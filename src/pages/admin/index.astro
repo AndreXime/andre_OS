@@ -1,0 +1,105 @@
+---
+import AdminView from "@/components/admin/Admin";
+import { INITIAL_ITEMS } from "@/data/items";
+import Layout from "@/layout/Layout.astro";
+import { Lock } from "lucide-preact";
+
+let error = false;
+let isAuthenticated = false;
+
+// 1. Verificação de Sessão (Leitura do Cookie)
+if (Astro.cookies.has("admin_session")) {
+    isAuthenticated = true;
+}
+
+if (Astro.request.method === "POST") {
+    try {
+        const data = await Astro.request.formData();
+        const password = data.get("password");
+
+        // TODO: Valide a senha com sua variável de ambiente real
+        const CORRECT_PASSWORD = import.meta.env.ADMIN_PASSWORD || "admin";
+
+        if (password === CORRECT_PASSWORD) {
+            Astro.cookies.set("admin_session", "true", {
+                path: "/",
+                httpOnly: true,
+                secure: import.meta.env.PROD,
+                maxAge: 60 * 60 * 24,
+            });
+
+            return Astro.redirect(Astro.url.pathname);
+        } else {
+            error = true;
+        }
+    } catch (e) {
+        console.error(e);
+        error = true;
+    }
+}
+
+// Se o usuário quiser sair (Rota ?action=logout)
+if (Astro.url.searchParams.get("action") === "logout") {
+    Astro.cookies.delete("admin_session", { path: "/" });
+    return Astro.redirect(Astro.url.pathname);
+}
+---
+
+<Layout title={isAuthenticated ? "Admin | andre_OS" : "Login | andre_OS"}>
+    {
+        isAuthenticated ? (
+            <AdminView posts={INITIAL_ITEMS} client:load />
+        ) : (
+            <div class="flex items-center justify-center min-h-screen bg-zinc-950 text-zinc-300 font-sans">
+                <div class="w-full max-w-sm p-8 bg-zinc-900 border border-zinc-800 rounded-lg shadow-2xl relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-red-700" />
+
+                    <div class="flex justify-center mb-6 text-red-500">
+                        <div class="p-3 bg-red-950/30 rounded-full border border-red-900/50">
+                            <Lock size={32} />
+                        </div>
+                    </div>
+
+                    <h2 class="text-center text-xl font-mono text-zinc-100 mb-2">
+                        andre_OS Kernel
+                    </h2>
+                    <p class="text-center text-xs text-zinc-500 font-mono mb-6">
+                        Acesso Administrativo Requerido
+                    </p>
+
+                    <form method="POST" class="space-y-4">
+                        <div>
+                            <label
+                                for="password"
+                                class="block text-xs font-mono text-zinc-500 mb-1"
+                            >
+                                Senha de Root (admin)
+                            </label>
+                            <input
+                                id="password"
+                                name="password"
+                                type="password"
+                                required
+                                class="w-full bg-zinc-950 border border-zinc-700 text-zinc-100 p-2 rounded focus:border-red-500 focus:outline-none focus:ring-1 focus:ring-red-500/20 font-mono text-sm transition-all"
+                            />
+                        </div>
+
+                        {error && (
+                            <div class="flex items-center gap-2 text-red-400 text-xs font-mono animate-in slide-in-from-top-1">
+                                <span class="w-1.5 h-1.5 bg-red-500 rounded-full" />
+                                Senha incorreta. Acesso negado.
+                            </div>
+                        )}
+
+                        <button
+                            type="submit"
+                            class="w-full py-2 bg-red-600 hover:bg-red-500 text-white text-xs font-mono rounded transition-colors font-bold flex items-center justify-center gap-2 mt-4 cursor-pointer"
+                        >
+                            Entrar no Sistema
+                        </button>
+                    </form>
+                </div>
+            </div>
+        )
+    }
+</Layout>
