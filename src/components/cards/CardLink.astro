@@ -1,12 +1,13 @@
 ---
 import Badge from "../ui/Badge.astro";
 import type { Post } from "@/database/types";
-import { getDomain } from "@/lib/utils";
+import { getDomain, getThemeClasses } from "@/lib/utils";
 
 interface Props {
     item: Post;
 }
 const { item } = Astro.props;
+const { badgeClass } = getThemeClasses(item.type);
 ---
 
 <div
@@ -34,7 +35,7 @@ const { item } = Astro.props;
         <div class="mt-4 flex gap-2 flex-wrap">
             {
                 item.tags.map((tag: string) => (
-                    <Badge text={`#${tag}`} color="violet" />
+                    <Badge text={`#${tag}`} colorClass={badgeClass} />
                 ))
             }
         </div>

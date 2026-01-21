@@ -3,12 +3,14 @@ import { Code2, Zap } from "lucide-preact";
 import Badge from "../ui/Badge.astro";
 
 import type { Post } from "@/database/types";
+import { getThemeClasses } from "@/lib/utils";
 
 interface Props {
     item: Post;
 }
 
 const { item } = Astro.props;
+const { badgeClass } = getThemeClasses(item.type);
 ---
 
 <div
@@ -20,7 +22,7 @@ const { item } = Astro.props;
         >
             <Code2 size={20} />
         </div>
-        <Badge text={item.status || "Ready"} color="emerald" />
+        <Badge text={item.status || "Ready"} colorClass={badgeClass} />
     </div>
     <div>
         <h3
