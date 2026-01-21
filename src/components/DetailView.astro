@@ -3,7 +3,7 @@ import { ChevronLeft, ExternalLink, Terminal, Zap } from "lucide-preact";
 import Badge from "./ui/Badge.astro";
 import type { Post } from "@/database/types";
 import { formatDate, getDomain, getThemeClasses } from "@/lib/utils";
-import { marked } from "marked";
+import { marked, type Tokens } from "marked";
 
 interface Props {
     item: Post;
@@ -12,6 +12,21 @@ interface Props {
 const { item } = Astro.props;
 
 const { bgClass, borderClass, badgeClass } = getThemeClasses(item.type);
+
+const renderer = {
+    link({ href, title, text }: Tokens.Link): string {
+        return `<a href="${href}" title="${title ?? ""}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+    },
+
+    code({ text, lang }: Tokens.Code): string {
+        const languageClass = lang ? `language-${lang}` : "language-text";
+        return `<pre><code class="${languageClass}">${text}</code></pre>`;
+    },
+};
+
+marked.use({ renderer });
+
+const contentHTML = marked.parse(item.content || "");
 ---
 
 <div class="flex flex-col w-full">
@@ -28,7 +43,7 @@ const { bgClass, borderClass, badgeClass } = getThemeClasses(item.type);
         </a>
         <div class="h-4 w-px bg-zinc-800"></div>
         <div class="flex items-center gap-2 text-xs font-mono text-zinc-500">
-            <span class="uppercase">~/ {item.type}s / {item.id}</span>
+            <span class="uppercase">~/ {item.type}s / {item.slug}</span>
         </div>
     </div>
 
@@ -68,7 +83,7 @@ const { bgClass, borderClass, badgeClass } = getThemeClasses(item.type);
         </div>
 
         <div
-            class="p-6 md:p-8 overflow-y-auto flex-1 prose prose-invert prose-zinc max-w-none"
+            class="p-6 md:p-8 overflow-y-auto flex-1 prose prose-invert prose-zinc prose-pre:text-base max-w-none"
         >
             {
                 item.type === "tool" && (
@@ -95,11 +110,39 @@ const { bgClass, borderClass, badgeClass } = getThemeClasses(item.type);
             {
                 item.content && (
                     <div
-                        class="text-zinc-400 leading-relaxed whitespace-pre-wrap"
-                        set:html={await marked.parse(item.content.trim())}
+                        class="text-zinc-400 leading-relaxed whitespace-pre-wrap content"
+                        set:html={contentHTML}
                     />
                 )
             }
         </div>
     </div>
 </div>
+
+<style is:inline>
+    .content pre {
+        background-color: #0d1117;
+        border-radius: 6px;
+        padding: 16px;
+        overflow: auto;
+        margin: 1.5rem 0;
+    }
+
+    .content code {
+        font-family:
+            ui-monospace,
+            SFMono-Regular,
+            SF Mono,
+            Menlo,
+            monospace;
+        font-size: 85%;
+        color: #e6edf3;
+    }
+
+    .content :not(pre) > code {
+        background-color: rgba(110, 118, 129, 0.4);
+        padding: 0.2em 0.4em;
+        border-radius: 6px;
+        color: inherit;
+    }
+</style>
