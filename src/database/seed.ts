@@ -1,8 +1,7 @@
-import type { Client } from "@libsql/client";
-import type { Item } from "./types";
 import database from "./database";
+import type { Post } from "./types";
 
-export const SEED_ITEMS: Item[] = [
+const SEED_POSTS: Post[] = [
 	{
 		id: 1,
 		type: "intro",
@@ -105,12 +104,12 @@ export const SEED_ITEMS: Item[] = [
 	},
 ];
 
-async function seedDatabase(client: Client, items: Item[]) {
+async function seedDatabase() {
 	console.log("Iniciando seed...");
 
-	for (const item of items) {
+	for (const item of SEED_POSTS) {
 		try {
-			await client.execute({
+			await database.execute({
 				sql: `
           INSERT INTO posts (
             id, slug, type, title, description, tags, featured, date, content, status, url
@@ -149,4 +148,4 @@ async function seedDatabase(client: Client, items: Item[]) {
 	console.log("Seed finalizado!");
 }
 
-seedDatabase(database, SEED_ITEMS);
+await seedDatabase();
