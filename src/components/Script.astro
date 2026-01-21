@@ -7,29 +7,19 @@
         const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
 
         if (isDesktop) {
-            // Desktop: Alterna lg:block.
-            // Se remover lg:block, o 'hidden' nativo assume e esconde.
             sidebar?.classList.toggle("lg:block");
-        } else {
-            // Mobile: Alterna hidden diretamente.
-            sidebar?.classList.toggle("hidden");
-        }
-
-        // Animações: Alternar entre estado visível e invisível
-        sidebar?.classList.toggle("opacity-0");
-        sidebar?.classList.toggle("opacity-100");
-        sidebar?.classList.toggle("-translate-x-10");
-        sidebar?.classList.toggle("translate-x-0");
-
-        // Ajustar a Grid Principal (Expandir para 12 colunas se fechar)
-        if (mainContent) {
-            if (mainContent.classList.contains("lg:col-span-10")) {
-                mainContent.classList.remove("lg:col-span-10");
-                mainContent.classList.add("lg:col-span-12");
-            } else {
-                mainContent.classList.remove("lg:col-span-12");
-                mainContent.classList.add("lg:col-span-10");
+            if (mainContent) {
+                if (mainContent.classList.contains("lg:col-span-10")) {
+                    mainContent.classList.remove("lg:col-span-10");
+                    mainContent.classList.add("lg:col-span-12");
+                } else {
+                    mainContent.classList.remove("lg:col-span-12");
+                    mainContent.classList.add("lg:col-span-10");
+                }
             }
+        } else {
+            sidebar?.classList.toggle("hidden");
+            mainContent.classList.toggle("hidden");
         }
     });
 </script>

@@ -11,7 +11,7 @@ import Script from "@/components/Script.astro";
 import { getHomePosts } from "@/lib/getHomePosts";
 
 const { searchParams } = Astro.url;
-const filterParam = searchParams.get("filter") || "all";
+const filterParam = searchParams.get("category") || "all";
 const searchParam = searchParams.get("q") || "";
 
 const { tagCounts, filteredItems, lastDeploy } = await getHomePosts(
@@ -41,27 +41,6 @@ Astro.response.headers.set(
 			/>
 
 			<main class={`flex lg:col-span-10`}>
-				{/* Mobile Filter Links */}
-				<div class="lg:hidden col-span-full mb-4 space-y-4">
-					<div class="flex gap-2 overflow-x-auto pb-2">
-						{
-							["all", "note", "link", "tool"].map((f) => (
-								<a
-									href={`/?filter=${f}&q=${searchParam}`}
-									class={`px-3 py-1 rounded text-xs whitespace-nowrap border uppercase ${
-										filterParam === f
-											? "bg-zinc-800 border-zinc-600 text-white"
-											: "border-zinc-800 text-zinc-500"
-									}`}
-								>
-									{f}
-								</a>
-							))
-						}
-					</div>
-				</div>
-
-				{/* Grid Render */}
 				<div
 					class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 auto-rows-min w-full"
 				>
@@ -90,8 +69,8 @@ Astro.response.headers.set(
 						) : (
 							<div class="col-span-full py-20 text-center border border-dashed border-zinc-800 rounded-lg ">
 								<p class="text-zinc-500 text-lg">
-									Nenhum resultado encontrado para "
-									{searchParam}".
+									Nenhum resultado encontrado para
+									{`"${searchParam}"`}.
 								</p>
 								<a
 									href="/"
