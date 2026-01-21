@@ -1,8 +1,9 @@
 ---
-import { ChevronLeft, ExternalLink } from "lucide-preact";
+import { ChevronLeft, ExternalLink, Terminal, Zap } from "lucide-preact";
 import Badge from "./ui/Badge.astro";
 import type { Post } from "@/database/types";
 import { formatDate, getDomain, getThemeClasses } from "@/lib/utils";
+import { marked } from "marked";
 
 interface Props {
     item: Post;
@@ -69,14 +70,34 @@ const { bgClass, borderClass, badgeClass } = getThemeClasses(item.type);
         <div
             class="p-6 md:p-8 overflow-y-auto flex-1 prose prose-invert prose-zinc max-w-none"
         >
+            {
+                item.type === "tool" && (
+                    <div class="mb-8 p-6 bg-black/40 rounded-lg border border-zinc-800 border-dashed flex flex-col items-center justify-center text-center py-12">
+                        <div class="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center mb-4 text-emerald-500">
+                            <Zap size={32} />
+                        </div>
+                        <h3 class="text-lg font-medium text-zinc-300 mb-2">
+                            Interface da Ferramenta
+                        </h3>
+                        <p class="text-sm text-zinc-500 max-w-sm mb-6">
+                            Esta ferramenta interativa rodaria aqui, carregando
+                            o módulo WASM.
+                        </p>
+                        <button class="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-2 rounded-md font-medium text-sm transition-colors flex items-center gap-2">
+                            <Terminal size={16} /> Iniciar Processo
+                        </button>
+                    </div>
+                )
+            }
             <p class="text-zinc-300 leading-relaxed mb-6">
                 {item.description}
             </p>
             {
                 item.content && (
-                    <div class="text-zinc-400 leading-relaxed mb-6 whitespace-pre-wrap">
-                        {item.content}
-                    </div>
+                    <div
+                        class="text-zinc-400 leading-relaxed whitespace-pre-wrap"
+                        set:html={await marked.parse(item.content.trim())}
+                    />
                 )
             }
         </div>
