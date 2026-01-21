@@ -1,0 +1,44 @@
+---
+import { FileText } from "lucide-preact";
+import Badge from "../ui/Badge.astro";
+import type { Item } from "@/data/items";
+import { formatDate } from "@/lib/utils";
+
+interface Props {
+    item: Item;
+}
+const { item } = Astro.props;
+---
+
+<div
+    class="cursor-pointer h-full p-5 bg-zinc-900 border border-zinc-800 hover:border-blue-500/50 hover:bg-blue-900/5 transition-all duration-300 flex flex-col justify-between rounded-md relative overflow-hidden card-trigger"
+>
+    <div
+        class="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity text-blue-500"
+    >
+        <FileText size={48} strokeWidth={1} />
+    </div>
+    <div>
+        <div class="flex items-center gap-2 mb-3">
+            <FileText size={14} class="text-blue-500" />
+            <span class="text-xs font-mono text-zinc-500">
+                {item.date ? formatDate(item.date) : ""}
+            </span>
+        </div>
+        <h3
+            class="text-lg font-medium text-zinc-100 mb-2 leading-tight group-hover:text-blue-100 transition-colors"
+        >
+            {item.title}
+        </h3>
+        <p class="text-sm text-zinc-400 mb-4 line-clamp-3 leading-relaxed">
+            {item.description}
+        </p>
+    </div>
+    <div class="mt-4 flex gap-2 flex-wrap">
+        {
+            item.tags.map((tag: string) => (
+                <Badge text={`#${tag}`} color="blue" />
+            ))
+        }
+    </div>
+</div>

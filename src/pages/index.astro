@@ -1,16 +1,115 @@
 ---
+import Layout from "../layout/Layout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import Sidebar from "../components/Sidebar.astro";
+import { INITIAL_ITEMS } from "../data/items";
+import CardIntro from "../components/cards/CardIntro.astro";
+import CardNote from "../components/cards/CardNote.astro";
+import CardTool from "../components/cards/CardTool.astro";
+import CardLink from "../components/cards/CardLink.astro";
+import Script from "@/components/Script.astro";
+import { processPosts } from "@/lib/utils";
 
+const { searchParams } = Astro.url;
+const filterParam = searchParams.get("filter") || "all";
+const searchParam = searchParams.get("q") || "";
+
+const { tagCounts, filteredItems, lastDeploy } = processPosts(
+	INITIAL_ITEMS,
+	filterParam,
+	searchParam,
+);
+
+/* 
+Astro.response.headers.set(
+	"Cache-Control",
+	"public, max-age=60, s-maxage=600, stale-while-revalidate=30",
+);
+*/
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="andre_OS">
+	<div class="min-h-screen relative">
+		<Header searchParam={searchParam} filterParam={filterParam} />
+
+		<div
+			class="pt-20 px-4 md:px-6 max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 transition-all"
+		>
+			<Sidebar
+				tagCounts={tagCounts}
+				currentFilter={filterParam}
+				currentSearch={searchParam}
+			/>
+
+			<main class={`flex lg:col-span-10`}>
+				{/* Mobile Filter Links */}
+				<div class="lg:hidden col-span-full mb-4 space-y-4">
+					<div class="flex gap-2 overflow-x-auto pb-2">
+						{
+							["all", "note", "link", "tool"].map((f) => (
+								<a
+									href={`/?filter=${f}&q=${searchParam}`}
+									class={`px-3 py-1 rounded text-xs whitespace-nowrap border uppercase ${
+										filterParam === f
+											? "bg-zinc-800 border-zinc-600 text-white"
+											: "border-zinc-800 text-zinc-500"
+									}`}
+								>
+									{f}
+								</a>
+							))
+						}
+					</div>
+				</div>
+
+				{/* Grid Render */}
+				<div
+					class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 auto-rows-min w-full"
+				>
+					{
+						filteredItems.length > 0 ? (
+							filteredItems.map((item) => (
+								// O Link envolve o card inteiro. Ao clicar, a URL muda para ?id=X
+								<a
+									href={`/post/${item.slug}`}
+									class={`block group h-full relative ${item.featured ? "md:col-span-2" : "col-span-1"} outline-none focus-visible:ring-2 ring-emerald-500/50 rounded-md`}
+								>
+									{item.type === "intro" && (
+										<CardIntro item={item} />
+									)}
+									{item.type === "note" && (
+										<CardNote item={item} />
+									)}
+									{item.type === "tool" && (
+										<CardTool item={item} />
+									)}
+									{item.type === "link" && (
+										<CardLink item={item} />
+									)}
+								</a>
+							))
+						) : (
+							<div class="col-span-full py-20 text-center border border-dashed border-zinc-800 rounded-lg ">
+								<p class="text-zinc-500 text-lg">
+									Nenhum resultado encontrado para "
+									{searchParam}".
+								</p>
+								<a
+									href="/"
+									class="mt-4 inline-block text-emerald-500 hover:underline"
+								>
+									Limpar filtros
+								</a>
+							</div>
+						)
+					}
+				</div>
+			</main>
+		</div>
+
+		<Footer lastDeploy={lastDeploy} />
+	</div>
+</Layout>
+
+<Script />

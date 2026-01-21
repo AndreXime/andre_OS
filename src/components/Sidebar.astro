@@ -1,0 +1,70 @@
+---
+import { Command, FileText, ExternalLink, Terminal } from "lucide-preact";
+
+interface Props {
+    tagCounts: Record<string, number>;
+    currentFilter: string;
+    currentSearch: string;
+}
+const { tagCounts, currentFilter, currentSearch } = Astro.props;
+
+// Preserva o termo de busca ao trocar de categoria
+const getHref = (filter: string) =>
+    `?filter=${filter}${currentSearch ? `&q=${currentSearch}` : ""}`;
+---
+
+<aside
+    id="sidebar"
+    class="lg:col-span-2 sticky top-24 h-[calc(100vh-8rem)] transition-all duration-300 hidden lg:block opacity-100 translate-x-0"
+>
+    <div class="space-y-8">
+        <div class="space-y-1">
+            <p
+                class="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-2 pl-2"
+            >
+                Diretórios
+            </p>
+            {
+                [
+                    { id: "all", label: "Root / Tudo", Icon: Command },
+                    { id: "note", label: "~/notas", Icon: FileText },
+                    { id: "link", label: "~/links", Icon: ExternalLink },
+                    { id: "tool", label: "~/bin", Icon: Terminal },
+                ].map((f) => {
+                    const isActive = currentFilter === f.id;
+                    const activeClass =
+                        "bg-zinc-800 text-zinc-100 border-zinc-700";
+                    const inactiveClass =
+                        "border-transparent text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200";
+
+                    return (
+                        <a
+                            href={getHref(f.id)}
+                            class={`w-full text-left px-3 py-2 rounded-md text-sm font-medium flex items-center gap-3 transition-colors border ${isActive ? activeClass : inactiveClass}`}
+                        >
+                            <f.Icon size={14} />
+                            {f.label}
+                        </a>
+                    );
+                })
+            }
+        </div>
+
+        <div>
+            <p
+                class="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-3 pl-2"
+            >
+                Tags Populares
+            </p>
+            <div class="flex flex-wrap gap-2">
+                {
+                    Object.entries(tagCounts).map(([tag, count]) => (
+                        <span class="text-xs text-zinc-500 hover:text-zinc-300 font-mono transition-colors cursor-default">
+                            #{tag} <span class="text-zinc-700">({count})</span>
+                        </span>
+                    ))
+                }
+            </div>
+        </div>
+    </div>
+</aside>

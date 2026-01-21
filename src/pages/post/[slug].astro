@@ -1,0 +1,51 @@
+---
+import Layout from "../../layout/Layout.astro";
+import DetailView from "../../components/DetailView.astro";
+import { INITIAL_ITEMS } from "../../data/items";
+import Footer from "@/components/Footer.astro";
+import Header from "@/components/Header.astro";
+import Sidebar from "@/components/Sidebar.astro";
+import Script from "@/components/Script.astro";
+import { processPosts } from "@/lib/utils";
+
+const { slug } = Astro.params;
+
+const item = INITIAL_ITEMS.find((i) => i.slug === slug);
+
+if (!item) {
+    return Astro.redirect("/");
+}
+
+const { tagCounts, lastDeploy } = processPosts(INITIAL_ITEMS, "", "");
+
+/* 
+Astro.response.headers.set(
+	"Cache-Control",
+	"public, max-age=60, s-maxage=600, stale-while-revalidate=30",
+);
+*/
+---
+
+<Layout title="andre_OS">
+    <div class="min-h-screen relative" id="app-root">
+        <Header searchParam={""} filterParam={""} />
+
+        <div
+            class="pt-20 px-4 md:px-6 max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 transition-all"
+        >
+            <Sidebar
+                tagCounts={tagCounts}
+                currentFilter={""}
+                currentSearch={""}
+            />
+
+            <main class={`flex lg:col-span-10`}>
+                <DetailView item={item} />
+            </main>
+        </div>
+
+        <Footer lastDeploy={lastDeploy} />
+    </div>
+</Layout>
+
+<Script />

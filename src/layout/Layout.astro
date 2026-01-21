@@ -1,0 +1,23 @@
+---
+import "../styles/global.css";
+interface Props {
+    title: string;
+}
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="description" content="AndreOS" />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <title>{title}</title>
+    </head>
+    <body
+        class="bg-zinc-950 text-zinc-300 font-sans selection:bg-emerald-500/30 selection:text-emerald-200"
+    >
+        <slot />
+    </body>
+</html>
