@@ -3,20 +3,18 @@ import Layout from "../layout/Layout.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import Sidebar from "../components/Sidebar.astro";
-import { INITIAL_ITEMS } from "../data/items";
 import CardIntro from "../components/cards/CardIntro.astro";
 import CardNote from "../components/cards/CardNote.astro";
 import CardTool from "../components/cards/CardTool.astro";
 import CardLink from "../components/cards/CardLink.astro";
 import Script from "@/components/Script.astro";
-import { processPosts } from "@/lib/utils";
+import { getHomePosts } from "@/lib/getHomePosts";
 
 const { searchParams } = Astro.url;
 const filterParam = searchParams.get("filter") || "all";
 const searchParam = searchParams.get("q") || "";
 
-const { tagCounts, filteredItems, lastDeploy } = processPosts(
-	INITIAL_ITEMS,
+const { tagCounts, filteredItems, lastDeploy } = await getHomePosts(
 	filterParam,
 	searchParam,
 );

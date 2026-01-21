@@ -1,10 +1,10 @@
 ---
 import Badge from "../ui/Badge.astro";
-import type { Item } from "@/data/items";
+import type { Post } from "@/database/types";
 import { getDomain } from "@/lib/utils";
 
 interface Props {
-    item: Item;
+    item: Post;
 }
 const { item } = Astro.props;
 ---

@@ -10,14 +10,3 @@ services:
     environment:
       - SQLD_NODE=primary
     restart: unless-stopped
-
-# Opcional: Interface visual para ver o banco
-  studio:
-    image: ghcr.io/tursodatabase/libsql-studio:latest
-    container_name: libsql_studio
-    ports:
-      - "3000:3000"
-    environment:
-      - LIBSQL_URL=http://db:8080
-    depends_on:
-      - db

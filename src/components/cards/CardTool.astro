@@ -2,10 +2,10 @@
 import { Code2, Zap } from "lucide-preact";
 import Badge from "../ui/Badge.astro";
 
-import type { Item } from "@/data/items";
+import type { Post } from "@/database/types";
 
 interface Props {
-    item: Item;
+    item: Post;
 }
 
 const { item } = Astro.props;

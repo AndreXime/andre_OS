@@ -10,7 +10,7 @@ const { tagCounts, currentFilter, currentSearch } = Astro.props;
 
 // Preserva o termo de busca ao trocar de categoria
 const getHref = (filter: string) =>
-    `?filter=${filter}${currentSearch ? `&q=${currentSearch}` : ""}`;
+    `/?filter=${filter}${currentSearch ? `&q=${currentSearch}` : ""}`;
 ---
 
 <aside

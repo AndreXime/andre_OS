@@ -1,18 +1,8 @@
-export interface Item {
-	id: number;
-	slug: string;
-	type: "intro" | "tool" | "note" | "link";
-	title: string;
-	description: string;
-	tags: string[];
-	featured?: boolean;
-	date: Date;
-	content?: string; // Conteúdo longo, type Intro não tem
-	status?: string; // Versão da ferramenta, apenas para tools
-	url?: string; // Link do site recomendado, Apenas para links
-}
+import type { Client } from "@libsql/client";
+import type { Item } from "./types";
+import database from "./database";
 
-export const INITIAL_ITEMS: Item[] = [
+export const SEED_ITEMS: Item[] = [
 	{
 		id: 1,
 		type: "intro",
@@ -114,3 +104,49 @@ export const INITIAL_ITEMS: Item[] = [
 			"Nunca inicie seu app sem validar as variáveis de ambiente. Usar Zod no arquivo de configuração garante que o app falhe rápido (fail-fast) se algo estiver faltando.\n\n```typescript\nz.object({ DATABASE_URL: z.string() })\n```",
 	},
 ];
+
+async function seedDatabase(client: Client, items: Item[]) {
+	console.log("Iniciando seed...");
+
+	for (const item of items) {
+		try {
+			await client.execute({
+				sql: `
+          INSERT INTO posts (
+            id, slug, type, title, description, tags, featured, date, content, status, url
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          ON CONFLICT(id) DO UPDATE SET
+            slug = excluded.slug,
+            type = excluded.type,
+            title = excluded.title,
+            description = excluded.description,
+            tags = excluded.tags,
+            featured = excluded.featured,
+            date = excluded.date,
+            content = excluded.content,
+            status = excluded.status,
+            url = excluded.url
+        `,
+				args: [
+					item.id,
+					item.slug,
+					item.type,
+					item.title,
+					item.description,
+					JSON.stringify(item.tags), // SQLite não tem array, vira JSON string
+					item.featured ? 1 : 0, // SQLite não tem boolean, vira 1 ou 0
+					item.date.toISOString(), // Data como string ISO
+					item.content ?? null,
+					item.status ?? null,
+					item.url ?? null,
+				],
+			});
+		} catch (err) {
+			console.error(`Erro no item ${item.id}:`, err);
+		}
+	}
+
+	console.log("Seed finalizado!");
+}
+
+seedDatabase(database, SEED_ITEMS);

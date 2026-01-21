@@ -1,4 +1,5 @@
-import type { Item } from "@/data/items";
+import type { Row } from "@libsql/client";
+import type { Post } from "@/database/types";
 
 export const formatDate = (date: Date) =>
 	new Intl.DateTimeFormat("pt-BR", {
@@ -9,41 +10,18 @@ export const formatDate = (date: Date) =>
 
 export const getDomain = (url: string) => url.replace(/^https?:\/\//, "").split("/")[0];
 
-export function processPosts(posts: Item[], categoryFilter: string, searchFilter: string) {
-	const filteredItems = posts.filter((item) => {
-		const matchesFilter = categoryFilter === "all" || item.type === categoryFilter;
-
-		if (!searchFilter) return matchesFilter;
-
-		const searchContent = `${item.title} ${item.description || ""}`.toLowerCase();
-
-		return matchesFilter && searchContent.includes(categoryFilter.toLowerCase());
-	});
-
-	const tagCounts = posts.reduce(
-		(acc, item) => {
-			item.tags.forEach((tag) => {
-				acc[tag] = (acc[tag] || 0) + 1;
-			});
-			return acc;
-		},
-		{} as Record<string, number>,
-	);
-
-	const lastDeploy = new Intl.DateTimeFormat("pt-BR", {
-		day: "2-digit",
-		month: "numeric",
-		year: "numeric",
-	}).format(
-		posts.reduce((maxDate, item) => {
-			if (!item.date) return maxDate;
-			return item.date > maxDate ? item.date : maxDate;
-		}, new Date(0)),
-	);
-
+export function castRowToPost(row: Row): Post {
 	return {
-		tagCounts,
-		filteredItems,
-		lastDeploy,
+		id: Number(row.id),
+		slug: String(row.slug),
+		type: row.type as Post["type"],
+		title: String(row.title),
+		description: String(row.description),
+		tags: JSON.parse(String(row.tags)) as string[],
+		featured: Boolean(row.featured),
+		date: new Date(String(row.date)),
+		content: row.content ? String(row.content) : undefined,
+		status: row.status ? String(row.status) : undefined,
+		url: row.url ? String(row.url) : undefined,
 	};
 }

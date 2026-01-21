@@ -1,22 +1,19 @@
 ---
 import Layout from "../../layout/Layout.astro";
 import DetailView from "../../components/DetailView.astro";
-import { INITIAL_ITEMS } from "../../data/items";
 import Footer from "@/components/Footer.astro";
 import Header from "@/components/Header.astro";
 import Sidebar from "@/components/Sidebar.astro";
 import Script from "@/components/Script.astro";
-import { processPosts } from "@/lib/utils";
+import getPostBySlug from "@/lib/getPostBySlug";
 
 const { slug } = Astro.params;
 
-const item = INITIAL_ITEMS.find((i) => i.slug === slug);
+const { post, tagCounts, lastDeploy } = await getPostBySlug(slug || "");
 
-if (!item) {
+if (!post) {
     return Astro.redirect("/");
 }
-
-const { tagCounts, lastDeploy } = processPosts(INITIAL_ITEMS, "", "");
 
 /* 
 Astro.response.headers.set(
@@ -26,7 +23,7 @@ Astro.response.headers.set(
 */
 ---
 
-<Layout title="andre_OS">
+<Layout title={post.title + " | andre_OS"}>
     <div class="min-h-screen relative" id="app-root">
         <Header searchParam={""} filterParam={""} />
 
@@ -40,7 +37,7 @@ Astro.response.headers.set(
             />
 
             <main class={`flex lg:col-span-10`}>
-                <DetailView item={item} />
+                <DetailView item={post} />
             </main>
         </div>
 

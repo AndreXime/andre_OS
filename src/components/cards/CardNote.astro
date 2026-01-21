@@ -1,11 +1,11 @@
 ---
 import { FileText } from "lucide-preact";
 import Badge from "../ui/Badge.astro";
-import type { Item } from "@/data/items";
+import type { Post } from "@/database/types";
 import { formatDate } from "@/lib/utils";
 
 interface Props {
-    item: Item;
+    item: Post;
 }
 const { item } = Astro.props;
 ---
