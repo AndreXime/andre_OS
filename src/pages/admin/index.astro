@@ -1,15 +1,26 @@
 ---
 import AdminView from "@/components/admin/Admin";
-import { INITIAL_ITEMS } from "@/data/items";
 import Layout from "@/layout/Layout.astro";
+import getAllPosts from "@/lib/getAllPosts";
 import { Lock } from "lucide-preact";
+import { EncryptJWT, jwtDecrypt } from "jose";
 
 let error = false;
 let isAuthenticated = false;
 
-// 1. Verificação de Sessão (Leitura do Cookie)
-if (Astro.cookies.has("admin_session")) {
-    isAuthenticated = true;
+const JWT_SECRET = new TextEncoder().encode(import.meta.env.JWT_SECRET);
+const sessionCookie = Astro.cookies.get("admin_session")?.value;
+
+if (sessionCookie) {
+    try {
+        const { payload } = await jwtDecrypt(sessionCookie, JWT_SECRET);
+
+        if (payload.admin === true) {
+            isAuthenticated = true;
+        }
+    } catch {
+        Astro.cookies.delete("admin_session");
+    }
 }
 
 if (Astro.request.method === "POST") {
@@ -17,11 +28,14 @@ if (Astro.request.method === "POST") {
         const data = await Astro.request.formData();
         const password = data.get("password");
 
-        // TODO: Valide a senha com sua variável de ambiente real
-        const CORRECT_PASSWORD = import.meta.env.ADMIN_PASSWORD || "admin";
+        if (password === import.meta.env.ADMIN_PASSWORD) {
+            const jwt = await new EncryptJWT({ admin: true })
+                .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
+                .setIssuedAt()
+                .setExpirationTime("24h")
+                .encrypt(JWT_SECRET);
 
-        if (password === CORRECT_PASSWORD) {
-            Astro.cookies.set("admin_session", "true", {
+            Astro.cookies.set("admin_session", jwt, {
                 path: "/",
                 httpOnly: true,
                 secure: import.meta.env.PROD,
@@ -32,8 +46,7 @@ if (Astro.request.method === "POST") {
         } else {
             error = true;
         }
-    } catch (e) {
-        console.error(e);
+    } catch {
         error = true;
     }
 }
@@ -43,12 +56,14 @@ if (Astro.url.searchParams.get("action") === "logout") {
     Astro.cookies.delete("admin_session", { path: "/" });
     return Astro.redirect(Astro.url.pathname);
 }
+
+const posts = await getAllPosts();
 ---
 
 <Layout title={isAuthenticated ? "Admin | andre_OS" : "Login | andre_OS"}>
     {
         isAuthenticated ? (
-            <AdminView posts={INITIAL_ITEMS} client:load />
+            <AdminView posts={posts} client:load />
         ) : (
             <div class="flex items-center justify-center min-h-screen bg-zinc-950 text-zinc-300 font-sans">
                 <div class="w-full max-w-sm p-8 bg-zinc-900 border border-zinc-800 rounded-lg shadow-2xl relative overflow-hidden">
