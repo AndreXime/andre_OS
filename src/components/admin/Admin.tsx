@@ -1,4 +1,4 @@
-import type { Item } from "@/data/items";
+import type { Post } from "@/database/types";
 import { List, PenTool } from "lucide-preact";
 import { useEffect } from "preact/hooks";
 import HeaderAdmin from "./Header";
@@ -7,7 +7,7 @@ import { useStore } from "@nanostores/preact";
 import AdminEditor from "./Editor";
 import AdminList from "./List";
 
-export default function AdminView({ posts }: { posts: Item[] }) {
+export default function AdminView({ posts }: { posts: Post[] }) {
 	const items = useStore($items);
 	const { editingId, activeTab } = useStore($formState);
 

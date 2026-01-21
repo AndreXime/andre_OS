@@ -1,10 +1,10 @@
 import { atom, map, computed } from "nanostores";
-import type { Item } from "@/data/items";
+import type { Post } from "@/database/types";
 
 // --- STATE (Átomos) ---
 
 // O estado dos dados principais
-export const $items = atom<Item[]>([]);
+export const $items = atom<Post[]>([]);
 
 // O estado da UI do formulário
 export const $formState = map({
@@ -23,7 +23,7 @@ export const $editingItem = computed([$items, $formState], (items, form) => {
 
 const defaultType = "note";
 
-export function setItems(items: Item[]) {
+export function setItems(items: Post[]) {
 	$items.set(items);
 }
 
@@ -35,7 +35,7 @@ export function setCurrentType(type: string) {
 	$formState.setKey("currentType", type);
 }
 
-export function startEditing(item: Item) {
+export function startEditing(item: Post) {
 	$formState.set({
 		...$formState.get(),
 		editingId: item.id,
@@ -61,7 +61,7 @@ export function deleteItem(id: number) {
 	}
 }
 
-export function saveItem(newItem: Item) {
+export function saveItem(newItem: Post) {
 	const currentItems = $items.get();
 	const exists = currentItems.some((i) => i.id === newItem.id);
 

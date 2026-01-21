@@ -2,7 +2,7 @@ import { useStore } from "@nanostores/preact";
 import { Terminal, Plus, CheckCircle2, Hash, Save } from "lucide-preact";
 
 import { $editingItem, $formState, saveItem, triggerSuccess, cancelEditing, setCurrentType } from "./store";
-import type { Item } from "@/data/items";
+import type { Post } from "@/database/types";
 
 export default function AdminEditor() {
 	const { editingId, currentType, showSuccess } = useStore($formState);
@@ -22,9 +22,9 @@ export default function AdminEditor() {
 					.filter(Boolean)
 			: [];
 
-		const newItem: Item = {
+		const newItem: Post = {
 			id: editingId ? Number(editingId) : Date.now(),
-			type: currentType as Item["type"],
+			type: currentType as Post["type"],
 			title: rawData.title,
 			description: rawData.description,
 			slug: editingItem?.slug || rawData.title.toLowerCase().replace(/\s+/g, "-"),
