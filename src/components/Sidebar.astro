@@ -2,7 +2,7 @@
 import { Command, FileText, ExternalLink, Terminal } from "lucide-preact";
 
 interface Props {
-    tagCounts: Record<string, number>;
+    tagCounts: Record<string, number> | undefined;
     currentFilter: string;
     currentSearch: string;
 }
@@ -50,21 +50,22 @@ const { tagCounts, currentFilter, currentSearch } = Astro.props;
             }
         </div>
 
-        <div>
-            <p
-                class="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-3 pl-2"
-            >
-                Tags Populares
-            </p>
-            <div class="flex flex-wrap gap-2">
-                {
-                    Object.entries(tagCounts).map(([tag, count]) => (
-                        <span class="text-xs text-zinc-500 hover:text-zinc-300 font-mono transition-colors cursor-default">
-                            #{tag} <span class="text-zinc-700">({count})</span>
-                        </span>
-                    ))
-                }
-            </div>
-        </div>
+        {
+            tagCounts && (
+                <div>
+                    <p class="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-3 pl-2">
+                        Tags Populares
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        {Object.entries(tagCounts).map(([tag, count]) => (
+                            <span class="text-xs text-zinc-500 hover:text-zinc-300 font-mono transition-colors cursor-default">
+                                #{tag}{" "}
+                                <span class="text-zinc-700">({count})</span>
+                            </span>
+                        ))}
+                    </div>
+                </div>
+            )
+        }
     </div>
 </aside>
