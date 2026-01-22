@@ -47,7 +47,11 @@ export async function getLastPostDate() {
 
 	const rawDate = lastPostDateData.rows[0]?.last_date;
 
-	return new Date(String(rawDate));
+	if (!rawDate) {
+		return "";
+	}
+
+	return String(rawDate);
 }
 
 export async function getPostsTags() {

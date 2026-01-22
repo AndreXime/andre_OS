@@ -2,7 +2,7 @@
 import { formatDate } from "@/lib/utils";
 
 interface Props {
-    lastDate: Date;
+    lastDate: string;
 }
 
 const { lastDate } = Astro.props;
@@ -17,7 +17,8 @@ const { lastDate } = Astro.props;
             Online</span
         >
         <span class="hidden md:inline text-zinc-700">|</span>
-        <span class="hidden md:inline">Last Update: {formatDate(lastDate)}</span
+        <span class="hidden md:inline"
+            >Last Update: {!!lastDate && formatDate(lastDate)}</span
         >
     </div>
     <div class="flex items-center gap-4">

@@ -19,12 +19,10 @@ const posts = await getFilteredPosts(filterParam, searchParam);
 const tags = await getPostsTags();
 const lastDate = await getLastPostDate();
 
-/* 
 Astro.response.headers.set(
 	"Cache-Control",
 	"public, max-age=60, s-maxage=600, stale-while-revalidate=30",
 );
-*/
 ---
 
 <Layout title="andre_OS">
@@ -68,16 +66,27 @@ Astro.response.headers.set(
 							))
 						) : (
 							<div class="col-span-full py-20 text-center border border-dashed border-zinc-800 rounded-lg ">
-								<p class="text-zinc-500 text-lg">
-									Nenhum resultado encontrado para
-									{`"${searchParam}"`}.
-								</p>
-								<a
-									href="/"
-									class="mt-4 inline-block text-emerald-500 hover:underline"
-								>
-									Limpar filtros
-								</a>
+								{searchParam ? (
+									<>
+										<p class="text-zinc-500 text-lg">
+											Nenhum resultado encontrado para
+											{`"${searchParam}"`}.
+										</p>
+										<a
+											href="/"
+											class="mt-4 inline-block text-emerald-500 hover:underline"
+										>
+											Limpar filtros
+										</a>
+									</>
+								) : (
+									<div class="col-span-full py-20 text-center border border-dashed border-zinc-800 rounded-lg ">
+										<p class="text-zinc-500 text-lg">
+											Por enquanto não foi publicado
+											nenhum post
+										</p>
+									</div>
+								)}
 							</div>
 						)
 					}

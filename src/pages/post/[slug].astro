@@ -24,12 +24,10 @@ if (!post) {
 const tags = await getPostsTags();
 const lastDate = await getLastPostDate();
 
-/* 
 Astro.response.headers.set(
-	"Cache-Control",
-	"public, max-age=60, s-maxage=600, stale-while-revalidate=30",
+    "Cache-Control",
+    "public, max-age=60, s-maxage=600, stale-while-revalidate=30",
 );
-*/
 
 post.content = await parseMarkdown(post.content || "");
 ---
