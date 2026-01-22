@@ -15,7 +15,7 @@ export default function WebEditor() {
 
 	return (
 		<div
-			className="flex h-screen w-full bg-[#1e1e1e] text-white overflow-hidden font-sans"
+			className="flex h-screen w-full min-w-[600px] overflow-scroll bg-[#1e1e1e] text-white font-sans"
 			onClick={() => setMenu(null)}
 		>
 			{/* SIDEBAR */}
