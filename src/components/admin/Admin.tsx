@@ -12,7 +12,7 @@ export default function AdminView({ posts }: { posts: Post[] }) {
 
 	useEffect(() => {
 		setItems(posts);
-	}, [posts, setItems]);
+	}, [posts]);
 
 	return (
 		<div className="min-h-screen bg-zinc-950 text-zinc-300 font-sans flex flex-col">

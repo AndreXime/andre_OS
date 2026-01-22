@@ -22,6 +22,7 @@ export const $draft = map({
 	tags: "",
 	url: "",
 	featured: false,
+	tool_name: "",
 });
 
 export const $editingItem = computed([$items, $formState], (items, form) => {
@@ -51,6 +52,7 @@ export const $preview = computed([$formState, $draft, $editingItem], (form, draf
 		date: originalItem?.date ?? new Date(),
 		featured: draft.featured,
 		content: draft.content,
+		tool_name: form.currentType === "tool" ? draft.tool_name : undefined,
 		url: form.currentType === "link" ? draft.url : undefined,
 	} as Post;
 });
@@ -78,6 +80,7 @@ export function resetDraft() {
 		tags: "",
 		url: "",
 		featured: false,
+		tool_name: "",
 	});
 }
 
@@ -104,6 +107,7 @@ export function startEditing(item: Post) {
 		tags: item.tags.join(", "),
 		url: item.url || "",
 		featured: item.featured || false,
+		tool_name: item.tool_name || "",
 	});
 }
 

@@ -14,6 +14,7 @@ function castRowToPost(row: Row): Post {
 		date: new Date(String(row.date)),
 		content: row.content ? String(row.content) : undefined,
 		url: row.url ? String(row.url) : undefined,
+		tool_name: row.tool_name ? String(row.tool_name) : undefined,
 	};
 }
 
@@ -54,6 +55,24 @@ export async function getPostBySlug(slug: string) {
 		}
 
 		return castRowToPost(postData.rows[0]);
+	} catch {
+		return undefined;
+	}
+}
+
+export async function getPostToolName(slug: string) {
+	try {
+		const postQuery = `SELECT tool_name FROM posts WHERE slug = ? LIMIT 1`;
+
+		const postData = await database.execute({ sql: postQuery, args: [slug] });
+
+		const toolName = postData.rows[0].tool_name;
+
+		if (toolName) {
+			return undefined;
+		}
+
+		return String(toolName);
 	} catch {
 		return undefined;
 	}

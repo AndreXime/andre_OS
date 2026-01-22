@@ -9,4 +9,5 @@ export interface Post {
 	date: Date;
 	content?: string; // Conteúdo longo, intro não tem
 	url?: string; // Link do site recomendado, apenas para links
+	tool_name?: string;
 }

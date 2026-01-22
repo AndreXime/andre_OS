@@ -17,6 +17,7 @@ import {
 import { useState } from "preact/hooks";
 import PreviewCard from "../ui/PreviewCards";
 import DetailPostView from "../ui/DetailCard";
+import { toolRegistry } from "@/tools";
 
 export default function AdminEditor() {
 	const { editingId, currentType, showSuccess } = useStore($formState);
@@ -130,7 +131,7 @@ export default function AdminEditor() {
 					</fieldset>
 
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
-						<div className={`space-y-2 ${currentType !== "link" && "col-span-full"}`}>
+						<div className={`space-y-2 ${currentType !== "link" && currentType !== "tool" && "col-span-full"}`}>
 							<label htmlFor="title" className="text-xs font-mono text-zinc-500">
 								Título
 							</label>
@@ -161,6 +162,50 @@ export default function AdminEditor() {
 									onInput={(e) => updateDraft("url", e.currentTarget.value)}
 									className="w-full bg-zinc-950 border border-zinc-800 p-2.5 rounded text-zinc-200 text-sm focus:border-violet-500/50 outline-none transition-all"
 								/>
+							</div>
+						)}
+						{currentType === "tool" && (
+							<div className="space-y-2">
+								<label htmlFor="toolSelect" className="text-xs font-mono text-zinc-500">
+									Selecione a Ferramenta
+								</label>
+
+								<div className="relative">
+									<select
+										id="toolSelect"
+										name="tool"
+										required
+										value={draft.tool_name}
+										onChange={(e) => updateDraft("tool_name", e.currentTarget.value)}
+										className="w-full bg-zinc-950 border border-zinc-800 p-2.5 rounded text-zinc-200 text-sm focus:border-violet-500/50 outline-none transition-all appearance-none cursor-pointer"
+									>
+										<option value="" disabled className="text-zinc-500">
+											Selecione uma opção...
+										</option>
+
+										{Object.keys(toolRegistry).map((option) => (
+											<option key={option} value={option}>
+												{option}
+											</option>
+										))}
+									</select>
+
+									<div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500">
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											width="16"
+											height="16"
+											viewBox="0 0 24 24"
+											fill="none"
+											stroke="currentColor"
+											strokeWidth="2"
+											strokeLinecap="round"
+											strokeLinejoin="round"
+										>
+											<path d="m6 9 6 6 6-6" />
+										</svg>
+									</div>
+								</div>
 							</div>
 						)}
 					</div>

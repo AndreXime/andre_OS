@@ -7,10 +7,10 @@ export async function createPost(post: CreatePostInput) {
 	const query = `
         INSERT INTO posts (
             slug, type, title, description, tags, 
-            featured, date, content, url
+            featured, date, content, url, tool_name
         ) VALUES (
             ?, ?, ?, ?, json(?), 
-            ?, ?, ?, ?
+            ?, ?, ?, ?, ?
         )
     `;
 
@@ -24,6 +24,7 @@ export async function createPost(post: CreatePostInput) {
 		post.date.toISOString(),
 		post.content ?? null,
 		post.url ?? null,
+		post.tool_name ?? null,
 	];
 
 	const result = await database.execute({ sql: query, args });
@@ -45,7 +46,8 @@ export async function updatePost(post: Post) {
             featured = ?, 
             date = ?, 
             content = ?, 
-            url = ?
+            url = ?,
+			tool_name = ?
         WHERE id = ?
     `;
 
@@ -59,6 +61,7 @@ export async function updatePost(post: Post) {
 		post.date.toISOString(),
 		post.content ?? null,
 		post.url ?? null,
+		post.tool_name ?? null,
 		post.id,
 	];
 

@@ -15,6 +15,7 @@ const PostSchema = z.object({
 	date: z.coerce.date(),
 	content: z.string().optional(),
 	url: z.string().optional(),
+	tool_name: z.string().optional(),
 });
 
 export const server = {

@@ -72,6 +72,7 @@ await ensureSchema(database, "posts", [
 	{ name: "date", type: "TEXT" },
 	{ name: "content", type: "TEXT" },
 	{ name: "url", type: "TEXT" },
+	{ name: "tool_name", type: "TEXT" },
 ]);
 
 export default database;
