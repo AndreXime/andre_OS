@@ -1,9 +1,13 @@
 ---
 import { ChevronLeft, ExternalLink, Terminal, Zap } from "lucide-preact";
-import Badge from "./ui/Badge.astro";
+import Badge from "./Bagde";
 import type { Post } from "@/database/types";
-import { formatDate, getDomain, getThemeClasses } from "@/lib/utils";
-import { marked, type Tokens } from "marked";
+import {
+    formatDate,
+    getDomain,
+    getThemeClasses,
+    parseMarkdown,
+} from "@/lib/utils";
 
 interface Props {
     item: Post;
@@ -13,20 +17,7 @@ const { item } = Astro.props;
 
 const { bgClass, borderClass, badgeClass } = getThemeClasses(item.type);
 
-const renderer = {
-    link({ href, title, text }: Tokens.Link): string {
-        return `<a href="${href}" title="${title ?? ""}" target="_blank" rel="noopener noreferrer">${text}</a>`;
-    },
-
-    code({ text, lang }: Tokens.Code): string {
-        const languageClass = lang ? `language-${lang}` : "language-text";
-        return `<pre><code class="${languageClass}">${text}</code></pre>`;
-    },
-};
-
-marked.use({ renderer });
-
-const contentHTML = marked.parse(item.content || "");
+const contentHTML = parseMarkdown(item.content || "");
 ---
 
 <div class="flex flex-col w-full">

@@ -3,12 +3,9 @@ import Layout from "../layout/Layout.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import Sidebar from "../components/Sidebar.astro";
-import CardIntro from "../components/cards/CardIntro.astro";
-import CardNote from "../components/cards/CardNote.astro";
-import CardTool from "../components/cards/CardTool.astro";
-import CardLink from "../components/cards/CardLink.astro";
 import Script from "@/components/Script.astro";
 import { getHomePosts } from "@/lib/getHomePosts";
+import { CardIntro, CardLink, CardNote, CardTool } from "@/components/Cards";
 
 const { searchParams } = Astro.url;
 const filterParam = searchParams.get("category") || "all";
@@ -53,16 +50,16 @@ Astro.response.headers.set(
 									class={`block group h-full relative ${item.featured ? "md:col-span-2" : "col-span-1"} outline-none focus-visible:ring-2 ring-emerald-500/50 rounded-md`}
 								>
 									{item.type === "intro" && (
-										<CardIntro item={item} />
+										<CardIntro post={item} />
 									)}
 									{item.type === "note" && (
-										<CardNote item={item} />
+										<CardNote post={item} />
 									)}
 									{item.type === "tool" && (
-										<CardTool item={item} />
+										<CardTool post={item} />
 									)}
 									{item.type === "link" && (
-										<CardLink item={item} />
+										<CardLink post={item} />
 									)}
 								</a>
 							))
