@@ -45,14 +45,41 @@ Astro.response.headers.set(
 				>
 					{
 						posts && posts.length > 0 ? (
-							posts.map((item) => (
-								<a
-									href={`/post/${item.slug}`}
-									class={`block group h-full relative ${item.featured ? "md:col-span-2" : "col-span-1"} outline-none focus-visible:ring-2 ring-emerald-500/50 rounded-md`}
-								>
-									<PreviewCard post={item} />
-								</a>
-							))
+							posts.map((item) => {
+								let itemUrl = "";
+
+								switch (item.type) {
+									case "note":
+										itemUrl = `/post/${item.slug}`;
+										break;
+
+									case "link":
+										itemUrl = `${item.url}`;
+										break;
+
+									case "tool":
+										itemUrl = `/app/${item.slug}`;
+										break;
+									default:
+										itemUrl = "";
+										break;
+								}
+
+								return (
+									<a
+										href={itemUrl}
+										{...(item.type === "link"
+											? {
+													target: "_blank",
+													rel: "noopener noreferrer",
+												}
+											: {})}
+										class={`block group h-full relative ${item.featured ? "md:col-span-2" : "col-span-1"} outline-none focus-visible:ring-2 ring-emerald-500/50 rounded-md`}
+									>
+										<PreviewCard post={item} />
+									</a>
+								);
+							})
 						) : (
 							<div class="col-span-full py-20 text-center border border-dashed border-zinc-800 rounded-lg ">
 								{searchParam ? (
