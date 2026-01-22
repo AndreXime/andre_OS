@@ -13,14 +13,15 @@ import { ChevronLeft } from "lucide-preact";
 
 const { slug } = Astro.params;
 
-const post = await getPostBySlug(slug || "");
+const [post, tags, lastDate] = await Promise.all([
+    getPostBySlug(slug || ""),
+    getPostsTags(),
+    getLastPostDate(),
+]);
 
 if (!post) {
     return Astro.redirect("/");
 }
-
-const tags = await getPostsTags();
-const lastDate = await getLastPostDate();
 
 Astro.response.headers.set(
     "Cache-Control",

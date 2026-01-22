@@ -14,9 +14,11 @@ const { searchParams } = Astro.url;
 const filterParam = searchParams.get("category") || "all";
 const searchParam = searchParams.get("q") || "";
 
-const posts = await getFilteredPosts(filterParam, searchParam);
-const tags = await getPostsTags();
-const lastDate = await getLastPostDate();
+const [posts, tags, lastDate] = await Promise.all([
+	getFilteredPosts(filterParam, searchParam),
+	getPostsTags(),
+	getLastPostDate(),
+]);
 
 Astro.response.headers.set(
 	"Cache-Control",
