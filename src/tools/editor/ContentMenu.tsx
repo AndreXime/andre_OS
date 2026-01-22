@@ -1,7 +1,8 @@
-import { useCemeteryStore } from "./store";
+import { useStore } from "@nanostores/preact";
+import { $cemetery, deleteNode, setAddingType, setMenu } from "./store";
 
 export default function ContextMenu() {
-	const { menu, setMenu, setAddingType, deleteNode } = useCemeteryStore();
+	const { menu } = useStore($cemetery);
 
 	if (!menu) return null;
 

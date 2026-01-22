@@ -1,5 +1,6 @@
-import { create } from "zustand";
+import { map } from "nanostores";
 
+// 1. Definição das Interfaces
 export interface FileNode {
 	id: string;
 	name: string;
@@ -10,114 +11,123 @@ export interface FileNode {
 	children?: FileNode[];
 }
 
-interface CemeteryState {
+export interface CemeteryState {
 	files: FileNode[];
 	selectedFile: FileNode | null;
 	addingType: { type: "file" | "folder"; parentId: string | null } | null;
 	menu: { x: number; y: number; parentId: string | null } | null;
-
-	// Ações
-	setSelectedFile: (file: FileNode | null) => void;
-	setAddingType: (val: { type: "file" | "folder"; parentId: string | null } | null) => void;
-	setMenu: (val: { x: number; y: number; parentId: string | null } | null) => void;
-
-	createNode: (name: string) => void;
-	updateFileContent: (id: string, content: string) => void;
-	deleteNode: (id: string) => void;
 }
 
-export const useCemeteryStore = create<CemeteryState>((set, get) => ({
+// 2. Criação da Store (map)
+// A convenção do Nanostores é usar o prefixo '$' para stores
+export const $cemetery = map<CemeteryState>({
 	files: [],
 	selectedFile: null,
-	user: null,
 	addingType: null,
 	menu: null,
+});
 
-	setSelectedFile: (selectedFile) => set({ selectedFile }),
-	setAddingType: (addingType) => set({ addingType }),
-	setMenu: (menu) => set({ menu }),
+// 3. Ações (Funções independentes)
 
-	createNode: (name) => {
-		const { addingType, files } = get();
-		const trimmedName = name.trim();
+export const setSelectedFile = (file: FileNode | null) => {
+	$cemetery.setKey("selectedFile", file);
+};
 
-		if (!trimmedName || !addingType) {
-			set({
-				addingType: null,
-			});
-			return;
-		}
+export const setAddingType = (val: { type: "file" | "folder"; parentId: string | null } | null) => {
+	$cemetery.setKey("addingType", val);
+};
 
-		// 2. Validação de duplicados (Case-insensitive)
-		const fileExists = files.some((f) => f.name.toLowerCase() === trimmedName.toLowerCase());
+export const setMenu = (val: { x: number; y: number; parentId: string | null } | null) => {
+	$cemetery.setKey("menu", val);
+};
 
-		if (fileExists) {
-			alert("Uma lápide com este nome já existe no cemitério!");
-			return;
-		}
+export const createNode = (name: string) => {
+	// .get() recupera o estado atual de forma síncrona (semelhante ao get() do Zustand)
+	const { addingType, files, selectedFile } = $cemetery.get();
+	const trimmedName = name.trim();
 
-		// 3. Extração dinâmica de extensão
-		// Pega tudo após o último ponto. Se não houver, assume 'plaintext'
-		const extension = trimmedName.split(".").pop()?.toLowerCase() || "";
+	if (!trimmedName || !addingType) {
+		$cemetery.setKey("addingType", null);
+		return;
+	}
 
-		// Mapeamento simples de extensões para linguagens do Monaco
-		const languageMap: Record<string, string> = {
-			go: "go",
-			ts: "typescript",
-			tsx: "typescript",
-			js: "javascript",
-			jsx: "javascript",
-			py: "python",
-			json: "json",
-			md: "markdown",
-			css: "css",
-			html: "html",
-		};
+	// Validação de duplicados
+	const fileExists = files.some((f) => f.name.toLowerCase() === trimmedName.toLowerCase());
 
-		const newNode: FileNode = {
-			id: Date.now().toString(),
-			name,
-			isFolder: addingType.type === "folder",
-			language: addingType.type === "folder" ? "" : languageMap[extension] || "plaintext",
-			parentId: addingType.parentId,
-			content: addingType.type === "folder" ? "" : "// O codigo vai aqui\n",
-		};
+	if (fileExists) {
+		alert("Uma lápide com este nome já existe no cemitério!");
+		return;
+	}
 
-		set({
-			files: [...files, newNode],
-			addingType: null,
-			selectedFile: newNode.isFolder ? get().selectedFile : newNode,
-		});
-	},
+	// Extração dinâmica de extensão
+	const extension = trimmedName.split(".").pop()?.toLowerCase() || "";
 
-	updateFileContent: (id, content) => {
-		const { selectedFile } = get();
-		if (!selectedFile) return;
+	const languageMap: Record<string, string> = {
+		go: "go",
+		ts: "typescript",
+		tsx: "typescript",
+		js: "javascript",
+		jsx: "javascript",
+		py: "python",
+		json: "json",
+		md: "markdown",
+		css: "css",
+		html: "html",
+	};
 
-		set((state) => ({
-			files: state.files.map((f) => (f.id === id ? { ...f, content } : f)),
-		}));
-	},
+	const newNode: FileNode = {
+		id: Date.now().toString(),
+		name,
+		isFolder: addingType.type === "folder",
+		language: addingType.type === "folder" ? "" : languageMap[extension] || "plaintext",
+		parentId: addingType.parentId,
+		content: addingType.type === "folder" ? "" : "// O codigo vai aqui\n",
+	};
 
-	deleteNode: (id) =>
-		set((state) => {
-			// Função auxiliar para encontrar todos os IDs descendentes
-			const getAllDescendantIds = (parentId: string, allFiles: FileNode[]): string[] => {
-				const children = allFiles.filter((f) => f.parentId === parentId);
-				const childIds = children.map((c) => c.id);
+	// Atualiza múltiplos valores do estado
+	$cemetery.set({
+		...$cemetery.get(),
+		files: [...files, newNode],
+		addingType: null,
+		selectedFile: newNode.isFolder ? selectedFile : newNode,
+	});
+};
 
-				// Recursão para pegar os netos, bisnetos, etc.
-				const descendantIds = childIds.flatMap((childId) => getAllDescendantIds(childId, allFiles));
+export const updateFileContent = (id: string, content: string) => {
+	const { files, selectedFile } = $cemetery.get();
 
-				return [...childIds, ...descendantIds];
-			};
+	// Safety check simples
+	if (!selectedFile) return;
 
-			const idsToDelete = [id, ...getAllDescendantIds(id, state.files)];
+	$cemetery.setKey(
+		"files",
+		files.map((f) => (f.id === id ? { ...f, content } : f)),
+	);
+};
 
-			return {
-				files: state.files.filter((f) => !idsToDelete.includes(f.id)),
-				// Se o arquivo selecionado estiver na lista de exclusão, desselecione
-				selectedFile: state.selectedFile && idsToDelete.includes(state.selectedFile.id) ? null : state.selectedFile,
-			};
-		}),
-}));
+export const deleteNode = (id: string) => {
+	const currentState = $cemetery.get();
+	const { files, selectedFile } = currentState;
+
+	// Função auxiliar para encontrar descendentes
+	const getAllDescendantIds = (parentId: string, allFiles: FileNode[]): string[] => {
+		const children = allFiles.filter((f) => f.parentId === parentId);
+		const childIds = children.map((c) => c.id);
+		const descendantIds = childIds.flatMap((childId) => getAllDescendantIds(childId, allFiles));
+		return [...childIds, ...descendantIds];
+	};
+
+	const idsToDelete = [id, ...getAllDescendantIds(id, files)];
+
+	// Filtra os arquivos
+	const newFiles = files.filter((f) => !idsToDelete.includes(f.id));
+
+	// Verifica se o arquivo selecionado foi deletado
+	const newSelectedFile = selectedFile && idsToDelete.includes(selectedFile.id) ? null : selectedFile;
+
+	$cemetery.set({
+		...currentState,
+		files: newFiles,
+		selectedFile: newSelectedFile,
+	});
+};

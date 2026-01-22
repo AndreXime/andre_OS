@@ -7,8 +7,6 @@ import preact from "@astrojs/preact";
 
 import vercel from "@astrojs/vercel";
 
-import react from "@astrojs/react";
-
 // https://astro.build/config
 export default defineConfig({
 	site: "https://andreximenes.xyz",
@@ -19,15 +17,16 @@ export default defineConfig({
 
 	vite: {
 		plugins: [tailwindcss()],
+		resolve: {
+			alias: {
+				react: "preact/compat",
+				"react-dom/test-utils": "preact/test-utils",
+				"react-dom": "preact/compat",
+				"react/jsx-runtime": "preact/jsx-runtime",
+			},
+		},
 	},
 
-	integrations: [
-		react({
-			include: ["**/src/tools/**"],
-		}),
-		preact({
-			exclude: ["**/src/tools/**"],
-		}),
-	],
+	integrations: [preact()],
 	adapter: vercel(),
 });

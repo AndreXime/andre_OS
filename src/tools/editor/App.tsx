@@ -1,13 +1,14 @@
-import { Ghost } from "lucide-react";
+import { Ghost } from "lucide-preact";
 import Editor from "@monaco-editor/react";
 import FileTreeItem from "./FileTree";
 import ContextMenu from "./ContentMenu";
-import { useCemeteryStore } from "./store";
+import { useStore } from "@nanostores/preact";
+import { $cemetery, createNode, setAddingType, setMenu, updateFileContent } from "./store";
 
 export default function WebEditor() {
-	const { setMenu, files, selectedFile, addingType, updateFileContent, createNode, setAddingType } = useCemeteryStore();
+	const { files, selectedFile, addingType } = useStore($cemetery);
 
-	const handleContextMenu = (e: React.MouseEvent, parentId: string | null = null) => {
+	const handleContextMenu = (e: MouseEvent, parentId: string | null = null) => {
 		e.preventDefault();
 		setMenu({ x: e.clientX, y: e.clientY, parentId });
 	};
@@ -56,7 +57,7 @@ export default function WebEditor() {
 						key={selectedFile.id}
 						language={selectedFile.language}
 						defaultValue={selectedFile.content}
-						onChange={(val) => updateFileContent(selectedFile.id, val || "")}
+						onChange={(val: string) => updateFileContent(selectedFile.id, val || "")}
 						options={{ minimap: { enabled: false }, fontSize: 14, automaticLayout: true }}
 					/>
 				) : (
