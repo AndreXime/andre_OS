@@ -7,6 +7,7 @@ import Sidebar from "@/components/Sidebar.astro";
 import Script from "@/components/Script.astro";
 import getPostBySlug from "@/lib/getPostBySlug";
 import { parseMarkdown } from "@/lib/utils";
+import { ChevronLeft } from "lucide-preact";
 
 const { slug } = Astro.params;
 
@@ -40,7 +41,29 @@ post.content = await parseMarkdown(post.content || "");
             />
 
             <main class={`flex lg:col-span-10`}>
-                <DetailView post={post} />
+                <div class="flex flex-col w-full">
+                    <div class="mb-6 flex items-center gap-4 flex-shrink-0">
+                        <a
+                            href="/"
+                            class="flex items-center gap-2 px-3 py-1.5 rounded-md bg-zinc-900 border border-zinc-800 hover:border-zinc-600 hover:bg-zinc-800 text-sm transition-colors text-zinc-400 hover:text-white group"
+                        >
+                            <ChevronLeft
+                                size={16}
+                                class="group-hover:-translate-x-0.5 transition-transform"
+                            />
+                            Home
+                        </a>
+                        <div class="h-4 w-px bg-zinc-800"></div>
+                        <div
+                            class="flex items-center gap-2 text-xs font-mono text-zinc-500"
+                        >
+                            <span>
+                                ~/{post.type}s/{post.slug}
+                            </span>
+                        </div>
+                    </div>
+                    <DetailView post={post} />
+                </div>
             </main>
         </div>
 

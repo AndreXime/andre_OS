@@ -1,4 +1,4 @@
-import { ChevronLeft, ExternalLink, Terminal, Zap } from "lucide-preact";
+import { ExternalLink, Terminal } from "lucide-preact";
 import Badge from "./Bagde";
 import type { Post } from "@/database/types";
 import { formatDate, getDomain, getThemeClasses } from "@/lib/utils";
@@ -7,71 +7,49 @@ export default function DetailPostView({ post }: { post: Post }) {
 	const { bgClass, borderClass, badgeClass } = getThemeClasses(post.type);
 
 	return (
-		<div class="flex flex-col w-full">
-			<div class="mb-6 flex items-center gap-4 flex-shrink-0">
-				<a
-					href={"/"}
-					class="flex items-center gap-2 px-3 py-1.5 rounded-md bg-zinc-900 border border-zinc-800 hover:border-zinc-600 hover:bg-zinc-800 text-sm transition-colors text-zinc-400 hover:text-white group"
-				>
-					<ChevronLeft size={16} class="group-hover:-translate-x-0.5 transition-transform" />
-					Home
-				</a>
-				<div class="h-4 w-px bg-zinc-800"></div>
-				<div class="flex items-center gap-2 text-xs font-mono text-zinc-500">
-					<span class="uppercase">
-						~/ {post.type}s / {post.slug}
-					</span>
+		<div
+			class={`min-h-[200px] rounded-lg border ${borderClass} bg-zinc-900/50 backdrop-blur-sm overflow-hidden flex flex-col`}
+		>
+			<div class={`p-6 md:p-8 border-b ${borderClass} ${bgClass} flex-shrink-0`}>
+				<div class="flex gap-2 mb-4">
+					{post.tags?.map((tag: string) => (
+						<Badge text={`#${tag}`} colorClass={badgeClass} />
+					))}
+				</div>
+				<div class="flex items-end justify-between gap-4 mb-4">
+					<h1 class="text-3xl md:text-4xl font-bold text-zinc-100 ">{post.title}</h1>
+					{post.type === "tool" && (
+						<a
+							href={`/app/${post.slug}`}
+							class="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-2 rounded-md font-medium transition-colors flex items-center justi gap-2"
+						>
+							<Terminal size={16} /> Ver ferramenta
+						</a>
+					)}
+				</div>
+				<div class="flex items-center justify-between gap-4 text-sm text-zinc-400 font-mono">
+					{post.url && (
+						<a
+							href={post.url}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="flex items-center gap-1.5 text-violet-400 hover:text-violet-300 transition-colors"
+						>
+							<ExternalLink size={14} /> {getDomain(post.url)}
+						</a>
+					)}
+					{post.date && <span>{formatDate(post.date)}</span>}
 				</div>
 			</div>
 
-			<div
-				class={`min-h-[200px] rounded-lg border ${borderClass} bg-zinc-900/50 backdrop-blur-sm overflow-hidden flex flex-col`}
-			>
-				<div class={`p-6 md:p-8 border-b ${borderClass} ${bgClass} flex-shrink-0`}>
-					<div class="flex gap-2 mb-4">
-						{post.tags?.map((tag: string) => (
-							<Badge text={`#${tag}`} colorClass={badgeClass} />
-						))}
-					</div>
-					<h1 class="text-3xl md:text-4xl font-bold text-zinc-100 mb-4">{post.title}</h1>
-					<div class="flex items-center justify-between gap-4 text-sm text-zinc-400 font-mono">
-						{post.url && (
-							<a
-								href={post.url}
-								target="_blank"
-								rel="noopener noreferrer"
-								class="flex items-center gap-1.5 text-violet-400 hover:text-violet-300 transition-colors"
-							>
-								<ExternalLink size={14} /> {getDomain(post.url)}
-							</a>
-						)}
-						{post.date && <span>{formatDate(post.date)}</span>}
-					</div>
-				</div>
-
-				<div class="p-6 md:p-8 overflow-y-auto flex-1 prose prose-invert prose-zinc prose-pre:text-base max-w-none">
-					{post.type === "tool" && (
-						<div class="mb-8 p-6 bg-black/40 rounded-lg border border-zinc-800 border-dashed flex flex-col items-center justify-center text-center py-12">
-							<div class="w-16 h-16 bg-emerald-500/10 rounded-full flex items-center justify-center mb-4 text-emerald-500">
-								<Zap size={32} />
-							</div>
-							<h3 class="text-lg font-medium text-zinc-300 mb-2">Interface da Ferramenta</h3>
-							<p class="text-sm text-zinc-500 max-w-sm mb-6">
-								Esta ferramenta interativa rodaria aqui, carregando o módulo WASM.
-							</p>
-							<button class="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-2 rounded-md font-medium text-sm transition-colors flex items-center gap-2">
-								<Terminal size={16} /> Iniciar Processo
-							</button>
-						</div>
-					)}
-					<p class="text-zinc-300 leading-relaxed mb-6">{post.description}</p>
-					{post.content && (
-						<div
-							class="text-zinc-400 leading-relaxed whitespace-pre-wrap content-container"
-							dangerouslySetInnerHTML={{ __html: post.content }}
-						/>
-					)}
-				</div>
+			<div class="p-6 md:p-8 overflow-y-auto flex-1 prose prose-invert prose-zinc prose-pre:text-base max-w-none">
+				<p class="text-zinc-200 leading-relaxed">{post.description}</p>
+				{post.content && (
+					<div
+						class="text-zinc-200 leading-relaxed content-container"
+						dangerouslySetInnerHTML={{ __html: post.content }}
+					/>
+				)}
 			</div>
 		</div>
 	);
