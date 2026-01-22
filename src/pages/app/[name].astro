@@ -1,16 +1,20 @@
 ---
 import Layout from "../../layout/Layout.astro";
-import Header from "@/components/layout/Header.astro";
-import { getPostBySlug } from "@/database/post/queries";
-import { ChevronLeft, Github } from "lucide-preact";
-import { loadTool } from "@/tools";
+import { ChevronLeft } from "lucide-preact";
+import { ToolLoader, toolRegistry } from "@/tools";
 
-const { slug } = Astro.params;
+export function getStaticPaths() {
+    const paths = toolRegistry.map((tool) => ({
+        params: { name: tool },
+    }));
 
-const post = await getPostBySlug(slug || "");
-const Tool = await loadTool(post?.tool_name || "");
+    return paths;
+}
 
-if (!Tool || !post) {
+const { name } = Astro.params;
+
+const toolExists = toolRegistry.some((tool) => tool === name);
+if (!toolExists) {
     return Astro.redirect("/");
 }
 
@@ -20,7 +24,7 @@ Astro.response.headers.set(
 );
 ---
 
-<Layout title={post.title + " | andre_OS"}>
+<Layout title={name + " | andre_OS"}>
     <div class="min-h-screen overflow-hidden" id="app-root">
         <header
             class="w-full bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800 h-14 flex items-center px-4 md:px-6 justify-between"
@@ -39,7 +43,7 @@ Astro.response.headers.set(
             <div
                 class="flex items-center text-xs sm:text-sm font-mono text-zinc-100 font-semibold tracking-tight"
             >
-                {post.tool_name}
+                {name}
             </div>
             <a
                 href="/"
@@ -50,7 +54,7 @@ Astro.response.headers.set(
         </header>
 
         <main class="flex-1 overflow-auto">
-            <Tool />
+            <ToolLoader name={name} client:load />
         </main>
     </div>
 </Layout>

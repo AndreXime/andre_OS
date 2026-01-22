@@ -183,7 +183,7 @@ export default function AdminEditor() {
 											Selecione uma opção...
 										</option>
 
-										{Object.keys(toolRegistry).map((option) => (
+										{toolRegistry.map((option) => (
 											<option key={option} value={option}>
 												{option}
 											</option>

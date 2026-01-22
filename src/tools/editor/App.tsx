@@ -10,6 +10,7 @@ export default function WebEditor() {
 
 	const handleContextMenu = (e: MouseEvent, parentId: string | null = null) => {
 		e.preventDefault();
+		e.stopPropagation();
 		setMenu({ x: e.clientX, y: e.clientY, parentId });
 	};
 
