@@ -1,15 +1,14 @@
 ---
 import Layout from "../layout/Layout.astro";
-import Header from "../components/Header.astro";
-import Footer from "../components/Footer.astro";
-import Sidebar from "../components/Sidebar.astro";
-import Script from "@/components/Script.astro";
+import Header from "../components/layout/Header.astro";
+import Footer from "../components/layout/Footer.astro";
+import Sidebar from "../components/layout/Sidebar.astro";
 import {
 	getFilteredPosts,
 	getLastPostDate,
 	getPostsTags,
-} from "@/lib/post.queries";
-import { CardIntro, CardLink, CardNote, CardTool } from "@/components/Cards";
+} from "@/database/post/queries";
+import PreviewCard from "@/components/ui/PreviewCards";
 
 const { searchParams } = Astro.url;
 const filterParam = searchParams.get("category") || "all";
@@ -45,23 +44,11 @@ Astro.response.headers.set(
 					{
 						posts && posts.length > 0 ? (
 							posts.map((item) => (
-								// O Link envolve o card inteiro. Ao clicar, a URL muda para ?id=X
 								<a
 									href={`/post/${item.slug}`}
 									class={`block group h-full relative ${item.featured ? "md:col-span-2" : "col-span-1"} outline-none focus-visible:ring-2 ring-emerald-500/50 rounded-md`}
 								>
-									{item.type === "intro" && (
-										<CardIntro post={item} />
-									)}
-									{item.type === "note" && (
-										<CardNote post={item} />
-									)}
-									{item.type === "tool" && (
-										<CardTool post={item} />
-									)}
-									{item.type === "link" && (
-										<CardLink post={item} />
-									)}
+									<PreviewCard post={item} />
 								</a>
 							))
 						) : (
@@ -97,5 +84,3 @@ Astro.response.headers.set(
 		<Footer lastDate={lastDate} />
 	</div>
 </Layout>
-
-<Script />

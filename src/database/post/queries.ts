@@ -1,5 +1,21 @@
 import database from "@/database/database";
-import { castRowToPost } from "./utils";
+import type { Post } from "../types";
+import type { Row } from "@libsql/client";
+
+function castRowToPost(row: Row): Post {
+	return {
+		id: Number(row.id),
+		slug: String(row.slug),
+		type: row.type as Post["type"],
+		title: String(row.title),
+		description: String(row.description),
+		tags: JSON.parse(String(row.tags)) as string[],
+		featured: Boolean(row.featured),
+		date: new Date(String(row.date)),
+		content: row.content ? String(row.content) : undefined,
+		url: row.url ? String(row.url) : undefined,
+	};
+}
 
 export async function getFilteredPosts(categoryFilter: string, searchFilter: string) {
 	try {

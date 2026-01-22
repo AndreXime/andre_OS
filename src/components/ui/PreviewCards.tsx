@@ -3,7 +3,20 @@ import { Code2, Cpu, FileText, Terminal, Zap } from "lucide-preact";
 import type { Post } from "@/database/types";
 import Badge from "./Bagde";
 
-export function CardIntro({ post }: { post: Post }) {
+export default function PreviewCard({ post }: { post: Post }) {
+	switch (post.type) {
+		case "intro":
+			return <CardIntro post={post} />;
+		case "tool":
+			return <CardTool post={post} />;
+		case "link":
+			return <CardLink post={post} />;
+		default:
+			return <CardNote post={post} />;
+	}
+}
+
+function CardIntro({ post }: { post: Post }) {
 	return (
 		<div class="h-full p-6 bg-zinc-900 border border-zinc-700 flex flex-col justify-center rounded-md relative overflow-hidden">
 			<div class="absolute top-0 right-0 p-4 opacity-5 text-zinc-100">
@@ -19,7 +32,7 @@ export function CardIntro({ post }: { post: Post }) {
 	);
 }
 
-export function CardLink({ post }: { post: Post }) {
+function CardLink({ post }: { post: Post }) {
 	const { badgeClass } = getThemeClasses(post.type);
 
 	return (
@@ -46,7 +59,7 @@ export function CardLink({ post }: { post: Post }) {
 	);
 }
 
-export function CardNote({ post }: { post: Post }) {
+function CardNote({ post }: { post: Post }) {
 	const { badgeClass } = getThemeClasses(post.type);
 
 	return (
@@ -73,7 +86,7 @@ export function CardNote({ post }: { post: Post }) {
 	);
 }
 
-export function CardTool({ post }: { post: Post }) {
+function CardTool({ post }: { post: Post }) {
 	const { badgeClass } = getThemeClasses(post.type);
 
 	return (

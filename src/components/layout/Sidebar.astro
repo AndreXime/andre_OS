@@ -69,3 +69,28 @@ const { tagCounts, currentFilter, currentSearch } = Astro.props;
         }
     </div>
 </aside>
+<script is:inline>
+    const toggleSidebarBtn = document.getElementById("toggle-sidebar");
+    const sidebar = document.getElementById("sidebar");
+    const mainContent = document.querySelector("main");
+
+    toggleSidebarBtn?.addEventListener("click", () => {
+        const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
+
+        if (isDesktop) {
+            sidebar?.classList.toggle("lg:block");
+            if (mainContent) {
+                if (mainContent.classList.contains("lg:col-span-10")) {
+                    mainContent.classList.remove("lg:col-span-10");
+                    mainContent.classList.add("lg:col-span-12");
+                } else {
+                    mainContent.classList.remove("lg:col-span-12");
+                    mainContent.classList.add("lg:col-span-10");
+                }
+            }
+        } else {
+            sidebar?.classList.toggle("hidden");
+            mainContent.classList.toggle("hidden");
+        }
+    });
+</script>

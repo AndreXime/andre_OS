@@ -2,6 +2,24 @@ import { ExternalLink, Terminal } from "lucide-preact";
 import Badge from "./Bagde";
 import type { Post } from "@/database/types";
 import { formatDate, getDomain, getThemeClasses } from "@/lib/utils";
+import { marked, type Tokens } from "marked";
+
+function parseMarkdown(content: string) {
+	const renderer = {
+		link({ href, title, text }: Tokens.Link): string {
+			return `<a href="${href}" title="${title ?? ""}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+		},
+
+		code({ text, lang }: Tokens.Code): string {
+			const languageClass = lang ? `language-${lang}` : "language-text";
+			return `<pre><code class="${languageClass}">${text}</code></pre>`;
+		},
+	};
+
+	marked.use({ renderer });
+
+	return marked.parse(content, { async: false });
+}
 
 export default function DetailPostView({ post }: { post: Post }) {
 	const { bgClass, borderClass, badgeClass } = getThemeClasses(post.type);
@@ -47,7 +65,7 @@ export default function DetailPostView({ post }: { post: Post }) {
 				{post.content && (
 					<div
 						class="text-zinc-200 leading-relaxed content-container"
-						dangerouslySetInnerHTML={{ __html: post.content }}
+						dangerouslySetInnerHTML={{ __html: parseMarkdown(post.content) }}
 					/>
 				)}
 			</div>

@@ -1,7 +1,3 @@
-import type { Row } from "@libsql/client";
-import type { Post } from "@/database/types";
-import { marked, type Tokens } from "marked";
-
 export const formatDate = (date: Date) =>
 	new Intl.DateTimeFormat("pt-BR", {
 		day: "2-digit",
@@ -40,35 +36,3 @@ export const getThemeClasses = (toolType: string) => {
 			};
 	}
 };
-
-export function parseMarkdown(content: string) {
-	const renderer = {
-		link({ href, title, text }: Tokens.Link): string {
-			return `<a href="${href}" title="${title ?? ""}" target="_blank" rel="noopener noreferrer">${text}</a>`;
-		},
-
-		code({ text, lang }: Tokens.Code): string {
-			const languageClass = lang ? `language-${lang}` : "language-text";
-			return `<pre><code class="${languageClass}">${text}</code></pre>`;
-		},
-	};
-
-	marked.use({ renderer });
-
-	return marked.parse(content);
-}
-
-export function castRowToPost(row: Row): Post {
-	return {
-		id: Number(row.id),
-		slug: String(row.slug),
-		type: row.type as Post["type"],
-		title: String(row.title),
-		description: String(row.description),
-		tags: JSON.parse(String(row.tags)) as string[],
-		featured: Boolean(row.featured),
-		date: new Date(String(row.date)),
-		content: row.content ? String(row.content) : undefined,
-		url: row.url ? String(row.url) : undefined,
-	};
-}

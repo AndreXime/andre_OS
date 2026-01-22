@@ -15,8 +15,8 @@ import {
 	$preview,
 } from "./store";
 import { useState } from "preact/hooks";
-import { CardIntro, CardLink, CardNote, CardTool } from "../Cards";
-import DetailPostView from "../DetailView";
+import PreviewCard from "../ui/PreviewCards";
+import DetailPostView from "../ui/DetailCard";
 
 export default function AdminEditor() {
 	const { editingId, currentType, showSuccess } = useStore($formState);
@@ -84,10 +84,7 @@ export default function AdminEditor() {
 				<div className="bg-zinc-900/30 border border-zinc-800 p-8 rounded-lg min-h-[400px] flex flex-col items-center justify-center gap-4 animate-in fade-in zoom-in-95 duration-200">
 					<p className="text-zinc-500 font-mono text-xs uppercase tracking-widest mb-4">Pré-visualização</p>
 					<div className="w-full max-w-2xl mx-auto transform scale-100 origin-top">
-						{previewItem.type === "intro" && <CardIntro post={previewItem} />}
-						{previewItem.type === "note" && <CardNote post={previewItem} />}
-						{previewItem.type === "tool" && <CardTool post={previewItem} />}
-						{previewItem.type === "link" && <CardLink post={previewItem} />}
+						<PreviewCard post={previewItem} />
 					</div>
 					<div className="w-full">
 						<DetailPostView post={previewItem} />

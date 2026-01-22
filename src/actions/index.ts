@@ -1,7 +1,7 @@
 import { defineAction } from "astro:actions";
 import { z } from "astro:schema";
 import type { Post } from "@/database/types";
-import { createPost, deletePost, updatePost } from "@/lib/post.mutations";
+import { createPost, deletePost, updatePost } from "@/database/post/mutations";
 
 const PostSchema = z.object({
 	// O ID é opcional na entrada, pois na criação ele não existe

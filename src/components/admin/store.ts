@@ -24,7 +24,6 @@ export const $draft = map({
 	featured: false,
 });
 
-// Estado derivado (Computed): Encontra o item atual baseado no ID
 export const $editingItem = computed([$items, $formState], (items, form) => {
 	return form.editingId ? items.find((i) => i.id === form.editingId) : undefined;
 });

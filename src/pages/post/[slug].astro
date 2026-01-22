@@ -1,16 +1,14 @@
 ---
 import Layout from "../../layout/Layout.astro";
-import DetailView from "../../components/DetailView";
-import Footer from "@/components/Footer.astro";
-import Header from "@/components/Header.astro";
-import Sidebar from "@/components/Sidebar.astro";
-import Script from "@/components/Script.astro";
+import DetailView from "../../components/ui/DetailCard";
+import Footer from "@/components/layout/Footer.astro";
+import Header from "@/components/layout/Header.astro";
+import Sidebar from "@/components/layout/Sidebar.astro";
 import {
     getPostBySlug,
     getPostsTags,
     getLastPostDate,
-} from "@/lib/post.queries";
-import { parseMarkdown } from "@/lib/utils";
+} from "@/database/post/queries";
 import { ChevronLeft } from "lucide-preact";
 
 const { slug } = Astro.params;
@@ -28,8 +26,6 @@ Astro.response.headers.set(
     "Cache-Control",
     "public, max-age=60, s-maxage=600, stale-while-revalidate=30",
 );
-
-post.content = await parseMarkdown(post.content || "");
 ---
 
 <Layout title={post.title + " | andre_OS"}>
@@ -71,5 +67,3 @@ post.content = await parseMarkdown(post.content || "");
         <Footer lastDate={lastDate} />
     </div>
 </Layout>
-
-<Script />
