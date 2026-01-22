@@ -1,49 +1,68 @@
 import { useStore } from "@nanostores/preact";
-import { Terminal, Plus, CheckCircle2, Hash, Save } from "lucide-preact";
+import { Terminal, Plus, CheckCircle2, Hash, Save, Eye, Edit2 } from "lucide-preact";
 
-import { $editingItem, $formState, saveItem, triggerSuccess, cancelEditing, setCurrentType } from "./store";
+import {
+	$editingItem,
+	$formState,
+	saveItem,
+	triggerSuccess,
+	cancelEditing,
+	setCurrentType,
+	$items,
+	$draft,
+	resetDraft,
+	updateDraft,
+} from "./store";
 import type { Post } from "@/database/types";
+import { useState } from "preact/hooks";
+import { CardIntro, CardLink, CardNote, CardTool } from "../Cards";
+import DetailPostView from "../DetailView";
 
 export default function AdminEditor() {
 	const { editingId, currentType, showSuccess } = useStore($formState);
 	const editingItem = useStore($editingItem);
+	const items = useStore($items);
+	const draft = useStore($draft);
+	const hasIntro = items.some((i) => i.type === "intro");
+	const [isPreview, setIsPreview] = useState(false);
 
-	const handleSubmit = (e: SubmitEvent) => {
+	const previewItem: Post = {
+		id: editingId ? Number(editingId) : 0,
+		type: currentType as Post["type"],
+		title: draft.title || "Título do Post",
+		description: draft.description || "Descrição...",
+		slug:
+			editingItem?.slug ||
+			draft.title
+				.normalize("NFD")
+				.replace(/[\u0300-\u036f]/g, "")
+				.toLowerCase()
+				.trim()
+				.replace(/[^a-z0-9 -]/g, "")
+				.replace(/\s+/g, "-")
+				.replace(/-+/g, "-"),
+		tags: draft.tags
+			.split(",")
+			.map((t) => t.trim())
+			.filter(Boolean),
+		date: editingItem ? editingItem.date : new Date(),
+		featured: editingItem?.featured || false,
+		content: draft.content,
+		url: currentType === "link" ? draft.url : undefined,
+		status: currentType === "tool" ? draft.status : undefined,
+	};
+
+	const handleSubmit = async (e: SubmitEvent) => {
 		e.preventDefault();
 
-		const form = e.currentTarget as HTMLFormElement;
-		const formData = new FormData(form);
-		const rawData = Object.fromEntries(formData) as Record<string, string>;
+		await saveItem(previewItem);
 
-		const tagsArray = rawData.tags
-			? rawData.tags
-					.split(",")
-					.map((t) => t.trim())
-					.filter(Boolean)
-			: [];
-
-		const newItem: Post = {
-			id: editingId ? Number(editingId) : Date.now(),
-			type: currentType as Post["type"],
-			title: rawData.title,
-			description: rawData.description,
-			slug: editingItem?.slug || rawData.title.toLowerCase().replace(/\s+/g, "-"),
-			tags: tagsArray,
-			date: editingItem ? editingItem.date : new Date(),
-			featured: editingItem?.featured || false,
-			content: rawData.content || undefined,
-			url: currentType === "link" ? rawData.url : undefined,
-			status: currentType === "tool" ? rawData.status : undefined,
-		};
-
-		// Salva na store
-		saveItem(newItem);
 		triggerSuccess();
 
-		// Limpeza de UI
 		if (!editingId) {
-			form.reset();
+			resetDraft();
 			setCurrentType("note");
+			(e.target as HTMLFormElement).reset();
 		} else {
 			cancelEditing();
 		}
@@ -54,16 +73,27 @@ export default function AdminEditor() {
 			<div className="flex items-center justify-between mb-6">
 				<h1 className="text-2xl font-bold text-zinc-100 flex items-center gap-3">
 					<Terminal size={24} className={editingId ? "text-yellow-500" : "text-red-500"} />
-					{editingId ? `Editando Post` : "Novo Post"}
+					{editingId ? `Editando ${editingItem?.title}` : "Novo Post"}
 				</h1>
-				{editingId && (
+				<div className="flex items-center gap-3">
 					<button
-						onClick={cancelEditing}
-						className="text-xs bg-zinc-800 px-3 py-1.5 rounded text-zinc-400 hover:text-white flex items-center gap-1 border border-zinc-700"
+						type="button"
+						onClick={() => setIsPreview(!isPreview)}
+						className="flex items-center gap-2 text-xs font-mono uppercase text-zinc-400 hover:text-white transition-colors bg-zinc-800/50 px-3 py-1.5 rounded border border-zinc-700/50"
 					>
-						<Plus size={12} className="rotate-45" /> Cancelar Edição
+						{isPreview ? <Edit2 size={14} /> : <Eye size={14} />}
+						{isPreview ? "Editar" : "Visualizar Card"}
 					</button>
-				)}
+
+					{editingId && (
+						<button
+							onClick={cancelEditing}
+							className="text-xs bg-zinc-800 px-3 py-1.5 rounded text-zinc-400 hover:text-white flex items-center gap-1 border border-zinc-700"
+						>
+							<Plus size={12} className="rotate-45" /> Cancelar
+						</button>
+					)}
+				</div>
 			</div>
 
 			{showSuccess && (
@@ -75,147 +105,165 @@ export default function AdminEditor() {
 				</div>
 			)}
 
-			{/* TRUQUE IMPORTANTE: key={editingId ?? 'new'} 
-								Isso força o React/Preact a "remontar" o form quando mudamos de item.
-								Sem isso, os defaultValue não seriam atualizados ao clicar em "Editar".
-							*/}
-			<form
-				key={editingId ?? "new"}
-				onSubmit={handleSubmit}
-				className="bg-zinc-900/30 border border-zinc-800 p-8 rounded-lg space-y-8 relative"
-			>
-				{/* Input Hidden para garantir que o type vá no FormData */}
-				<input type="hidden" name="type" value={currentType} />
-
-				{/* SELEÇÃO DE TIPO */}
-				<fieldset className="space-y-3 border-none p-0 m-0">
-					<legend className="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-3 px-0 w-full">
-						Tipo de Conteúdo
-					</legend>
-					<div className="grid grid-cols-4 gap-4">
-						{" "}
-						{/* Mudei para 4 colunas para caber o 'intro' */}
-						{["note", "link", "tool", "intro"].map((t) => (
-							<button
-								key={t}
-								type="button"
-								onClick={() => setCurrentType(t)}
-								className={`py-3 text-sm font-mono uppercase rounded-md border transition-all ${
-									currentType === t
-										? "bg-zinc-800 border-red-500 text-white shadow-[0_0_15px_-5px_rgba(239,68,68,0.3)]"
-										: "bg-zinc-950 border-zinc-800 text-zinc-500 hover:border-zinc-700"
-								}`}
-							>
-								{t}
-							</button>
-						))}
+			{isPreview ? (
+				<div className="bg-zinc-900/30 border border-zinc-800 p-8 rounded-lg min-h-[400px] flex flex-col items-center justify-center gap-4 animate-in fade-in zoom-in-95 duration-200">
+					<p className="text-zinc-500 font-mono text-xs uppercase tracking-widest mb-4">Pré-visualização</p>
+					<div className="w-full max-w-2xl mx-auto transform scale-100 origin-top">
+						{previewItem.type === "intro" && <CardIntro post={previewItem} />}
+						{previewItem.type === "note" && <CardNote post={previewItem} />}
+						{previewItem.type === "tool" && <CardTool post={previewItem} />}
+						{previewItem.type === "link" && <CardLink post={previewItem} />}
 					</div>
-				</fieldset>
+					<div className="w-full">
+						<DetailPostView post={previewItem} />
+					</div>
+				</div>
+			) : (
+				<form
+					key={editingId ?? "new"}
+					onSubmit={handleSubmit}
+					className="bg-zinc-900/30 border border-zinc-800 p-8 rounded-lg space-y-8 relative animate-in fade-in"
+				>
+					<input type="hidden" name="type" value={currentType} />
 
-				{/* CAMPOS PRINCIPAIS */}
-				<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+					<fieldset className="space-y-3 border-none p-0 m-0">
+						<legend className="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-3 px-0 w-full">
+							Tipo de Conteúdo {editingId && "(Fixo durante edição)"}
+						</legend>
+						<div className="grid grid-cols-4 gap-4">
+							{["note", "link", "tool", "intro"].map((t) => {
+								const isIntroBlocked = t === "intro" && hasIntro && !editingId;
+								const isDisabled = !!editingId || isIntroBlocked;
+								return (
+									<button
+										key={t}
+										type="button"
+										disabled={isDisabled}
+										onClick={() => setCurrentType(t)}
+										className={`py-3 text-sm font-mono uppercase rounded-md border transition-all ${
+											isDisabled ? "opacity-50 cursor-not-allowed bg-zinc-950/50" : "cursor-pointer"
+										} ${
+											currentType === t
+												? "bg-zinc-800 border-red-500 text-white shadow-[0_0_15px_-5px_rgba(239,68,68,0.3)]"
+												: !isDisabled
+													? "bg-zinc-950 border-zinc-800 text-zinc-500 hover:border-zinc-700"
+													: "border-zinc-900"
+										}`}
+									>
+										{t}
+									</button>
+								);
+							})}
+						</div>
+					</fieldset>
+
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
+						<div className="space-y-2">
+							<label htmlFor="title" className="text-xs font-mono text-zinc-500">
+								Título
+							</label>
+							<input
+								id="title"
+								name="title"
+								required
+								type="text"
+								value={draft.title}
+								onInput={(e) => {
+									updateDraft("title", e.currentTarget.value);
+								}}
+								className="w-full bg-zinc-950 border border-zinc-800 p-2.5 rounded text-zinc-200 text-sm focus:border-red-500/50 outline-none transition-all"
+							/>
+						</div>
+
+						{currentType === "link" && (
+							<div className="space-y-2 animate-in fade-in">
+								<label htmlFor="url" className="text-xs font-mono text-zinc-500">
+									URL recomendada
+								</label>
+								<input
+									id="url"
+									name="url"
+									required
+									type="url"
+									value={draft.url}
+									onInput={(e) => updateDraft("url", e.currentTarget.value)}
+									className="w-full bg-zinc-950 border border-zinc-800 p-2.5 rounded text-zinc-200 text-sm focus:border-violet-500/50 outline-none transition-all"
+								/>
+							</div>
+						)}
+
+						{currentType === "tool" && (
+							<div className="space-y-2 animate-in fade-in">
+								<label htmlFor="status" className="text-xs font-mono text-zinc-500">
+									Versão
+								</label>
+								<input
+									id="status"
+									name="status"
+									type="text"
+									value={draft.status}
+									onInput={(e) => updateDraft("status", e.currentTarget.value)}
+									className="w-full bg-zinc-950 border border-zinc-800 p-2.5 rounded text-zinc-200 text-sm focus:border-emerald-500/50 outline-none transition-all"
+								/>
+							</div>
+						)}
+					</div>
+
 					<div className="space-y-2">
-						<label htmlFor="title" className="text-xs font-mono text-zinc-500">
-							Título
+						<label htmlFor="description" className="text-xs font-mono text-zinc-500">
+							Descrição Curta
+						</label>
+						<textarea
+							id="description"
+							name="description"
+							required
+							rows={2}
+							value={draft.description}
+							onInput={(e) => updateDraft("description", e.currentTarget.value)}
+							className="w-full bg-zinc-950 border border-zinc-800 p-2.5 rounded text-zinc-200 text-sm focus:border-red-500/50 outline-none resize-none transition-all"
+						/>
+					</div>
+
+					{currentType !== "intro" && (
+						<div className="space-y-2 animate-in fade-in">
+							<label htmlFor="content" className="text-xs font-mono text-zinc-500">
+								Conteúdo Markdown
+							</label>
+							<textarea
+								id="content"
+								name="content"
+								rows={8}
+								value={draft.content}
+								onInput={(e) => updateDraft("content", e.currentTarget.value)}
+								className="w-full bg-zinc-950 border border-zinc-800 p-3 rounded text-zinc-200 text-sm focus:border-red-500/50 outline-none font-mono transition-all"
+							/>
+						</div>
+					)}
+
+					<div className="space-y-2">
+						<label htmlFor="tags" className="text-xs font-mono text-zinc-500 flex items-center gap-2">
+							<Hash size={12} /> Tags (separadas por vírgula)
 						</label>
 						<input
-							id="title"
-							name="title"
-							required
+							id="tags"
+							name="tags"
 							type="text"
-							defaultValue={editingItem?.title}
+							value={draft.tags}
+							onInput={(e) => updateDraft("tags", e.currentTarget.value)}
 							className="w-full bg-zinc-950 border border-zinc-800 p-2.5 rounded text-zinc-200 text-sm focus:border-red-500/50 outline-none transition-all"
 						/>
 					</div>
 
-					{/* CAMPO URL (Apenas para Links) */}
-					{currentType === "link" && (
-						<div className="space-y-2 animate-in fade-in">
-							<label htmlFor="url" className="text-xs font-mono text-zinc-500">
-								URL de Destino
-							</label>
-							<input
-								id="url"
-								name="url" // IMPORTANTE: name deve ser 'url' agora
-								required
-								type="url"
-								placeholder="https://exemplo.com"
-								defaultValue={editingItem?.url}
-								className="w-full bg-zinc-950 border border-zinc-800 p-2.5 rounded text-zinc-200 text-sm focus:border-violet-500/50 outline-none transition-all"
-							/>
-						</div>
-					)}
-
-					{/* CAMPO STATUS/VERSÃO (Apenas para Tools) */}
-					{currentType === "tool" && (
-						<div className="space-y-2 animate-in fade-in">
-							<label htmlFor="status" className="text-xs font-mono text-zinc-500">
-								Versão da Ferramenta
-							</label>
-							<input
-								id="status"
-								name="status"
-								type="text"
-								placeholder="v1.0.0"
-								defaultValue={editingItem?.status}
-								className="w-full bg-zinc-950 border border-zinc-800 p-2.5 rounded text-zinc-200 text-sm focus:border-emerald-500/50 outline-none transition-all"
-							/>
-						</div>
-					)}
-				</div>
-
-				<div className="space-y-2">
-					<label htmlFor="description" className="text-xs font-mono text-zinc-500">
-						Descrição Curta
-					</label>
-					<textarea
-						id="description"
-						name="description"
-						required
-						rows={2}
-						defaultValue={editingItem?.description}
-						className="w-full bg-zinc-950 border border-zinc-800 p-2.5 rounded text-zinc-200 text-sm focus:border-red-500/50 outline-none resize-none transition-all"
-					/>
-				</div>
-
-				{/* CONTEÚDO (Intro não tem conteúdo longo segundo seu comentário) */}
-				{currentType !== "intro" && (
-					<div className="space-y-2 animate-in fade-in">
-						<label htmlFor="content" className="text-xs font-mono text-zinc-500">
-							Conteúdo Markdown
-						</label>
-						<textarea
-							id="content"
-							name="content"
-							rows={8}
-							defaultValue={editingItem?.content}
-							className="w-full bg-zinc-950 border border-zinc-800 p-3 rounded text-zinc-200 text-sm focus:border-red-500/50 outline-none font-mono transition-all"
-						/>
+					<div className="pt-6 border-t border-zinc-800 flex justify-end items-center gap-4">
+						<button
+							type="submit"
+							className={`flex items-center gap-2 px-6 py-2.5 rounded text-sm font-bold transition-colors shadow-lg ${editingId ? "bg-yellow-600 hover:bg-yellow-500 text-white" : "bg-zinc-100 hover:bg-white text-zinc-900 shadow-white/5"}`}
+						>
+							<Save size={16} /> {editingId ? "Atualizar Post" : "Publicar"}
+						</button>
 					</div>
-				)}
-
-				<div className="space-y-2">
-					<label htmlFor="tags" className="text-xs font-mono text-zinc-500 flex items-center gap-2">
-						<Hash size={12} /> Tags (separadas por vírgula)
-					</label>
-					<input
-						id="tags"
-						name="tags"
-						type="text"
-						defaultValue={editingItem?.tags.join(", ")}
-						className="w-full bg-zinc-950 border border-zinc-800 p-2.5 rounded text-zinc-200 text-sm focus:border-red-500/50 outline-none transition-all"
-					/>
-				</div>
-
-				<div className="pt-6 border-t border-zinc-800 flex justify-end items-center gap-4">
-					<button
-						type="submit"
-						className={`flex items-center gap-2 px-6 py-2.5 rounded text-sm font-bold transition-colors shadow-lg ${editingId ? "bg-yellow-600 hover:bg-yellow-500 text-white" : "bg-zinc-100 hover:bg-white text-zinc-900 shadow-white/5"}`}
-					>
-						<Save size={16} /> {editingId ? "Atualizar Post" : "Publicar"}
-					</button>
-				</div>
-			</form>
+				</form>
+			)}
 		</section>
 	);
 }

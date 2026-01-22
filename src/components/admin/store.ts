@@ -1,5 +1,6 @@
 import { atom, map, computed } from "nanostores";
 import type { Post } from "@/database/types";
+import { actions } from "astro:actions";
 
 // --- STATE (Átomos) ---
 
@@ -14,6 +15,15 @@ export const $formState = map({
 	showSuccess: false,
 });
 
+export const $draft = map({
+	title: "",
+	description: "",
+	content: "",
+	tags: "", // Armazenamos como string ("tag1, tag2") para facilitar o input
+	url: "",
+	status: "",
+});
+
 // Estado derivado (Computed): Encontra o item atual baseado no ID
 export const $editingItem = computed([$items, $formState], (items, form) => {
 	return form.editingId ? items.find((i) => i.id === form.editingId) : undefined;
@@ -25,6 +35,22 @@ const defaultType = "note";
 
 export function setItems(items: Post[]) {
 	$items.set(items);
+}
+
+export function updateDraft(field: keyof ReturnType<typeof $draft.get>, value: string) {
+	$draft.setKey(field, value);
+}
+
+// NOVA ACTION: Reseta o draft para vazio
+export function resetDraft() {
+	$draft.set({
+		title: "",
+		description: "",
+		content: "",
+		tags: "",
+		url: "",
+		status: "",
+	});
 }
 
 export function setActiveTab(tab: string) {
@@ -42,33 +68,58 @@ export function startEditing(item: Post) {
 		currentType: item.type,
 		activeTab: "editor",
 	});
-	window.scrollTo({ top: 0, behavior: "smooth" });
+
+	$draft.set({
+		title: item.title,
+		description: item.description,
+		content: item.content || "",
+		tags: item.tags.join(", "),
+		url: item.url || "",
+		status: item.status || "",
+	});
 }
 
 export function cancelEditing() {
 	$formState.setKey("editingId", null);
 	$formState.setKey("currentType", defaultType);
+	resetDraft();
 }
 
-export function deleteItem(id: number) {
+export async function deleteItem(id: number) {
 	const { editingId } = $formState.get();
 
-	if (confirm("Tem certeza que deseja deletar este post?")) {
-		const currentItems = $items.get();
-		$items.set(currentItems.filter((item) => item.id !== id));
+	if (!confirm("Tem certeza que deseja deletar este post?")) return;
 
-		if (editingId === id) cancelEditing();
+	const { error } = await actions.deletePost({ id });
+
+	if (error) {
+		console.error("Erro ao deletar:", error);
+		alert("Não foi possível deletar o post.");
+		return;
 	}
+
+	const currentItems = $items.get();
+	$items.set(currentItems.filter((item) => item.id !== id));
+
+	if (editingId === id) cancelEditing();
 }
 
-export function saveItem(newItem: Post) {
+export async function saveItem(postData: Post) {
+	const { data, error } = await actions.savePost(postData);
+
+	if (error || !data.post) {
+		console.error("Erro de validação ou servidor:", error);
+		alert("Erro ao salvar o post. Verifique o console.");
+		return;
+	}
+
 	const currentItems = $items.get();
-	const exists = currentItems.some((i) => i.id === newItem.id);
+	const exists = currentItems.some((i) => i.id === postData.id);
 
 	if (exists) {
-		$items.set(currentItems.map((item) => (item.id === newItem.id ? newItem : item)));
+		$items.set(currentItems.map((item) => (item.id === postData.id ? postData : item)));
 	} else {
-		$items.set([newItem, ...currentItems]);
+		$items.set([data.post, ...currentItems]);
 	}
 }
 

@@ -30,7 +30,7 @@ export default function AdminView({ posts }: { posts: Post[] }) {
 						}`}
 					>
 						<PenTool size={16} />
-						{editingId ? `Editando #${editingId}` : "Criar Novo Post"}
+						{editingId ? `Editando Post` : "Criar Novo Post"}
 					</button>
 					<button
 						onClick={() => setActiveTab("list")}
