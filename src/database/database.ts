@@ -71,7 +71,6 @@ await ensureSchema(database, "posts", [
 	{ name: "featured", type: "INTEGER DEFAULT 0" },
 	{ name: "date", type: "TEXT" },
 	{ name: "content", type: "TEXT" },
-	{ name: "status", type: "TEXT" },
 	{ name: "url", type: "TEXT" },
 ]);
 

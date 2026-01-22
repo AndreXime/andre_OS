@@ -21,7 +21,6 @@ export const $draft = map({
 	content: "",
 	tags: "",
 	url: "",
-	status: "",
 	featured: false,
 });
 
@@ -52,7 +51,6 @@ export function resetDraft() {
 		content: "",
 		tags: "",
 		url: "",
-		status: "",
 		featured: false,
 	});
 }
@@ -79,7 +77,6 @@ export function startEditing(item: Post) {
 		content: item.content || "",
 		tags: item.tags.join(", "),
 		url: item.url || "",
-		status: item.status || "",
 		featured: item.featured || false,
 	});
 }

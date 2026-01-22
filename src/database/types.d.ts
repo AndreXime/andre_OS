@@ -8,6 +8,5 @@ export interface Post {
 	featured?: boolean;
 	date: Date;
 	content?: string; // Conteúdo longo, intro não tem
-	status?: string; // Versão da ferramenta, apenas para tools
 	url?: string; // Link do site recomendado, apenas para links
 }

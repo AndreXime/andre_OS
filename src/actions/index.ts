@@ -14,7 +14,6 @@ const PostSchema = z.object({
 	featured: z.boolean().optional(),
 	date: z.coerce.date(),
 	content: z.string().optional(),
-	status: z.string().optional(),
 	url: z.string().optional(),
 });
 

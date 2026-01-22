@@ -69,7 +69,6 @@ export function castRowToPost(row: Row): Post {
 		featured: Boolean(row.featured),
 		date: new Date(String(row.date)),
 		content: row.content ? String(row.content) : undefined,
-		status: row.status ? String(row.status) : undefined,
 		url: row.url ? String(row.url) : undefined,
 	};
 }

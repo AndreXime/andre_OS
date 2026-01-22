@@ -80,7 +80,7 @@ export function CardTool({ post }: { post: Post }) {
 				<div class="bg-emerald-500/10 p-2 rounded-md border border-emerald-500/20 text-emerald-400 mb-4 group-hover:bg-emerald-500/20 transition-colors">
 					<Code2 size={20} />
 				</div>
-				<Badge text={post.status || "Ready"} colorClass={badgeClass} />
+				<Badge text={"Ready"} colorClass={badgeClass} />
 			</div>
 			<div>
 				<h3 class="text-xl font-semibold text-zinc-100 mb-2 group-hover:text-emerald-50 transition-colors">

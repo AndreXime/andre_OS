@@ -7,10 +7,10 @@ export async function createPost(post: CreatePostInput) {
 	const query = `
         INSERT INTO posts (
             slug, type, title, description, tags, 
-            featured, date, content, status, url
+            featured, date, content, url
         ) VALUES (
             ?, ?, ?, ?, json(?), 
-            ?, ?, ?, ?, ?
+            ?, ?, ?, ?
         )
     `;
 
@@ -23,7 +23,6 @@ export async function createPost(post: CreatePostInput) {
 		post.featured ? 1 : 0,
 		post.date.toISOString(),
 		post.content ?? null,
-		post.status ?? null,
 		post.url ?? null,
 	];
 
@@ -46,7 +45,6 @@ export async function updatePost(post: Post) {
             featured = ?, 
             date = ?, 
             content = ?, 
-            status = ?, 
             url = ?
         WHERE id = ?
     `;
@@ -60,7 +58,6 @@ export async function updatePost(post: Post) {
 		post.featured ? 1 : 0,
 		post.date.toISOString(),
 		post.content ?? null,
-		post.status ?? null,
 		post.url ?? null,
 		post.id,
 	];

@@ -49,7 +49,6 @@ export default function AdminEditor() {
 		featured: draft.featured,
 		content: draft.content,
 		url: currentType === "link" ? draft.url : undefined,
-		status: currentType === "tool" ? draft.status : undefined,
 	};
 
 	const handleSubmit = async (e: SubmitEvent) => {
@@ -188,22 +187,6 @@ export default function AdminEditor() {
 									value={draft.url}
 									onInput={(e) => updateDraft("url", e.currentTarget.value)}
 									className="w-full bg-zinc-950 border border-zinc-800 p-2.5 rounded text-zinc-200 text-sm focus:border-violet-500/50 outline-none transition-all"
-								/>
-							</div>
-						)}
-
-						{currentType === "tool" && (
-							<div className="space-y-2 animate-in fade-in">
-								<label htmlFor="status" className="text-xs font-mono text-zinc-500">
-									Versão
-								</label>
-								<input
-									id="status"
-									name="status"
-									type="text"
-									value={draft.status}
-									onInput={(e) => updateDraft("status", e.currentTarget.value)}
-									className="w-full bg-zinc-950 border border-zinc-800 p-2.5 rounded text-zinc-200 text-sm focus:border-emerald-500/50 outline-none transition-all"
 								/>
 							</div>
 						)}

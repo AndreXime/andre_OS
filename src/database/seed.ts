@@ -19,7 +19,6 @@ const SEED_POSTS: Post[] = [
 		slug: "json-para-go-struct",
 		title: "JSON para Go Struct",
 		description: "Conversor instantâneo com tags omitempty. Cole seu JSON e receba a struct tipada.",
-		status: "v1.4.2",
 		featured: false,
 		date: new Date(),
 
@@ -70,7 +69,6 @@ const SEED_POSTS: Post[] = [
 		slug: "regex-tester-local",
 		title: "Regex Tester (Local)",
 		description: "Testador de Regex rodando 100% no cliente via WASM.",
-		status: "Beta",
 		featured: true,
 		date: new Date(),
 
@@ -112,8 +110,8 @@ async function seedDatabase() {
 			await database.execute({
 				sql: `
           INSERT INTO posts (
-            id, slug, type, title, description, tags, featured, date, content, status, url
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            id, slug, type, title, description, tags, featured, date, content, url
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
           ON CONFLICT(id) DO UPDATE SET
             slug = excluded.slug,
             type = excluded.type,
@@ -123,7 +121,6 @@ async function seedDatabase() {
             featured = excluded.featured,
             date = excluded.date,
             content = excluded.content,
-            status = excluded.status,
             url = excluded.url
         `,
 				args: [
@@ -136,7 +133,6 @@ async function seedDatabase() {
 					item.featured ? 1 : 0, // SQLite não tem boolean, vira 1 ou 0
 					item.date.toISOString(), // Data como string ISO
 					item.content ?? null,
-					item.status ?? null,
 					item.url ?? null,
 				],
 			});
