@@ -4,17 +4,20 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import Sidebar from "../components/Sidebar.astro";
 import Script from "@/components/Script.astro";
-import { getHomePosts } from "@/lib/getHomePosts";
+import {
+	getFilteredPosts,
+	getLastPostDate,
+	getPostsTags,
+} from "@/lib/post.queries";
 import { CardIntro, CardLink, CardNote, CardTool } from "@/components/Cards";
 
 const { searchParams } = Astro.url;
 const filterParam = searchParams.get("category") || "all";
 const searchParam = searchParams.get("q") || "";
 
-const { tagCounts, filteredItems, lastDeploy } = await getHomePosts(
-	filterParam,
-	searchParam,
-);
+const posts = await getFilteredPosts(filterParam, searchParam);
+const tags = await getPostsTags();
+const lastDate = await getLastPostDate();
 
 /* 
 Astro.response.headers.set(
@@ -32,7 +35,7 @@ Astro.response.headers.set(
 			class="pt-20 px-4 md:px-6 max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 transition-all"
 		>
 			<Sidebar
-				tagCounts={tagCounts}
+				tagCounts={tags}
 				currentFilter={filterParam}
 				currentSearch={searchParam}
 			/>
@@ -42,8 +45,8 @@ Astro.response.headers.set(
 					class="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 auto-rows-min w-full"
 				>
 					{
-						filteredItems.length > 0 ? (
-							filteredItems.map((item) => (
+						posts.length > 0 ? (
+							posts.map((item) => (
 								// O Link envolve o card inteiro. Ao clicar, a URL muda para ?id=X
 								<a
 									href={`/post/${item.slug}`}
@@ -82,7 +85,7 @@ Astro.response.headers.set(
 			</main>
 		</div>
 
-		<Footer lastDeploy={lastDeploy} />
+		<Footer lastDate={lastDate} />
 	</div>
 </Layout>
 

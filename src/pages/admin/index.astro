@@ -1,7 +1,7 @@
 ---
 import AdminView from "@/components/admin/Admin";
 import Layout from "@/layout/Layout.astro";
-import getAllPosts from "@/lib/getAllPosts";
+import { getAllPosts } from "@/lib/post.queries";
 import { Lock } from "lucide-preact";
 import { EncryptJWT, jwtDecrypt } from "jose";
 

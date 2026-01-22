@@ -1,9 +1,11 @@
 ---
+import { formatDate } from "@/lib/utils";
+
 interface Props {
-    lastDeploy: string;
+    lastDate: Date;
 }
 
-const { lastDeploy } = Astro.props;
+const { lastDate } = Astro.props;
 ---
 
 <footer
@@ -15,7 +17,8 @@ const { lastDeploy } = Astro.props;
             Online</span
         >
         <span class="hidden md:inline text-zinc-700">|</span>
-        <span class="hidden md:inline">Last Update: {lastDeploy}</span>
+        <span class="hidden md:inline">Last Update: {formatDate(lastDate)}</span
+        >
     </div>
     <div class="flex items-center gap-4">
         <span>© {new Date().getFullYear()} Andre Dev</span>

@@ -5,17 +5,24 @@ import Footer from "@/components/Footer.astro";
 import Header from "@/components/Header.astro";
 import Sidebar from "@/components/Sidebar.astro";
 import Script from "@/components/Script.astro";
-import getPostBySlug from "@/lib/getPostBySlug";
+import {
+    getPostBySlug,
+    getPostsTags,
+    getLastPostDate,
+} from "@/lib/post.queries";
 import { parseMarkdown } from "@/lib/utils";
 import { ChevronLeft } from "lucide-preact";
 
 const { slug } = Astro.params;
 
-const { post, tagCounts, lastDeploy } = await getPostBySlug(slug || "");
+const post = await getPostBySlug(slug || "");
 
 if (!post) {
     return Astro.redirect("/");
 }
+
+const tags = await getPostsTags();
+const lastDate = await getLastPostDate();
 
 /* 
 Astro.response.headers.set(
@@ -34,11 +41,7 @@ post.content = await parseMarkdown(post.content || "");
         <div
             class="pt-20 px-4 md:px-6 max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 transition-all"
         >
-            <Sidebar
-                tagCounts={tagCounts}
-                currentFilter={""}
-                currentSearch={""}
-            />
+            <Sidebar tagCounts={tags} currentFilter={""} currentSearch={""} />
 
             <main class={`flex lg:col-span-10`}>
                 <div class="flex flex-col w-full">
@@ -67,7 +70,7 @@ post.content = await parseMarkdown(post.content || "");
             </main>
         </div>
 
-        <Footer lastDeploy={lastDeploy} />
+        <Footer lastDate={lastDate} />
     </div>
 </Layout>
 
