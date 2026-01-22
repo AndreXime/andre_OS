@@ -10,7 +10,7 @@ export const $items = atom<Post[]>([]);
 // O estado da UI do formulário
 export const $formState = map({
 	editingId: null as number | null,
-	activeTab: "editor", // 'editor' | 'list'
+	activeTab: "editor",
 	currentType: "note",
 	showSuccess: false,
 });
@@ -19,9 +19,10 @@ export const $draft = map({
 	title: "",
 	description: "",
 	content: "",
-	tags: "", // Armazenamos como string ("tag1, tag2") para facilitar o input
+	tags: "",
 	url: "",
 	status: "",
+	featured: false,
 });
 
 // Estado derivado (Computed): Encontra o item atual baseado no ID
@@ -37,11 +38,13 @@ export function setItems(items: Post[]) {
 	$items.set(items);
 }
 
-export function updateDraft(field: keyof ReturnType<typeof $draft.get>, value: string) {
+export function updateDraft<K extends keyof ReturnType<typeof $draft.get>>(
+	field: K,
+	value: ReturnType<typeof $draft.get>[K],
+) {
 	$draft.setKey(field, value);
 }
 
-// NOVA ACTION: Reseta o draft para vazio
 export function resetDraft() {
 	$draft.set({
 		title: "",
@@ -50,6 +53,7 @@ export function resetDraft() {
 		tags: "",
 		url: "",
 		status: "",
+		featured: false,
 	});
 }
 
@@ -76,6 +80,7 @@ export function startEditing(item: Post) {
 		tags: item.tags.join(", "),
 		url: item.url || "",
 		status: item.status || "",
+		featured: item.featured || false,
 	});
 }
 

@@ -46,7 +46,7 @@ export default function AdminEditor() {
 			.map((t) => t.trim())
 			.filter(Boolean),
 		date: editingItem ? editingItem.date : new Date(),
-		featured: editingItem?.featured || false,
+		featured: draft.featured,
 		content: draft.content,
 		url: currentType === "link" ? draft.url : undefined,
 		status: currentType === "tool" ? draft.status : undefined,
@@ -254,7 +254,36 @@ export default function AdminEditor() {
 						/>
 					</div>
 
-					<div className="pt-6 border-t border-zinc-800 flex justify-end items-center gap-4">
+					<div className="pt-6 border-t border-zinc-800 flex justify-between items-center gap-4">
+						<div className="flex items-center gap-3 py-2">
+							<div className="relative flex items-center">
+								<input
+									id="featured"
+									type="checkbox"
+									checked={draft.featured}
+									onChange={(e) => updateDraft("featured", e.currentTarget.checked)}
+									className="peer h-5 w-5 cursor-pointer appearance-none rounded border border-zinc-700 bg-zinc-950 transition-all checked:border-yellow-500 checked:bg-yellow-500/10 hover:border-zinc-500 focus:outline-none"
+								/>
+								<svg
+									className="absolute h-3.5 w-3.5 pointer-events-none left-0.5 top-0.5 ml-[1px] mt-[0.5px] stroke-yellow-500 opacity-0 peer-checked:opacity-100 transition-opacity"
+									xmlns="http://www.w3.org/2000/svg"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="4"
+									stroke-linecap="round"
+									stroke-linejoin="round"
+								>
+									<polyline points="20 6 9 17 4 12"></polyline>
+								</svg>
+							</div>
+							<label
+								htmlFor="featured"
+								className="text-xs font-mono uppercase tracking-wider cursor-pointer select-none text-zinc-400 peer-checked:text-yellow-500 transition-colors"
+							>
+								Post Destaque
+							</label>
+						</div>
 						<button
 							type="submit"
 							className={`flex items-center gap-2 px-6 py-2.5 rounded text-sm font-bold transition-colors shadow-lg ${editingId ? "bg-yellow-600 hover:bg-yellow-500 text-white" : "bg-zinc-100 hover:bg-white text-zinc-900 shadow-white/5"}`}
