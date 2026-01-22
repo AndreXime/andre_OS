@@ -11,16 +11,23 @@ import react from "@astrojs/react";
 
 // https://astro.build/config
 export default defineConfig({
-    site: "https://andreximenes.xyz",
-    output: "server",
-    build: {
-        inlineStylesheets: "always",
-    },
+	site: "https://andreximenes.xyz",
+	output: "server",
+	build: {
+		inlineStylesheets: "always",
+	},
 
-    vite: {
-        plugins: [tailwindcss()],
-    },
+	vite: {
+		plugins: [tailwindcss()],
+	},
 
-    integrations: [preact(), react()],
-    adapter: vercel(),
+	integrations: [
+		react({
+			include: ["**/src/tools/**"],
+		}),
+		preact({
+			exclude: ["**/src/tools/**"],
+		}),
+	],
+	adapter: vercel(),
 });
