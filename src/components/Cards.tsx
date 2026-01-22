@@ -12,7 +12,9 @@ export function CardIntro({ post }: { post: Post }) {
 			<h2 class="text-sm font-mono text-emerald-500 mb-2 flex items-center gap-2">
 				<Terminal size={14} /> README.md
 			</h2>
-			<p class="text-lg font-medium text-zinc-200 leading-relaxed relative z-10">{post.description}</p>
+			<p class="text-lg font-bold text-zinc-200 leading-relaxed relative z-10">{post.title}</p>
+
+			<p class="text-base font-medium text-zinc-200 leading-relaxed relative z-10">{post.description}</p>
 		</div>
 	);
 }

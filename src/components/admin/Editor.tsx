@@ -157,7 +157,7 @@ export default function AdminEditor() {
 					</fieldset>
 
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-5">
-						<div className="space-y-2">
+						<div className={`space-y-2 ${currentType !== "link" && "col-span-full"}`}>
 							<label htmlFor="title" className="text-xs font-mono text-zinc-500">
 								Título
 							</label>
@@ -175,7 +175,7 @@ export default function AdminEditor() {
 						</div>
 
 						{currentType === "link" && (
-							<div className="space-y-2 animate-in fade-in">
+							<div className="space-y-2">
 								<label htmlFor="url" className="text-xs font-mono text-zinc-500">
 									URL recomendada
 								</label>
@@ -222,20 +222,21 @@ export default function AdminEditor() {
 							/>
 						</div>
 					)}
-
-					<div className="space-y-2">
-						<label htmlFor="tags" className="text-xs font-mono text-zinc-500 flex items-center gap-2">
-							<Hash size={12} /> Tags (separadas por vírgula)
-						</label>
-						<input
-							id="tags"
-							name="tags"
-							type="text"
-							value={draft.tags}
-							onInput={(e) => updateDraft("tags", e.currentTarget.value)}
-							className="w-full bg-zinc-950 border border-zinc-800 p-2.5 rounded text-zinc-200 text-sm focus:border-red-500/50 outline-none transition-all"
-						/>
-					</div>
+					{currentType !== "intro" && (
+						<div className="space-y-2">
+							<label htmlFor="tags" className="text-xs font-mono text-zinc-500 flex items-center gap-2">
+								<Hash size={12} /> Tags (separadas por vírgula)
+							</label>
+							<input
+								id="tags"
+								name="tags"
+								type="text"
+								value={draft.tags}
+								onInput={(e) => updateDraft("tags", e.currentTarget.value)}
+								className="w-full bg-zinc-950 border border-zinc-800 p-2.5 rounded text-zinc-200 text-sm focus:border-red-500/50 outline-none transition-all"
+							/>
+						</div>
+					)}
 
 					<div className="pt-6 border-t border-zinc-800 flex justify-between items-center gap-4">
 						<div className="flex items-center gap-3 py-2">
