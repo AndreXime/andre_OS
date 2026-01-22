@@ -1,2 +1,28 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
+
+.content-container pre {
+	background-color: #0d1117;
+	border-radius: 6px;
+	padding: 16px;
+	overflow: auto;
+	margin: 1.5rem 0;
+}
+
+.content-container code {
+	font-family:
+		ui-monospace,
+		SFMono-Regular,
+		SF Mono,
+		Menlo,
+		monospace;
+	font-size: 85%;
+	color: #e6edf3;
+}
+
+.content-container :not(pre) > code {
+	background-color: rgba(110, 118, 129, 0.4);
+	padding: 0.2em 0.4em;
+	border-radius: 6px;
+	color: inherit;
+}
