@@ -6,8 +6,8 @@ interface ColumnDefinition {
 }
 
 const database = createClient({
-	url: "http://127.0.0.1:8080",
-	authToken: "",
+	url: import.meta.env.DATABASE_URL || "http://127.0.0.1:8080",
+	authToken: import.meta.env.DATABASE_AUTH,
 });
 
 async function ensureSchema(client: Client, tableName: string, schema: ColumnDefinition[]) {
