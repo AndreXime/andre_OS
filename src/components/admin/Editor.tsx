@@ -12,8 +12,8 @@ import {
 	$draft,
 	resetDraft,
 	updateDraft,
+	$preview,
 } from "./store";
-import type { Post } from "@/database/types";
 import { useState } from "preact/hooks";
 import { CardIntro, CardLink, CardNote, CardTool } from "../Cards";
 import DetailPostView from "../DetailView";
@@ -23,33 +23,9 @@ export default function AdminEditor() {
 	const editingItem = useStore($editingItem);
 	const items = useStore($items);
 	const draft = useStore($draft);
-	const hasIntro = items.some((i) => i.type === "intro");
+	const previewItem = useStore($preview);
 	const [isPreview, setIsPreview] = useState(false);
-
-	const previewItem: Post = {
-		id: editingId ? Number(editingId) : 0,
-		type: currentType as Post["type"],
-		title: draft.title || "Título do Post",
-		description: draft.description || "Descrição...",
-		slug:
-			editingItem?.slug ||
-			draft.title
-				.normalize("NFD")
-				.replace(/[\u0300-\u036f]/g, "")
-				.toLowerCase()
-				.trim()
-				.replace(/[^a-z0-9 -]/g, "")
-				.replace(/\s+/g, "-")
-				.replace(/-+/g, "-"),
-		tags: draft.tags
-			.split(",")
-			.map((t) => t.trim())
-			.filter(Boolean),
-		date: editingItem ? editingItem.date : new Date(),
-		featured: draft.featured,
-		content: draft.content,
-		url: currentType === "link" ? draft.url : undefined,
-	};
+	const hasIntro = items.some((i) => i.type === "intro");
 
 	const handleSubmit = async (e: SubmitEvent) => {
 		e.preventDefault();

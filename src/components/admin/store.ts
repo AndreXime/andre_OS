@@ -29,6 +29,33 @@ export const $editingItem = computed([$items, $formState], (items, form) => {
 	return form.editingId ? items.find((i) => i.id === form.editingId) : undefined;
 });
 
+export const $preview = computed([$formState, $draft, $editingItem], (form, draft, originalItem) => {
+	return {
+		id: Number(form.editingId) || 0,
+		type: form.currentType as Post["type"],
+		title: draft.title || "Título do Post",
+		description: draft.description || "Descrição...",
+		slug:
+			originalItem?.slug ||
+			draft.title
+				.normalize("NFD")
+				.replace(/[\u0300-\u036f]/g, "")
+				.toLowerCase()
+				.trim()
+				.replace(/[^a-z0-9 -]/g, "")
+				.replace(/\s+/g, "-")
+				.replace(/-+/g, "-"),
+		tags: draft.tags
+			.split(",")
+			.map((t) => t.trim())
+			.filter(Boolean),
+		date: originalItem?.date ?? new Date(),
+		featured: draft.featured,
+		content: draft.content,
+		url: form.currentType === "link" ? draft.url : undefined,
+	} as Post;
+});
+
 // --- ACTIONS ---
 
 const defaultType = "note";
