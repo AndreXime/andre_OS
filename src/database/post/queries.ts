@@ -23,18 +23,27 @@ export async function getFilteredPosts(categoryFilter: string, searchFilter: str
 		let query = `SELECT * FROM posts WHERE 1=1`;
 		const args: (string | number)[] = [];
 
-		if (categoryFilter !== "all") {
+		const hasCategoryFilter = categoryFilter !== "all";
+		const hasSearchFilter = !!searchFilter;
+		const isUnfiltered = !hasCategoryFilter && !hasSearchFilter;
+
+		if (hasCategoryFilter) {
 			query += ` AND type = ?`;
 			args.push(categoryFilter);
 		}
 
-		if (searchFilter) {
+		if (hasSearchFilter) {
 			query += ` AND (title LIKE ? OR description LIKE ?)`;
 			const searchParam = `%${searchFilter}%`;
 			args.push(searchParam, searchParam);
 		}
 
-		query += ` ORDER BY date DESC`;
+		// Na home (quando não tem filtros) o Intro deve aparecer primeiro
+		if (isUnfiltered) {
+			query += ` ORDER BY (CASE WHEN type = 'intro' THEN 0 ELSE 1 END), date DESC`;
+		} else {
+			query += ` ORDER BY date DESC`;
+		}
 
 		const postsData = await database.execute({ sql: query, args });
 
