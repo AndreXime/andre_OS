@@ -104,7 +104,7 @@ function CardTool({ post }: { post: Post }) {
 				<p class="text-sm text-zinc-400 mb-4">{post.description}</p>
 			</div>
 			<div class="mt-auto pt-4 border-t border-dashed border-zinc-800 group-hover:border-emerald-900/50 flex justify-between items-center transition-colors">
-				<span class="text-xs font-mono text-zinc-600 group-hover:text-emerald-600/70 transition-colors">
+				<span class="text-xs font-mono text-zinc-300 group-hover:text-emerald-600/70 transition-colors">
 					./bin/exec
 				</span>
 				<div class="flex items-center gap-2 text-xs font-bold text-emerald-400 bg-emerald-950/30 hover:bg-emerald-900 border border-emerald-900/50 hover:border-emerald-500/50 px-3 py-1.5 rounded transition-all uppercase tracking-wide">
