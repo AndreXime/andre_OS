@@ -1,5 +1,5 @@
 export interface Post {
-	id: number;
+	id: number | string;
 	slug: string;
 	type: "intro" | "tool" | "note" | "link";
 	title: string;

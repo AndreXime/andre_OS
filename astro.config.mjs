@@ -10,7 +10,7 @@ import vercel from "@astrojs/vercel";
 // https://astro.build/config
 export default defineConfig({
 	site: "https://andreximenes.xyz",
-	output: "server",
+	output: "static",
 	build: {
 		inlineStylesheets: "always",
 	},
