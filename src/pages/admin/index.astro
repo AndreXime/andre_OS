@@ -1,9 +1,11 @@
 ---
 import AdminView from "@/components/admin/Admin";
 import Layout from "@/layout/Layout.astro";
-import { getAllPosts } from "@/database/post/queries";
 import { Lock } from "lucide-preact";
 import { EncryptJWT, jwtDecrypt } from "jose";
+import { getCollection } from "astro:content";
+
+export const prerender = false;
 
 let error = false;
 let isAuthenticated = false;
@@ -56,8 +58,7 @@ if (Astro.url.searchParams.get("action") === "logout") {
     Astro.cookies.delete("admin_session", { path: "/" });
     return Astro.redirect(Astro.url.pathname);
 }
-
-const posts = await getAllPosts();
+const posts = (await getCollection("posts")).map(({ data, ...post }) => data);
 ---
 
 <Layout title={isAuthenticated ? "Admin | andre_OS" : "Login | andre_OS"}>

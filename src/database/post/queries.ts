@@ -53,38 +53,12 @@ export async function getFilteredPosts(categoryFilter: string, searchFilter: str
 	}
 }
 
-export async function getPostBySlug(slug: string) {
-	try {
-		const postQuery = `SELECT * FROM posts WHERE slug = ? LIMIT 1`;
+export async function getAllPostNotes() {
+	const postsRaw = await database.execute(`SELECT * FROM posts WHERE type = 'note'`);
 
-		const postData = await database.execute({ sql: postQuery, args: [slug] });
+	const posts = postsRaw.rows.map(castRowToPost);
 
-		if (postData.rows.length === 0 || !postData) {
-			return undefined;
-		}
-
-		return castRowToPost(postData.rows[0]);
-	} catch {
-		return undefined;
-	}
-}
-
-export async function getPostToolName(slug: string) {
-	try {
-		const postQuery = `SELECT tool_name FROM posts WHERE slug = ? LIMIT 1`;
-
-		const postData = await database.execute({ sql: postQuery, args: [slug] });
-
-		const toolName = postData.rows[0].tool_name;
-
-		if (toolName) {
-			return undefined;
-		}
-
-		return String(toolName);
-	} catch {
-		return undefined;
-	}
+	return posts;
 }
 
 export async function getAllPosts() {
