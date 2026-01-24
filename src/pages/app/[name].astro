@@ -17,11 +17,6 @@ const toolExists = toolRegistry.some((tool) => tool === name);
 if (!toolExists) {
     return Astro.redirect("/");
 }
-
-Astro.response.headers.set(
-    "Cache-Control",
-    "public, max-age=60, s-maxage=600, stale-while-revalidate=30",
-);
 ---
 
 <Layout title={name + " | andre_OS"}>

@@ -5,28 +5,25 @@ import Footer from "@/components/layout/Footer.astro";
 import Header from "@/components/layout/Header.astro";
 import Sidebar from "@/components/layout/Sidebar.astro";
 import {
-    getPostBySlug,
     getPostsTags,
     getLastPostDate,
+    getAllPostNotes,
 } from "@/database/post/queries";
 import { ChevronLeft } from "lucide-preact";
 
-const { slug } = Astro.params;
-
-const [post, tags, lastDate] = await Promise.all([
-    getPostBySlug(slug || ""),
-    getPostsTags(),
-    getLastPostDate(),
-]);
-
-if (!post) {
-    return Astro.redirect("/");
+export async function getStaticPaths() {
+    const [posts, tags, lastDate] = await Promise.all([
+        getAllPostNotes(), // Somente posts tipo notas tem essa pagina
+        getPostsTags(),
+        getLastPostDate(),
+    ]);
+    return posts.map((post) => ({
+        params: { slug: post.slug },
+        props: { post, tags, lastDate },
+    }));
 }
 
-Astro.response.headers.set(
-    "Cache-Control",
-    "public, max-age=60, s-maxage=600, stale-while-revalidate=30",
-);
+const { post, tags, lastDate } = Astro.props;
 ---
 
 <Layout title={post.title + " | andre_OS"}>
