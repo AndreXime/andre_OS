@@ -2,6 +2,7 @@ import { defineAction } from "astro:actions";
 import { z } from "astro:schema";
 import type { Post } from "@/database/types";
 import { createPost, deletePost, updatePost } from "@/database/post/mutations";
+import { revalidateCache } from "@/database/cache";
 
 const PostSchema = z.object({
 	// O ID é opcional na entrada, pois na criação ele não existe
@@ -26,10 +27,12 @@ export const server = {
 				// Se tiver ID, atualizamos
 				if (input.id && input.id !== 0) {
 					const updated = await updatePost(input as Post);
+					await revalidateCache();
 					return { success: true, post: updated, action: "update" };
 				}
 
 				const created = await createPost(input);
+				await revalidateCache();
 				return { success: true, post: created, action: "create" };
 			} catch (error) {
 				console.log(error);
@@ -43,6 +46,7 @@ export const server = {
 		handler: async ({ id }) => {
 			try {
 				await deletePost(id);
+				await revalidateCache();
 				return { success: true };
 			} catch (error) {
 				console.log(error);
