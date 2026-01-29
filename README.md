@@ -1,43 +1,21 @@
-# Astro Starter Kit: Minimal
+# Andre OS
 
-```sh
-npm create astro@latest -- --template minimal
-```
+Um blog pessoal e portfólio criativo que utiliza a estética de um sistema operativo para organizar o conteúdo. A interface funciona como um dashboard onde cada "janela" ou cartão é uma porta de entrada para artigos, ferramentas interativas ou recomendações.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Tecnologias Utilizadas
 
-## 🚀 Project Structure
+* **[Astro](https://astro.build/)**: Serve a estrutura base do site e as páginas de conteúdo (posts) com máxima performance, utilizando renderização no servidor (SSR) para dados dinâmicos.
+* **[Preact](https://preactjs.com/)**: Gerencia a interatividade das ferramentas web (Apps) e do painel administrativo com uma pegada leve, utilizando *aliasing* para compatibilidade com React.
+* **[LibSQL (Turso)](https://turso.tech/libsql)**: Atua como a base de dados central para armazenar todos os posts, referências de links e configurações das ferramentas.
+* **[Docker](https://www.docker.com/)**: Simplifica o ambiente de desenvolvimento ao rodar uma instância local do banco de dados LibSQL isolada do sistema principal.
+* **[Tailwind CSS v4](https://tailwindcss.com/)**: Permite criar o design visual complexo estilo "Desktop" e os componentes de UI de forma rápida e responsiva.
 
-Inside of your Astro project, you'll see the following folders and files:
+## Funcionalidades
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+O projeto organiza o conhecimento em três formatos distintos acessíveis a partir da home:
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+* **Posts**: Artigos técnicos e textos explicativos renderizados em páginas dedicadas focadas na leitura.
+* **Ferramentas (Apps)**: Aplicações web completas e interativas desenvolvidas por mim, executadas dentro do próprio ambiente do site.
+* **Links**: Cartões de recomendação rápida que direcionam para referências externas ou recursos interessantes.
+* **Painel Administrativo**: Interface interna para criação e gestão de todo o conteúdo (CMS) e ferramentas.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
