@@ -1,13 +1,13 @@
 import { useEffect, useState } from "preact/hooks";
 import { Folder, FileCode, ChevronRight, ChevronDown } from "lucide-preact";
 import { useStore } from "@nanostores/preact";
-import { $cemetery, createNode, setAddingType, setMenu, setSelectedFile, type FileNode } from "./store";
+import { $editor, createNode, setAddingType, setMenu, setSelectedFile, type FileNode } from "./store";
 
 // Componente para cada item da árvore (Arquivo ou Pasta)
 export default function FileItem({ node }: { node: FileNode }) {
 	const [isOpen, setIsOpen] = useState(false);
 
-	const { files, selectedFile, addingType } = useStore($cemetery);
+	const { files, selectedFile, addingType } = useStore($editor);
 
 	useEffect(() => {
 		if (addingType?.parentId === node.id) {

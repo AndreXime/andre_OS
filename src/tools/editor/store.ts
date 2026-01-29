@@ -1,6 +1,5 @@
 import { map } from "nanostores";
 
-// 1. Definição das Interfaces
 export interface FileNode {
 	id: string;
 	name: string;
@@ -18,36 +17,59 @@ export interface CemeteryState {
 	menu: { x: number; y: number; parentId: string | null } | null;
 }
 
-// 2. Criação da Store (map)
-// A convenção do Nanostores é usar o prefixo '$' para stores
-export const $cemetery = map<CemeteryState>({
-	files: [],
+const STORAGE_KEY = "webeditor:files";
+
+const loadInitialFiles = (): FileNode[] => {
+	if (typeof window === "undefined") return [];
+
+	const saved = localStorage.getItem(STORAGE_KEY);
+	if (saved) {
+		try {
+			return JSON.parse(saved);
+		} catch (e) {
+			console.error("Erro ao carregar arquivos do localStorage", e);
+			return [];
+		}
+	}
+	return [];
+};
+
+export const $editor = map<CemeteryState>({
+	files: loadInitialFiles(),
 	selectedFile: null,
 	addingType: null,
 	menu: null,
 });
 
-// 3. Ações (Funções independentes)
+// Armazenamos a referência anterior para evitar escritas desnecessárias
+// quando apenas o 'menu' ou 'selectedFile' mudar.
+let previousFiles = $editor.get().files;
+
+$editor.subscribe((state) => {
+	if (state.files !== previousFiles) {
+		localStorage.setItem(STORAGE_KEY, JSON.stringify(state.files));
+		previousFiles = state.files;
+	}
+});
 
 export const setSelectedFile = (file: FileNode | null) => {
-	$cemetery.setKey("selectedFile", file);
+	$editor.setKey("selectedFile", file);
 };
 
 export const setAddingType = (val: { type: "file" | "folder"; parentId: string | null } | null) => {
-	$cemetery.setKey("addingType", val);
+	$editor.setKey("addingType", val);
 };
 
 export const setMenu = (val: { x: number; y: number; parentId: string | null } | null) => {
-	$cemetery.setKey("menu", val);
+	$editor.setKey("menu", val);
 };
 
 export const createNode = (name: string) => {
-	// .get() recupera o estado atual de forma síncrona (semelhante ao get() do Zustand)
-	const { addingType, files, selectedFile } = $cemetery.get();
+	const { addingType, files, selectedFile } = $editor.get();
 	const trimmedName = name.trim();
 
 	if (!trimmedName || !addingType) {
-		$cemetery.setKey("addingType", null);
+		$editor.setKey("addingType", null);
 		return;
 	}
 
@@ -55,7 +77,7 @@ export const createNode = (name: string) => {
 	const fileExists = files.some((f) => f.name.toLowerCase() === trimmedName.toLowerCase());
 
 	if (fileExists) {
-		alert("Uma lápide com este nome já existe no cemitério!");
+		alert("Já existe um arquivo com este nome");
 		return;
 	}
 
@@ -85,8 +107,8 @@ export const createNode = (name: string) => {
 	};
 
 	// Atualiza múltiplos valores do estado
-	$cemetery.set({
-		...$cemetery.get(),
+	$editor.set({
+		...$editor.get(),
 		files: [...files, newNode],
 		addingType: null,
 		selectedFile: newNode.isFolder ? selectedFile : newNode,
@@ -94,19 +116,18 @@ export const createNode = (name: string) => {
 };
 
 export const updateFileContent = (id: string, content: string) => {
-	const { files, selectedFile } = $cemetery.get();
+	const { files, selectedFile } = $editor.get();
 
-	// Safety check simples
 	if (!selectedFile) return;
 
-	$cemetery.setKey(
+	$editor.setKey(
 		"files",
 		files.map((f) => (f.id === id ? { ...f, content } : f)),
 	);
 };
 
 export const deleteNode = (id: string) => {
-	const currentState = $cemetery.get();
+	const currentState = $editor.get();
 	const { files, selectedFile } = currentState;
 
 	// Função auxiliar para encontrar descendentes
@@ -125,7 +146,7 @@ export const deleteNode = (id: string) => {
 	// Verifica se o arquivo selecionado foi deletado
 	const newSelectedFile = selectedFile && idsToDelete.includes(selectedFile.id) ? null : selectedFile;
 
-	$cemetery.set({
+	$editor.set({
 		...currentState,
 		files: newFiles,
 		selectedFile: newSelectedFile,
