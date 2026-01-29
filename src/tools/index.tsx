@@ -1,11 +1,14 @@
 import { Loader2 } from "lucide-preact";
-import { lazy, Suspense } from "preact/compat";
+import { lazy, Suspense, type JSX } from "preact/compat";
 
-export const toolRegistry = ["WebCodeEditor"];
-
-const WebCodeEditor = lazy(() => import("./editor/App"));
+export const ToolRegistry: Record<string, () => JSX.Element> = {
+	WebCodeEditor: lazy(() => import("./editor/App")),
+	EveryDayUtils: lazy(() => import("./utils/App")),
+};
 
 export function ToolLoader({ name }: { name: string }) {
+	const Component = ToolRegistry[name];
+
 	return (
 		<Suspense
 			fallback={
@@ -14,7 +17,7 @@ export function ToolLoader({ name }: { name: string }) {
 				</div>
 			}
 		>
-			{name === "WebCodeEditor" && <WebCodeEditor />}
+			{Component ? <Component /> : <div>Componente não encontrado</div>}{" "}
 		</Suspense>
 	);
 }

@@ -17,7 +17,7 @@ import {
 import { useState } from "preact/hooks";
 import PreviewCard from "../ui/PreviewCards";
 import DetailPostView from "../ui/DetailCard";
-import { toolRegistry } from "@/tools";
+import { ToolRegistry } from "@/tools";
 
 export default function AdminEditor() {
 	const { editingId, currentType, showSuccess } = useStore($formState);
@@ -183,7 +183,7 @@ export default function AdminEditor() {
 											Selecione uma opção...
 										</option>
 
-										{toolRegistry.map((option) => (
+										{Object.keys(ToolRegistry).map((option) => (
 											<option key={option} value={option}>
 												{option}
 											</option>

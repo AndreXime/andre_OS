@@ -1,10 +1,10 @@
 ---
 import Layout from "../../layout/Layout.astro";
 import { ChevronLeft } from "lucide-preact";
-import { ToolLoader, toolRegistry } from "@/tools";
+import { ToolLoader, ToolRegistry } from "@/tools";
 
 export function getStaticPaths() {
-    const paths = toolRegistry.map((tool) => ({
+    const paths = Object.keys(ToolRegistry).map((tool) => ({
         params: { name: tool },
     }));
 
@@ -12,11 +12,6 @@ export function getStaticPaths() {
 }
 
 const { name } = Astro.params;
-
-const toolExists = toolRegistry.some((tool) => tool === name);
-if (!toolExists) {
-    return Astro.redirect("/");
-}
 ---
 
 <Layout title={name + " | andre_OS"}>
