@@ -15,11 +15,7 @@ export default function WebEditor() {
 	};
 
 	return (
-		<div
-			className="flex h-screen w-full min-w-[600px] overflow-scroll bg-[#1e1e1e] text-white font-sans"
-			onClick={() => setMenu(null)}
-		>
-			{/* SIDEBAR */}
+		<div className="flex flex-1 w-full min-w-[600px] bg-[#1e1e1e] text-white font-sans" onClick={() => setMenu(null)}>
 			<aside
 				className="w-64 border-r border-zinc-800 bg-[#181818] flex flex-col"
 				onContextMenu={(e) => handleContextMenu(e, null)}
@@ -35,7 +31,7 @@ export default function WebEditor() {
 				<nav className="flex-1 overflow-y-auto py-2 px-1">
 					{addingType?.parentId === null && (
 						<input
-							placeholder="nome.ts"
+							placeholder="Nome do arquivo ou pasta"
 							className="w-full bg-[#3c3c3c] border border-blue-500 rounded px-2 py-1 text-xs outline-none mb-2"
 							onKeyDown={(e) => e.key === "Enter" && createNode(e.currentTarget.value)}
 							onBlur={() => setAddingType(null)}

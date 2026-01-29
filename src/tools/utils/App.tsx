@@ -17,7 +17,7 @@ export default function EveryDayUtils() {
 	}, []);
 
 	return (
-		<div className="flex justify-center bg-[#121212]">
+		<div className="flex justify-center bg-[#121212] flex-1">
 			<div className="p-4 flex flex-col items-center container">
 				<main className="w-full bg-[#1E1E1E] border border-white/5 rounded-xl shadow-2xl p-4 sm:p-8">
 					<section
