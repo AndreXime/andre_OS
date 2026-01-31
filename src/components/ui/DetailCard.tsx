@@ -61,7 +61,6 @@ export default function DetailPostView({ post }: { post: Post }) {
 			</div>
 
 			<div class="p-6 md:p-8 overflow-y-auto flex-1 prose prose-invert prose-zinc prose-pre:text-base max-w-none">
-				<p class="text-zinc-200 leading-relaxed">{post.description}</p>
 				{post.content && (
 					<div
 						class="text-zinc-200 leading-relaxed content-container"
