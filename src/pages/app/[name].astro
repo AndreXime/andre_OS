@@ -1,6 +1,6 @@
 ---
 import Layout from "../../layout/Layout.astro";
-import { ChevronLeft } from "lucide-preact";
+import { ChevronLeft, EyeOff, Menu, Terminal, X } from "lucide-preact";
 import { ToolLoader, ToolRegistry } from "@/tools";
 
 export function getStaticPaths() {
@@ -16,35 +16,226 @@ const { name } = Astro.params;
 
 <Layout title={name + " | andre_OS"}>
     <div class="flex flex-col min-h-screen overflow-hidden">
-        <header
-            class="w-full bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800 h-14 flex items-center px-4 md:px-6 justify-between"
+        <div
+            id="restore-zone"
+            class="fixed top-0 right-0 w-24 h-24 z-[60] cursor-pointer hidden"
+            title="Clique ou passe o mouse para restaurar o menu"
         >
-            <a
-                href="/"
-                class="flex text-xs sm:text-sm items-center justify-start gap-2 rounded-md hover:border-zinc-600 hover:bg-zinc-800 transition-colors text-zinc-400 hover:text-white group"
+        </div>
+
+        <div class="fixed top-4 right-4 z-50">
+            <button
+                id="open-menu-btn"
+                class="flex items-center justify-center w-10 h-10 rounded-full
+                   bg-zinc-950/80 backdrop-blur-md border border-zinc-800
+                   text-zinc-400 hover:text-white hover:bg-zinc-800
+                   transition-all duration-300 shadow-lg scale-100 opacity-100"
+                aria-label="Abrir menu"
             >
-                <ChevronLeft
-                    size={16}
-                    class="group-hover:-translate-x-0.5 transition-transform"
-                />
-                Home
-            </a>
+                <Menu size={20} />
+            </button>
 
             <div
-                class="flex items-center text-xs sm:text-sm font-mono text-zinc-100 font-semibold tracking-tight"
+                id="expanded-menu"
+                class="absolute top-0 right-0 w-64
+                   bg-zinc-950/95 backdrop-blur-xl border border-zinc-800 rounded-xl shadow-2xl
+                   transform origin-top-right transition-all duration-300 ease-in-out
+                   scale-90 opacity-0 invisible pointer-events-none"
             >
-                {name}
+                <div class="p-4 flex flex-col gap-4">
+                    <div
+                        class="flex items-center justify-between border-b border-zinc-800/50 pb-3"
+                    >
+                        <div
+                            class="flex items-center gap-2 text-zinc-400 select-none"
+                        >
+                            <Terminal size={14} />
+                            <span
+                                class="text-xs font-mono font-bold tracking-wider text-zinc-300"
+                                >andre_OS</span
+                            >
+                        </div>
+                        <button
+                            id="close-menu-btn"
+                            class="p-1 rounded-md text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
+                        >
+                            <X size={18} />
+                        </button>
+                    </div>
+
+                    <div class="flex flex-col gap-1">
+                        <span
+                            class="text-[10px] uppercase text-zinc-600 font-bold tracking-widest"
+                            >Running Tool</span
+                        >
+                        <span class="text-zinc-100 font-semibold text-base"
+                            >{name}</span
+                        >
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <a
+                            href="/"
+                            class="flex items-center justify-center w-full gap-2 py-2.5 px-3
+                               rounded-lg bg-zinc-100 text-zinc-950 border border-transparent
+                               text-sm font-semibold hover:bg-white
+                               active:scale-95 transition-all"
+                        >
+                            <ChevronLeft size={16} />
+                            Voltar ao Início
+                        </a>
+
+                        <button
+                            id="hide-ui-btn"
+                            class="flex items-center justify-center w-full gap-2 py-2 px-3
+                               rounded-lg bg-zinc-900/50 border border-zinc-800
+                               text-xs text-zinc-400 font-medium
+                               hover:text-red-400 hover:bg-zinc-900 hover:border-red-900/30
+                               transition-all group"
+                        >
+                            <EyeOff size={14} />
+                            Esconder Interface
+                        </button>
+                    </div>
+                </div>
             </div>
-            <a
-                href="/"
-                class="flex items-center cursor-pointer text-xs sm:text-sm font-mono text-zinc-400 tracking-tight"
-            >
-                andre_OS
-            </a>
-        </header>
+        </div>
 
         <main class="flex flex-1 overflow-auto">
             <ToolLoader name={name} client:load />
         </main>
     </div>
+
+    <script>
+        const openBtn = document.getElementById("open-menu-btn");
+        const closeBtn = document.getElementById("close-menu-btn");
+        const hideUiBtn = document.getElementById("hide-ui-btn");
+        const menuPanel = document.getElementById("expanded-menu");
+        const restoreZone = document.getElementById("restore-zone");
+
+        let isMenuOpen = false;
+
+        // --- Funções Principais ---
+
+        function openMenu() {
+            if (!openBtn || !menuPanel) return;
+            isMenuOpen = true;
+
+            // Animação de entrada do menu
+            menuPanel.classList.remove(
+                "invisible",
+                "opacity-0",
+                "scale-90",
+                "pointer-events-none",
+            );
+            menuPanel.classList.add("opacity-100", "scale-100");
+
+            // Oculta e desativa o botão de abrir (para não clicar nele enquanto o menu tá aberto)
+            openBtn.classList.add(
+                "opacity-0",
+                "scale-75",
+                "pointer-events-none",
+            );
+        }
+
+        function closeMenu() {
+            if (!openBtn || !menuPanel) return;
+            isMenuOpen = false;
+
+            // Esconde o menu
+            menuPanel.classList.remove("opacity-100", "scale-100");
+            menuPanel.classList.add(
+                "invisible",
+                "opacity-0",
+                "scale-90",
+                "pointer-events-none",
+            );
+
+            // Traz o botão de volta ao estado NORMAL (clicável)
+            openBtn.classList.remove(
+                "opacity-0",
+                "scale-75",
+                "pointer-events-none",
+                "translate-x-10",
+            );
+        }
+
+        function activateFocusMode() {
+            if (!openBtn || !restoreZone) return;
+
+            // 1. Garante que o menu feche primeiro
+            closeMenu();
+
+            // 2. Agora aplica o "sumiço" no botão (animação de saída para a direita)
+            // Adicionamos 'pointer-events-none' para ninguém clicar no botão invisível sem querer
+            setTimeout(() => {
+                openBtn.classList.add(
+                    "opacity-0",
+                    "translate-x-10",
+                    "pointer-events-none",
+                );
+            }, 50); // Pequeno delay para garantir que o closeMenu não sobrescreva
+
+            // 3. Ativa a zona fantasma
+            restoreZone.classList.remove("hidden");
+        }
+
+        function restoreUI() {
+            if (!openBtn || !restoreZone) return;
+
+            // 1. Remove classes que escondem e bloqueiam o clique
+            openBtn.classList.remove(
+                "opacity-0",
+                "translate-x-10",
+                "pointer-events-none",
+            );
+
+            // 2. Garante que ele está na escala correta
+            openBtn.classList.remove("scale-75");
+
+            // 3. Desativa zona fantasma
+            restoreZone.classList.add("hidden");
+        }
+
+        // --- Event Listeners ---
+
+        openBtn?.addEventListener("click", (e) => {
+            e.stopPropagation();
+            openMenu();
+        });
+
+        closeBtn?.addEventListener("click", (e) => {
+            e.stopPropagation();
+            closeMenu();
+        });
+
+        hideUiBtn?.addEventListener("click", (e) => {
+            e.stopPropagation();
+            activateFocusMode();
+        });
+
+        // Zona de restauração: Funciona com mouseover (Desktop) e click (Mobile)
+        restoreZone?.addEventListener("mouseenter", restoreUI);
+        restoreZone?.addEventListener("click", restoreUI);
+
+        // Click Outside
+        document.addEventListener("click", (e) => {
+            if (
+                isMenuOpen &&
+                menuPanel &&
+                !menuPanel.contains(e.target as Node)
+            ) {
+                closeMenu();
+            }
+        });
+
+        // Tecla ESC
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                if (isMenuOpen) closeMenu();
+                // Opcional: Se quiser que o ESC também restaure a UI caso esteja escondida:
+                if (!restoreZone?.classList.contains("hidden")) restoreUI();
+            }
+        });
+    </script>
 </Layout>
