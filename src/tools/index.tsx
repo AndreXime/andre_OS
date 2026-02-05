@@ -4,6 +4,7 @@ import { lazy, Suspense, type JSX } from "preact/compat";
 export const ToolRegistry: Record<string, () => JSX.Element> = {
 	WebCodeEditor: lazy(() => import("./editor/App")),
 	EveryDayUtils: lazy(() => import("./utils/App")),
+	CVBuilder: lazy(() => import("./cvbuilder/Page")),
 };
 
 export function ToolLoader({ name }: { name: string }) {
@@ -17,7 +18,7 @@ export function ToolLoader({ name }: { name: string }) {
 				</div>
 			}
 		>
-			{Component ? <Component /> : <div>Componente não encontrado</div>}{" "}
+			{Component ? <Component /> : <div>Componente não encontrado</div>}
 		</Suspense>
 	);
 }
