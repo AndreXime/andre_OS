@@ -18,23 +18,25 @@ const metaEntry = await getEntry("meta", "global");
 const tags = metaEntry?.data.tags || {};
 const lastDate = metaEntry?.data.lastDate || undefined;
 
-const filteredPosts = posts.filter((post) => {
-	const data = post;
+const filteredPosts = posts
+	.filter((post) => {
+		const data = post;
 
-	// Filtro de Categoria
-	if (categoryParam !== "all" && data.type !== categoryParam) return false;
+		// Filtro de Categoria
+		if (categoryParam !== "all" && data.type !== categoryParam)
+			return false;
 
-	// Filtro de Texto
-	if (searchParam) {
-		return (
-			data.title.toLowerCase().includes(searchParam) ||
-			data.description.toLowerCase().includes(searchParam) ||
-			data.tags.some((t) => t.toLowerCase().includes(searchParam))
-		);
-	}
-	return true;
-});
-
+		// Filtro de Texto
+		if (searchParam) {
+			return (
+				data.title.toLowerCase().includes(searchParam) ||
+				data.description.toLowerCase().includes(searchParam) ||
+				data.tags.some((t) => t.toLowerCase().includes(searchParam))
+			);
+		}
+		return true;
+	})
+	.map((post) => ({ ...post, id: Number(post.id) }));
 Astro.response.headers.set(
 	"Cache-Control",
 	"public, max-age=0, s-maxage=31536000, must-revalidate",

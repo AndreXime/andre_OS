@@ -58,7 +58,10 @@ if (Astro.url.searchParams.get("action") === "logout") {
     Astro.cookies.delete("admin_session", { path: "/" });
     return Astro.redirect(Astro.url.pathname);
 }
-const posts = (await getCollection("posts")).map(({ data, ...post }) => data);
+
+const posts = (await getCollection("posts"))
+    .map(({ data, ...post }) => data)
+    .map((post) => ({ ...post, id: Number(post.id) }));
 ---
 
 <Layout title={isAuthenticated ? "Admin | andre_OS" : "Login | andre_OS"}>
