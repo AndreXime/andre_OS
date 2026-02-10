@@ -3,6 +3,19 @@ import { z } from "astro:schema";
 import type { Post } from "@/database/types";
 import { createPost, deletePost, updatePost } from "@/database/post/mutations";
 import { revalidateCache } from "@/database/cache";
+import { jwtDecrypt } from "jose";
+
+const JWT_SECRET = new TextEncoder().encode(import.meta.env.JWT_SECRET);
+
+async function isAuthenticated(cookie: string | undefined) {
+	if (!cookie) return false;
+	try {
+		const { payload } = await jwtDecrypt(cookie, JWT_SECRET);
+		return payload.admin === true;
+	} catch {
+		return false;
+	}
+}
 
 const PostSchema = z.object({
 	// O ID é opcional na entrada, pois na criação ele não existe
@@ -22,8 +35,12 @@ const PostSchema = z.object({
 export const server = {
 	savePost: defineAction({
 		input: PostSchema,
-		handler: async (input) => {
+		handler: async (input, context) => {
 			try {
+				const authCookie = context.cookies.get("a")?.value;
+				if (!(await isAuthenticated(authCookie))) {
+					throw new Error("UNAUTHORIZED_ACCESS");
+				}
 				// Se tiver ID, atualizamos
 				if (input.id && input.id !== 0) {
 					const updated = await updatePost(input as Post);
@@ -34,8 +51,7 @@ export const server = {
 				const created = await createPost(input);
 				await revalidateCache();
 				return { success: true, post: created, action: "create" };
-			} catch (error) {
-				console.log(error);
+			} catch {
 				return { success: false };
 			}
 		},
@@ -43,8 +59,13 @@ export const server = {
 
 	deletePost: defineAction({
 		input: z.object({ id: z.number() }),
-		handler: async ({ id }) => {
+		handler: async ({ id }, context) => {
 			try {
+				const authCookie = context.cookies.get("a")?.value;
+				if (!(await isAuthenticated(authCookie))) {
+					throw new Error("UNAUTHORIZED_ACCESS");
+				}
+
 				await deletePost(id);
 				await revalidateCache();
 				return { success: true };
