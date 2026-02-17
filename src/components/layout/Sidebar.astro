@@ -1,5 +1,5 @@
 ---
-import { Command, FileText, ExternalLink, Terminal } from "lucide-preact";
+import { Command, FileText, ExternalLink, Terminal, Search } from "lucide-preact";
 
 interface Props {
     tagCounts: Record<string, number> | undefined;
@@ -14,6 +14,21 @@ const { tagCounts, currentFilter, currentSearch } = Astro.props;
     class="lg:col-span-2 hidden sticky top-24 h-[calc(100vh-8rem)] transition-all duration-300 lg:block opacity-100 translate-x-0"
 >
     <div class="space-y-8">
+        <form action="/" method="GET" class="md:hidden flex items-center group relative">
+            <Search
+                size={14}
+                class="absolute left-3 top-2 text-zinc-500 group-focus-within:text-emerald-500 transition-colors"
+            />
+            <input
+                type="text"
+                name="q"
+                value={currentSearch}
+                placeholder="Pesquisar notas, ferramentas..."
+                class="w-full bg-zinc-900 border border-zinc-800 text-sm py-1.5 pl-9 pr-4 rounded-md text-zinc-300 placeholder-zinc-600 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all font-mono"
+            />
+            <input type="hidden" name="category" value={currentFilter !== "all" ? currentFilter : ""} />
+        </form>
+
         <div class="space-y-1">
             <p
                 class="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-2 pl-2"
@@ -22,7 +37,7 @@ const { tagCounts, currentFilter, currentSearch } = Astro.props;
             </p>
             {
                 [
-                    { id: "all", label: "Root / Tudo", Icon: Command },
+                    { id: "all", label: "~/root", Icon: Command },
                     { id: "note", label: "~/notas", Icon: FileText },
                     { id: "link", label: "~/links", Icon: ExternalLink },
                     { id: "tool", label: "~/bin", Icon: Terminal },
@@ -89,8 +104,19 @@ const { tagCounts, currentFilter, currentSearch } = Astro.props;
                 }
             }
         } else {
-            sidebar?.classList.toggle("hidden");
-            mainContent.classList.toggle("hidden");
+            const isOpen = sidebar?.classList.contains("hidden");
+
+            if (isOpen) {
+                sidebar?.classList.remove("hidden");
+                sidebar?.classList.add("fixed", "inset-0", "z-50");
+                document.body.classList.add("overflow-hidden");
+                mainContent?.classList.add("hidden");
+            } else {
+                sidebar?.classList.add("hidden");
+                sidebar?.classList.remove("fixed", "inset-0", "z-50");
+                document.body.classList.remove("overflow-hidden");
+                mainContent?.classList.remove("hidden");
+            }
         }
     });
 </script>

@@ -27,11 +27,11 @@ const { post, tags, lastDate } = Astro.props;
 ---
 
 <Layout title={post.title + " | andre_OS"}>
-    <div class="min-h-screen relative" id="app-root">
+    <div class="min-h-screen relative">
         <Header searchParam={""} filterParam={""} />
 
         <div
-            class="pt-20 px-4 md:px-6 max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 transition-all"
+            class="pt-20 pb-12 px-4 md:px-6 max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 transition-all"
         >
             <Sidebar tagCounts={tags} currentFilter={""} currentSearch={""} />
 

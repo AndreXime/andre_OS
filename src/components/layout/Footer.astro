@@ -19,7 +19,13 @@ const { lastDate } = Astro.props;
         <span class="hidden md:inline text-zinc-700">|</span>
         <span class="hidden md:inline"
             >Last Update: {
-                lastDate ? formatDate(new Date(lastDate)) : "00:00"
+                lastDate
+                    ? new Intl.DateTimeFormat("pt-BR", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                      }).format(new Date(lastDate))
+                    : "00:00"
             }</span
         >
     </div>
