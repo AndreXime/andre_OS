@@ -56,15 +56,11 @@ a {
 
 	.a4-page {
 		width: 100%;
-		height: auto;
+		height: 297mm;
+		overflow: hidden;
 		margin: 0;
 		box-shadow: none;
 		background: transparent;
-		/* Garante que o padding seja respeitado na impressão */
 		padding: 10mm 14mm 12mm 14mm;
-	}
-
-	.no-print {
-		display: none !important;
 	}
 }

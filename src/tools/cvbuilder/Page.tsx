@@ -31,7 +31,7 @@ function ResumeContent() {
 	if (!content) return null;
 
 	return (
-		<div class="a4-page pt-52">
+		<div class="a4-page">
 			<Header data={content.header} />
 			<Intro text={content.intro} />
 			<Experience experiences={content.experience} />
