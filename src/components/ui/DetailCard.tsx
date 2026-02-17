@@ -63,7 +63,7 @@ export default function DetailPostView({ post }: { post: Post }) {
 			<div class="p-6 md:p-8 overflow-y-auto flex-1 prose prose-invert prose-zinc prose-pre:text-base max-w-none">
 				{post.content && (
 					<div
-						class="text-zinc-200 leading-relaxed content-container"
+						class="text-zinc-200 leading-relaxed content-container [&>*:first-child]:mt-0"
 						dangerouslySetInnerHTML={{ __html: parseMarkdown(post.content) }}
 					/>
 				)}
