@@ -1,7 +1,7 @@
-import { Loader2 } from "lucide-preact";
-import { lazy, Suspense, type JSX } from "preact/compat";
+import { Loader2 } from "lucide-react";
+import { lazy, Suspense, type ComponentType } from "react";
 
-export const ToolRegistry: Record<string, () => JSX.Element> = {
+export const ToolRegistry: Record<string, ComponentType> = {
 	WebCodeEditor: lazy(() => import("./editor/App")),
 	EveryDayUtils: lazy(() => import("./utils/App")),
 	CVBuilder: lazy(() => import("./cvbuilder/Page")),

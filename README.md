@@ -5,7 +5,7 @@ Um blog pessoal e portfólio criativo que utiliza a estética de um sistema oper
 ## Tecnologias Utilizadas
 
 * **[Astro](https://astro.build/)**: Serve a estrutura base do site e as páginas de conteúdo (posts) com máxima performance, utilizando renderização no servidor (SSR) para dados dinâmicos.
-* **[Preact](https://preactjs.com/)**: Gerencia a interatividade das ferramentas web (Apps) e do painel administrativo com uma pegada leve, utilizando *aliasing* para compatibilidade com React.
+* **[React](https://react.dev/)**: Gerencia a interatividade das ferramentas web (Apps) e do painel administrativo.
 * **[LibSQL (Turso)](https://turso.tech/libsql)**: Atua como a base de dados central para armazenar todos os posts, referências de links e configurações das ferramentas.
 * **[Docker](https://www.docker.com/)**: Simplifica o ambiente de desenvolvimento ao rodar uma instância local do banco de dados LibSQL isolada do sistema principal.
 * **[Tailwind CSS v4](https://tailwindcss.com/)**: Permite criar o design visual complexo estilo "Desktop" e os componentes de UI de forma rápida e responsiva.

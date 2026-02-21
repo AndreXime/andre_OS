@@ -1,6 +1,6 @@
-import { RotateCcw } from "lucide-preact";
-import { useLayoutEffect, useRef } from "preact/hooks";
-import { useStore } from "@nanostores/preact";
+import { RotateCcw } from "lucide-react";
+import { useLayoutEffect, useRef } from "react";
+import { useStore } from "@nanostores/react";
 import { activeResume$, updateResumeContent, resetActiveResume } from "../lib/store";
 
 export function EditorTab() {
@@ -33,7 +33,7 @@ export function EditorTab() {
 				id="cv-content"
 				name="cv-content"
 				autoComplete="off"
-				key={activeResume?.id} // Key ajuda o React/Preact a entender que mudou o contexto
+				key={activeResume?.id}
 				className="flex-1 w-full p-4 border border-slate-300 rounded-md text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none leading-relaxed"
 				placeholder="Siga o exemplo padrão"
 				defaultValue={activeResume?.data}

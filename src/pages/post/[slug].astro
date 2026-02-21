@@ -9,7 +9,7 @@ import {
     getLastPostDate,
     getAllPostNotes,
 } from "@/database/post/queries";
-import { ChevronLeft } from "lucide-preact";
+import { ChevronLeft } from "lucide-react";
 
 export async function getStaticPaths() {
     const [posts, tags, lastDate] = await Promise.all([
@@ -44,7 +44,7 @@ const { post, tags, lastDate } = Astro.props;
                         >
                             <ChevronLeft
                                 size={16}
-                                class="group-hover:-translate-x-0.5 transition-transform"
+                                className="group-hover:-translate-x-0.5 transition-transform"
                             />
                             Home
                         </a>

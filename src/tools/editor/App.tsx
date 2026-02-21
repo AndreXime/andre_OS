@@ -1,14 +1,15 @@
-import { FilePlus, FolderPlus, Ghost } from "lucide-preact";
+import type React from "react";
+import { FilePlus, FolderPlus, Ghost } from "lucide-react";
 import Editor from "@monaco-editor/react";
 import FileTreeItem from "./FileTree";
 import ContextMenu from "./ContentMenu";
-import { useStore } from "@nanostores/preact";
+import { useStore } from "@nanostores/react";
 import { $editor, createNode, setAddingType, setMenu, updateFileContent } from "./store";
 
 export default function WebEditor() {
 	const { files, selectedFile, addingType } = useStore($editor);
 
-	const handleContextMenu = (e: MouseEvent, parentId: string | null = null) => {
+	const handleContextMenu = (e: React.MouseEvent<HTMLElement>, parentId: string | null = null) => {
 		e.preventDefault();
 		e.stopPropagation();
 		setMenu({ x: e.clientX, y: e.clientY, parentId });
@@ -76,7 +77,7 @@ export default function WebEditor() {
 						key={selectedFile.id}
 						language={selectedFile.language}
 						defaultValue={selectedFile.content}
-						onChange={(val: string) => updateFileContent(selectedFile.id, val || "")}
+						onChange={(val) => updateFileContent(selectedFile.id, val ?? "")}
 						options={{ minimap: { enabled: false }, fontSize: 14, automaticLayout: true }}
 					/>
 				) : (

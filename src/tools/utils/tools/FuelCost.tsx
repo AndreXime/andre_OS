@@ -1,5 +1,5 @@
 import type { ToolThemeSchema } from "../toolsData";
-import { useState, useMemo } from "preact/hooks";
+import { useState, useMemo } from "react";
 
 function calcularCustoCombustivel(distancia: number, kml: number, preco: number, freq: number) {
 	// Retorna tudo zerado se faltar dados

@@ -1,6 +1,6 @@
-import { Check, Copy } from "lucide-preact";
-import { useState, useMemo } from "preact/hooks";
-import { useStore } from "@nanostores/preact";
+import { Check, Copy } from "lucide-react";
+import { useState, useMemo } from "react";
+import { useStore } from "@nanostores/react";
 import { masterProfile$ } from "../lib/store";
 import IAPromptTemplate from "../markdown/promptExample.md?raw";
 

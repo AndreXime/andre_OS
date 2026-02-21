@@ -1,5 +1,5 @@
 ---
-import { PanelLeft, Search, Github } from "lucide-preact";
+import { PanelLeft, Search, Github } from "lucide-react";
 
 interface Props {
     searchParam: string;
@@ -37,7 +37,7 @@ const { searchParam, filterParam } = Astro.props;
     >
         <Search
             size={14}
-            class="absolute left-3 top-2 text-zinc-500 group-focus-within:text-emerald-500 transition-colors"
+            className="absolute left-3 top-2 text-zinc-500 group-focus-within:text-emerald-500 transition-colors"
         />
 
         <input
@@ -57,7 +57,7 @@ const { searchParam, filterParam } = Astro.props;
         <div
             class="w-8 h-8 bg-zinc-900 border border-zinc-800 rounded-full flex items-center justify-center"
         >
-            <Github size={14} class="hover:text-white cursor-pointer" />
+            <Github size={14} className="hover:text-white cursor-pointer" />
         </div>
     </div>
 </header>

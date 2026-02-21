@@ -1,6 +1,6 @@
-import { Edit, Layout, Trash2 } from "lucide-preact";
+import { Edit, Layout, Trash2 } from "lucide-react";
 import { startEditing, deleteItem, $items } from "./store";
-import { useStore } from "@nanostores/preact";
+import { useStore } from "@nanostores/react";
 
 export default function AdminList() {
 	const items = useStore($items);

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "preact/hooks";
+import { useState, useEffect, useCallback } from "react";
 import type { ToolThemeSchema } from "../toolsData";
 
 // --- Utilitários de Lógica ---

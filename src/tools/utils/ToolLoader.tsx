@@ -1,6 +1,6 @@
-import { Suspense } from "preact/compat";
+import { Suspense } from "react";
 import type { ActiveTool } from "./toolsData";
-import { Loader2Icon } from "lucide-preact";
+import { Loader2Icon } from "lucide-react";
 
 export default function ToolLoader({ tool }: { tool: ActiveTool }) {
 	const IconComponent = tool.icon;

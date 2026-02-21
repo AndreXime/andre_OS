@@ -1,5 +1,5 @@
-import { DollarSign, Fuel, Lock, type LucideIcon, Percent } from "lucide-preact";
-import { lazy } from "preact/compat";
+import { DollarSign, Fuel, Lock, type LucideIcon, Percent } from "lucide-react";
+import { lazy } from "react";
 
 export const ColorThemes = {
 	Emerald: {

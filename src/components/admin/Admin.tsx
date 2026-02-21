@@ -1,8 +1,8 @@
 import type { Post } from "@/database/types";
-import { List, LogOut, PenTool } from "lucide-preact";
-import { useEffect } from "preact/hooks";
+import { List, LogOut, PenTool } from "lucide-react";
+import { useEffect } from "react";
 import { $items, $formState, setItems, setActiveTab } from "./store";
-import { useStore } from "@nanostores/preact";
+import { useStore } from "@nanostores/react";
 import AdminEditor from "./Editor";
 import AdminList from "./List";
 

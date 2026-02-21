@@ -1,4 +1,4 @@
-import { useStore } from "@nanostores/preact";
+import { useStore } from "@nanostores/react";
 import { $editor, deleteNode, setAddingType, setMenu } from "./store";
 
 export default function ContextMenu() {

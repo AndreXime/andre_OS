@@ -1,6 +1,6 @@
-import { Printer, FileText, Briefcase, User, Expand, Minimize2, Database, Eye, BookOpen } from "lucide-preact";
-import { useState } from "preact/hooks";
-import type React from "preact/compat";
+import { Printer, FileText, Briefcase, User, Expand, Minimize2, Database, Eye, BookOpen } from "lucide-react";
+import { useState } from "react";
+import type React from "react";
 
 import { EditorTab } from "./tabs/EditorTab";
 import { ContextTab } from "./tabs/ContextTab";

@@ -1,5 +1,5 @@
-import { useStore } from "@nanostores/preact";
-import { Terminal, Plus, CheckCircle2, Hash, Save, Eye, Edit2 } from "lucide-preact";
+import { useStore } from "@nanostores/react";
+import { Terminal, Plus, CheckCircle2, Hash, Save, Eye, Edit2 } from "lucide-react";
 
 import {
 	$editingItem,
@@ -14,7 +14,7 @@ import {
 	updateDraft,
 	$preview,
 } from "./store";
-import { useState } from "preact/hooks";
+import { useState, type FormEvent } from "react";
 import PreviewCard from "../ui/PreviewCards";
 import DetailPostView from "../ui/DetailCard";
 import { ToolRegistry } from "@/tools";
@@ -28,7 +28,7 @@ export default function AdminEditor() {
 	const [isPreview, setIsPreview] = useState(false);
 	const hasIntro = items.some((i) => i.type === "intro");
 
-	const handleSubmit = async (e: SubmitEvent) => {
+	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
 		await saveItem(previewItem);

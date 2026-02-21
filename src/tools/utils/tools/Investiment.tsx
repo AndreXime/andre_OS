@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "preact/hooks";
+import { useEffect, useState, useMemo } from "react";
 import type { ToolThemeSchema } from "../toolsData";
 
 interface TaxaApiItem {

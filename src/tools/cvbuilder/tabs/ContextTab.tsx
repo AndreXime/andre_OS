@@ -1,6 +1,6 @@
-import { useStore } from "@nanostores/preact";
+import { useStore } from "@nanostores/react";
 import { masterProfile$, updateMasterProfile } from "../lib/store";
-import { useLayoutEffect, useRef } from "preact/hooks";
+import { useLayoutEffect, useRef } from "react";
 
 export function ContextTab() {
 	const masterProfile = useStore(masterProfile$);

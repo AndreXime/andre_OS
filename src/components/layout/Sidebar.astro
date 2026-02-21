@@ -1,5 +1,11 @@
 ---
-import { Command, FileText, ExternalLink, Terminal, Search } from "lucide-preact";
+import {
+    Command,
+    FileText,
+    ExternalLink,
+    Terminal,
+    Search,
+} from "lucide-react";
 
 interface Props {
     tagCounts: Record<string, number> | undefined;
@@ -14,10 +20,14 @@ const { tagCounts, currentFilter, currentSearch } = Astro.props;
     class="lg:col-span-2 hidden sticky top-24 h-[calc(100vh-8rem)] transition-all duration-300 lg:block opacity-100 translate-x-0"
 >
     <div class="space-y-8">
-        <form action="/" method="GET" class="md:hidden flex items-center group relative">
+        <form
+            action="/"
+            method="GET"
+            class="md:hidden flex items-center group relative"
+        >
             <Search
                 size={14}
-                class="absolute left-3 top-2 text-zinc-500 group-focus-within:text-emerald-500 transition-colors"
+                className="absolute left-3 top-2 text-zinc-500 group-focus-within:text-emerald-500 transition-colors"
             />
             <input
                 type="text"
@@ -26,7 +36,11 @@ const { tagCounts, currentFilter, currentSearch } = Astro.props;
                 placeholder="Pesquisar notas, ferramentas..."
                 class="w-full bg-zinc-900 border border-zinc-800 text-sm py-1.5 pl-9 pr-4 rounded-md text-zinc-300 placeholder-zinc-600 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all font-mono"
             />
-            <input type="hidden" name="category" value={currentFilter !== "all" ? currentFilter : ""} />
+            <input
+                type="hidden"
+                name="category"
+                value={currentFilter !== "all" ? currentFilter : ""}
+            />
         </form>
 
         <div class="space-y-1">

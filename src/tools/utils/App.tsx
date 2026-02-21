@@ -1,7 +1,7 @@
 "use client";
 import { toolCategories, type ActiveTool } from "./toolsData";
-import { useCallback, useState } from "preact/hooks";
-import { ChevronRight, ArrowLeft } from "lucide-preact";
+import { useCallback, useState } from "react";
+import { ChevronRight, ArrowLeft } from "lucide-react";
 import ToolLoader from "./ToolLoader";
 
 export default function EveryDayUtils() {

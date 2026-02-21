@@ -1,4 +1,4 @@
-import { useState, useMemo } from "preact/hooks";
+import { useState, useMemo } from "react";
 import type { ToolThemeSchema } from "../toolsData";
 
 // --- Funções de Cálculo (Mantidas iguais) ---
@@ -82,7 +82,7 @@ export default function PercentageCalculatorCard({ colors }: { colors: ToolTheme
 
 	const [isDiscount, setIsDiscount] = useState(true);
 
-	const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
 		const { name, value } = e.currentTarget;
 		if (/^[\d.-]*$/.test(value)) {
 			setInputs((prev) => ({ ...prev, [name]: value }));

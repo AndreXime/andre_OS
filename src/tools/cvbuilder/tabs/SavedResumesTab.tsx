@@ -1,5 +1,5 @@
-import { Plus, Trash2, FileText } from "lucide-preact";
-import { useStore } from "@nanostores/preact";
+import { Plus, Trash2, FileText } from "lucide-react";
+import { useStore } from "@nanostores/react";
 import { resumes$, createNewResume, setActiveResume, deleteResume } from "../lib/store";
 
 export function SavedResumesTab() {
