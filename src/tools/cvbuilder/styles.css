@@ -2,7 +2,7 @@
 
 @page {
 	size: A4;
-	margin: 0; /* A margem é controlada pelo padding do conteúdo */
+	margin: 0;
 }
 
 body {
@@ -21,7 +21,7 @@ body {
 	min-height: 297mm;
 	background-color: white;
 	margin: 0 auto;
-	position: relative; /* Necessário apenas para tela */
+	position: relative;
 	padding: 10mm 14mm 12mm 14mm;
 	box-sizing: border-box;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -29,21 +29,6 @@ body {
 	flex-direction: column;
 }
 
-/* Estilos de Texto */
-.content-text {
-	font-size: 12px;
-	line-height: 1.5;
-}
-
-.meta-text {
-	font-size: 12px;
-}
-
-.section-title {
-	font-size: 14px;
-}
-
-/* Links padrão agora herdam a cor definida na classe inline */
 a {
 	text-decoration: none;
 }

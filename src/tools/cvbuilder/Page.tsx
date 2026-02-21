@@ -43,22 +43,21 @@ function ResumeContent() {
 }
 
 // Para resolver negritos e italicos do markdown que podem aparecer
-export const RichText = ({ content }: { content: string }) => {
+const RichText = ({ content }: { content: string }) => {
 	const html = content.replace(/\*\*(.*?)\*\*/g, "<strong >$1</strong>").replace(/\*(.*?)\*/g, "<em >$1</em>");
-	// biome-ignore lint/security/noDangerouslySetInnerHtml: ""
 	return <span dangerouslySetInnerHTML={{ __html: html }} />;
 };
 
 function Header({ data }: { data: UserData["header"] }) {
 	return (
-		<header className="text-center border-b-2 border-black pb-3 mb-5">
+		<header className="text-center border-b-2 border-black pb-3 mb-4">
 			<h1 className="text-3xl font-bold uppercase tracking-wide mb-0.5">{data.name}</h1>
 			<p className="text-base uppercase tracking-wider font-medium mb-2">{data.role}</p>
 			<div className="text-xs font-medium space-y-0.5">
 				<p>
 					{data.location} {" | "}
 					{data.phone} {" | "}
-					<a href="mailto:andreximenesa20@gmail.com" className="text-blue-700 underline decoration-blue-700">
+					<a href={`mailto:${data.email}`} className="text-blue-700 underline decoration-blue-700">
 						{data.email}
 					</a>
 				</p>
@@ -98,8 +97,8 @@ function Header({ data }: { data: UserData["header"] }) {
 function Intro({ text }: { text: UserData["intro"] }) {
 	return (
 		<section className="mb-4">
-			<h2 className="section-title font-bold uppercase border-b border-black mb-1.5 pb-[2px]">Resumo Profissional</h2>
-			<p className="content-text text-justify">
+			<h2 className="text-[14px] font-bold uppercase border-b border-black mb-1.5 pb-[2px]">Resumo Profissional</h2>
+			<p className="text-[12px] leading-normal text-left">
 				<RichText content={text} />
 			</p>
 		</section>
@@ -109,8 +108,8 @@ function Intro({ text }: { text: UserData["intro"] }) {
 function Skills({ skills }: { skills: UserData["skills"] }) {
 	return (
 		<section className="mb-4">
-			<h2 className="section-title font-bold uppercase border-b border-black mb-1.5 pb-[2px]">Habilidades Técnicas</h2>
-			<div className="content-text grid grid-cols-1 gap-0.5">
+			<h2 className="text-[14px] font-bold uppercase border-b border-black mb-1.5 pb-[2px]">Habilidades Técnicas</h2>
+			<div className="text-[12px] leading-normal grid grid-cols-1 gap-0.5">
 				{skills.map((skill) => (
 					<div key={skill}>
 						<RichText content={skill} />
@@ -124,24 +123,22 @@ function Skills({ skills }: { skills: UserData["skills"] }) {
 function Experience({ experiences }: { experiences: UserData["experience"] }) {
 	return (
 		<section className="mb-4">
-			<h2 className="section-title font-bold uppercase border-b border-black mb-2 pb-[2px]">
-				Experiência Profissional
-			</h2>
+			<h2 className="text-[14px] font-bold uppercase border-b border-black mb-2 pb-[2px]">Experiência Profissional</h2>
 
 			{experiences.map((experience) => (
-				<div key={experience.company} className="mb-2">
+				<div key={experience.company} className="mb-2 last:mb-0">
 					<div className="flex justify-between items-baseline mb-0.5">
 						<h3 className="font-bold text-[13px]">{experience.role}</h3>
-						<span className="meta-text font-bold">{experience.period}</span>
+						<span className="text-[12px] font-bold">{experience.period}</span>
 					</div>
-					<div className="meta-text italic mb-1">{experience.company}</div>
+					<div className="text-[12px] italic mb-1">{experience.company}</div>
 					{experience.shortdescription && (
-						<div className="content-text mb-1">
+						<div className="text-[12px] leading-normal mb-1">
 							<RichText content={experience.shortdescription} />
 						</div>
 					)}
 					{experience.descriptionList && experience.descriptionList.length > 0 && (
-						<ul className="list-disc list-outside ml-4 content-text space-y-0.5 text-justify">
+						<ul className="list-disc list-outside ml-4 text-[12px] leading-normal space-y-0.5 text-left">
 							{experience.descriptionList.map((text) => (
 								<li key={text}>
 									<RichText content={text} />
@@ -158,19 +155,19 @@ function Experience({ experiences }: { experiences: UserData["experience"] }) {
 function Projects({ projects }: { projects: UserData["projects"] }) {
 	return (
 		<section className="mb-4">
-			<h2 className="section-title font-bold uppercase border-b border-black mb-1.5 pb-[2px]">Projetos Relevantes</h2>
+			<h2 className="text-[14px] font-bold uppercase border-b border-black mb-1.5 pb-[2px]">Projetos Relevantes</h2>
 
 			{projects.map((project) => (
-				<div key={project.title} className="mb-3">
+				<div key={project.title} className="mb-3 last:mb-0">
 					<div className="flex justify-between items-baseline">
 						<h3 className="font-bold text-[13px]">{project.title}</h3>
-						<span className="meta-text italic">{project.stack}</span>
+						<span className="text-[12px] italic">{project.stack}</span>
 					</div>
-					<p className="content-text text-justify my-1">
+					<p className="text-[12px] leading-normal text-left my-1">
 						<RichText content={project.description} />
 					</p>
 					{project.descriptionList && project.descriptionList.length > 0 && (
-						<ul className="list-disc list-outside ml-4 content-text space-y-0.5 text-justify">
+						<ul className="list-disc list-outside ml-4 text-[12px] leading-normal space-y-0.5 text-left">
 							{project.descriptionList.map((text) => (
 								<li key={text}>
 									<RichText content={text} />
@@ -186,18 +183,18 @@ function Projects({ projects }: { projects: UserData["projects"] }) {
 
 function Education({ educations }: { educations: UserData["education"] }) {
 	return (
-		<section className="mb-2">
-			<h2 className="section-title font-bold uppercase border-b border-black mb-1.5 pb-[2px]">Formação Acadêmica</h2>
+		<section className="mb-0">
+			<h2 className="text-[14px] font-bold uppercase border-b border-black mb-1.5 pb-[2px]">Formação Acadêmica</h2>
 			{educations.map((edu) => (
-				<div key={edu.institution} className="flex justify-between items-baseline content-text mb-4">
-					<div>
+				<div key={edu.institution} className="mb-4 text-[12px] leading-normal last:mb-0">
+					<div className="flex justify-between items-baseline">
 						<span className="font-bold">{edu.degree}</span>
-						<span className="block italic text-[11px] mt-0.5">{edu.institution}</span>
-						<span className="block text-[11px] mt-0.5 text-justify">
-							<RichText content={edu.description} />
-						</span>
+						<span className="font-bold whitespace-nowrap ml-2">{edu.period}</span>
 					</div>
-					<span className="font-bold whitespace-nowrap">{edu.period}</span>
+					<span className="block italic text-[11px] mt-0.5">{edu.institution}</span>
+					<span className="block text-[11px] mt-0.5 text-left">
+						<RichText content={edu.description} />
+					</span>
 				</div>
 			))}
 		</section>

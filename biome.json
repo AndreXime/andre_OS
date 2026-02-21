@@ -23,6 +23,9 @@
 		"enabled": true,
 		"rules": {
 			"recommended": true,
+			"security": {
+				"noDangerouslySetInnerHtml": "off"
+			},
 			"correctness": {
 				"noUnusedImports": "error"
 			},
