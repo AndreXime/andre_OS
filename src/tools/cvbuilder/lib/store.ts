@@ -158,3 +158,15 @@ export function resetActiveResume() {
 		updateResumeContent(defaultCV);
 	}
 }
+
+export function printResume() {
+	const parsed = parsedContent$.get();
+	const nome = parsed?.header?.name?.trim() || "Currículo";
+	const role = parsed?.header?.role?.trim() || "";
+	const printTitle = role ? `${nome} - ${role}` : nome;
+
+	const previousTitle = document.title;
+	document.title = printTitle;
+	window.print();
+	document.title = previousTitle;
+}

@@ -2,6 +2,7 @@ import { Printer, FileText, Briefcase, User, Expand, Minimize2, Database, Eye, B
 import { useState } from "react";
 import type React from "react";
 
+import { printResume } from "./lib/store";
 import { EditorTab } from "./tabs/EditorTab";
 import { ContextTab } from "./tabs/ContextTab";
 import { PromptTab } from "./tabs/PromptTab";
@@ -38,7 +39,7 @@ export default function Sidebar() {
 							{expand ? <Minimize2 size={18} /> : <Expand size={18} />}
 						</button>
 						<button
-							onClick={() => window.print()}
+							onClick={printResume}
 							className="p-2 bg-white/10 hover:bg-white/20 rounded-md transition-colors"
 							title="Imprimir / Salvar PDF"
 						>
