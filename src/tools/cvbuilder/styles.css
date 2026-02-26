@@ -22,9 +22,7 @@ body {
 	background-color: white;
 	margin: 0 auto;
 	position: relative;
-	padding: 10mm 14mm 12mm 14mm;
-	box-sizing: border-box;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	padding: 10mm 14mm 10mm 14mm;
 	display: flex;
 	flex-direction: column;
 }
@@ -46,6 +44,6 @@ a {
 		margin: 0;
 		box-shadow: none;
 		background: transparent;
-		padding: 10mm 14mm 12mm 14mm;
+		padding: 10mm 14mm 10mm 14mm;
 	}
 }

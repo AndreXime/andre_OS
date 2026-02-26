@@ -50,9 +50,9 @@ const RichText = ({ content }: { content: string }) => {
 
 function Header({ data }: { data: UserData["header"] }) {
 	return (
-		<header className="text-center border-b-2 border-black pb-3 mb-4">
+		<header className="text-center border-b-2 border-black pb-3 mb-3">
 			<h1 className="text-3xl font-bold uppercase tracking-wide mb-0.5">{data.name}</h1>
-			<p className="text-base uppercase tracking-wider font-medium mb-2">{data.role}</p>
+			<p className="text-base uppercase tracking-wider font-medium mb-1">{data.role}</p>
 			<div className="text-xs font-medium space-y-0.5">
 				<p>
 					{data.location} {" | "}
@@ -96,7 +96,7 @@ function Header({ data }: { data: UserData["header"] }) {
 
 function Intro({ text }: { text: UserData["intro"] }) {
 	return (
-		<section className="mb-4">
+		<section className="mb-3">
 			<h2 className="text-[14px] font-bold uppercase border-b border-black mb-1.5 pb-[2px]">Resumo Profissional</h2>
 			<p className="text-[12px] leading-normal text-left">
 				<RichText content={text} />
@@ -107,7 +107,7 @@ function Intro({ text }: { text: UserData["intro"] }) {
 
 function Skills({ skills }: { skills: UserData["skills"] }) {
 	return (
-		<section className="mb-4">
+		<section className="mb-3">
 			<h2 className="text-[14px] font-bold uppercase border-b border-black mb-1.5 pb-[2px]">Habilidades Técnicas</h2>
 			<div className="text-[12px] leading-normal grid grid-cols-1 gap-0.5">
 				{skills.map((skill) => (
@@ -122,7 +122,7 @@ function Skills({ skills }: { skills: UserData["skills"] }) {
 
 function Experience({ experiences }: { experiences: UserData["experience"] }) {
 	return (
-		<section className="mb-4">
+		<section className="mb-3">
 			<h2 className="text-[14px] font-bold uppercase border-b border-black mb-2 pb-[2px]">Experiência Profissional</h2>
 
 			{experiences.map((experience) => (
@@ -154,7 +154,7 @@ function Experience({ experiences }: { experiences: UserData["experience"] }) {
 
 function Projects({ projects }: { projects: UserData["projects"] }) {
 	return (
-		<section className="mb-4">
+		<section className="mb-3">
 			<h2 className="text-[14px] font-bold uppercase border-b border-black mb-1.5 pb-[2px]">Projetos Relevantes</h2>
 
 			{projects.map((project) => (
@@ -183,7 +183,7 @@ function Projects({ projects }: { projects: UserData["projects"] }) {
 
 function Education({ educations }: { educations: UserData["education"] }) {
 	return (
-		<section className="mb-0">
+		<section className="mb-0 pb-0">
 			<h2 className="text-[14px] font-bold uppercase border-b border-black mb-1.5 pb-[2px]">Formação Acadêmica</h2>
 			{educations.map((edu) => (
 				<div key={edu.institution} className="mb-4 text-[12px] leading-normal last:mb-0">
