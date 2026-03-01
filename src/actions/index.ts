@@ -17,6 +17,16 @@ async function isAuthenticated(cookie: string | undefined) {
 	}
 }
 
+function getErrorMessage(e: unknown): string {
+	if (e instanceof Error) {
+		if (e.message === "UNAUTHORIZED_ACCESS") return "Sessão inválida ou expirada. Faça login novamente.";
+		if (e.message.includes("UNIQUE constraint failed")) return "Já existe um post com este slug.";
+		if (e.message.includes("SQLITE") || e.message.includes("database")) return "Erro no banco de dados. Tente novamente.";
+		return e.message;
+	}
+	return "Erro inesperado. Tente novamente.";
+}
+
 const PostSchema = z.object({
 	// O ID é opcional na entrada, pois na criação ele não existe
 	id: z.number().optional(),
@@ -37,7 +47,7 @@ export const server = {
 		input: PostSchema,
 		handler: async (input, context) => {
 			try {
-				const authCookie = context.cookies.get("a")?.value;
+				const authCookie = context.cookies.get("admin_session")?.value;
 				if (!(await isAuthenticated(authCookie))) {
 					throw new Error("UNAUTHORIZED_ACCESS");
 				}
@@ -51,8 +61,8 @@ export const server = {
 				const created = await createPost(input);
 				await revalidateCache();
 				return { success: true, post: created, action: "create" };
-			} catch {
-				return { success: false };
+			} catch (e) {
+				return { success: false, message: getErrorMessage(e) };
 			}
 		},
 	}),
@@ -61,7 +71,7 @@ export const server = {
 		input: z.object({ id: z.number() }),
 		handler: async ({ id }, context) => {
 			try {
-				const authCookie = context.cookies.get("a")?.value;
+				const authCookie = context.cookies.get("admin_session")?.value;
 				if (!(await isAuthenticated(authCookie))) {
 					throw new Error("UNAUTHORIZED_ACCESS");
 				}
@@ -69,9 +79,9 @@ export const server = {
 				await deletePost(id);
 				await revalidateCache();
 				return { success: true };
-			} catch (error) {
-				console.log(error);
-				return { success: false };
+			} catch (e) {
+				console.error(e);
+				return { success: false, message: getErrorMessage(e) };
 			}
 		},
 	}),

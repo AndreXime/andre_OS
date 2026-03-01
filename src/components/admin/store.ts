@@ -122,11 +122,11 @@ export async function deleteItem(id: number) {
 
 	if (!confirm("Tem certeza que deseja deletar este post?")) return;
 
-	const { error } = await actions.deletePost({ id });
+	const { data, error } = await actions.deletePost({ id });
 
-	if (error) {
-		console.error("Erro ao deletar:", error);
-		alert("Não foi possível deletar o post.");
+	if (error || data?.success === false) {
+		const message = data?.message || error?.message || "Não foi possível deletar o post.";
+		alert(message);
 		return;
 	}
 
@@ -136,23 +136,24 @@ export async function deleteItem(id: number) {
 	if (editingId === id) cancelEditing();
 }
 
-export async function saveItem(postData: Post) {
+export async function saveItem(postData: Post): Promise<boolean> {
 	const { data, error } = await actions.savePost(postData);
 
-	if (error || !data.post) {
-		console.error("Erro de validação ou servidor:", error);
-		alert("Erro ao salvar o post. Verifique o console.");
-		return;
+	if (error || !data?.post) {
+		const message = data?.message || error?.message || "Erro ao salvar o post. Tente novamente.";
+		alert(message);
+		return false;
 	}
 
 	const currentItems = $items.get();
 	const exists = currentItems.some((i) => i.id === postData.id);
 
 	if (exists) {
-		$items.set(currentItems.map((item) => (item.id === postData.id ? postData : item)));
+		$items.set(currentItems.map((item) => (item.id === postData.id ? data.post : item)));
 	} else {
 		$items.set([data.post, ...currentItems]);
 	}
+	return true;
 }
 
 export function triggerSuccess() {

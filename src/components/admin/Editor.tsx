@@ -31,7 +31,8 @@ export default function AdminEditor() {
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		await saveItem(previewItem);
+		const ok = await saveItem(previewItem);
+		if (!ok) return;
 
 		triggerSuccess();
 
