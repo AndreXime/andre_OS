@@ -1,6 +1,5 @@
 import { defineAction } from "astro:actions";
 import { z } from "astro:schema";
-import type { Post } from "@/database/types";
 import { createPost, deletePost, updatePost } from "@/database/post/mutations";
 import { revalidateCache } from "@/database/cache";
 import { isAuthenticated, getAuthErrorMessage, ADMIN_SESSION_COOKIE } from "@/lib/auth";
@@ -29,16 +28,14 @@ export const server = {
 				if (!(await isAuthenticated(authCookie))) {
 					throw new Error("UNAUTHORIZED_ACCESS");
 				}
-				// Se tiver ID, atualizamos
-				if (input.id && input.id !== 0) {
-					const updated = await updatePost(input as Post);
-					await revalidateCache();
-					return { success: true, post: updated, action: "update" };
-				}
 
-				const created = await createPost(input);
+				// input.id opcional no schema; garantir id: number para satisfazer Post sem cast
+				const post = input.id
+					? await updatePost({ ...input, id: input.id })
+					: await createPost(input);
+
 				await revalidateCache();
-				return { success: true, post: created, action: "create" };
+				return { success: true, post };
 			} catch (e) {
 				return { success: false, message: getAuthErrorMessage(e) };
 			}
