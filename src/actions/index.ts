@@ -3,29 +3,7 @@ import { z } from "astro:schema";
 import type { Post } from "@/database/types";
 import { createPost, deletePost, updatePost } from "@/database/post/mutations";
 import { revalidateCache } from "@/database/cache";
-import { jwtDecrypt } from "jose";
-
-const JWT_SECRET = new TextEncoder().encode(import.meta.env.JWT_SECRET);
-
-async function isAuthenticated(cookie: string | undefined) {
-	if (!cookie) return false;
-	try {
-		const { payload } = await jwtDecrypt(cookie, JWT_SECRET);
-		return payload.admin === true;
-	} catch {
-		return false;
-	}
-}
-
-function getErrorMessage(e: unknown): string {
-	if (e instanceof Error) {
-		if (e.message === "UNAUTHORIZED_ACCESS") return "Sessão inválida ou expirada. Faça login novamente.";
-		if (e.message.includes("UNIQUE constraint failed")) return "Já existe um post com este slug.";
-		if (e.message.includes("SQLITE") || e.message.includes("database")) return "Erro no banco de dados. Tente novamente.";
-		return e.message;
-	}
-	return "Erro inesperado. Tente novamente.";
-}
+import { isAuthenticated, getAuthErrorMessage, ADMIN_SESSION_COOKIE } from "@/lib/auth";
 
 const PostSchema = z.object({
 	// O ID é opcional na entrada, pois na criação ele não existe
@@ -47,7 +25,7 @@ export const server = {
 		input: PostSchema,
 		handler: async (input, context) => {
 			try {
-				const authCookie = context.cookies.get("admin_session")?.value;
+				const authCookie = context.cookies.get(ADMIN_SESSION_COOKIE)?.value;
 				if (!(await isAuthenticated(authCookie))) {
 					throw new Error("UNAUTHORIZED_ACCESS");
 				}
@@ -62,7 +40,7 @@ export const server = {
 				await revalidateCache();
 				return { success: true, post: created, action: "create" };
 			} catch (e) {
-				return { success: false, message: getErrorMessage(e) };
+				return { success: false, message: getAuthErrorMessage(e) };
 			}
 		},
 	}),
@@ -71,7 +49,7 @@ export const server = {
 		input: z.object({ id: z.number() }),
 		handler: async ({ id }, context) => {
 			try {
-				const authCookie = context.cookies.get("admin_session")?.value;
+				const authCookie = context.cookies.get(ADMIN_SESSION_COOKIE)?.value;
 				if (!(await isAuthenticated(authCookie))) {
 					throw new Error("UNAUTHORIZED_ACCESS");
 				}
@@ -81,7 +59,7 @@ export const server = {
 				return { success: true };
 			} catch (e) {
 				console.error(e);
-				return { success: false, message: getErrorMessage(e) };
+				return { success: false, message: getAuthErrorMessage(e) };
 			}
 		},
 	}),

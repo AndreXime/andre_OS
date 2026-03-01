@@ -2,26 +2,22 @@
 import AdminView from "@/components/admin/Admin";
 import Layout from "@/layout/Layout.astro";
 import { Lock } from "lucide-react";
-import { EncryptJWT, jwtDecrypt } from "jose";
 import { getCollection } from "astro:content";
+import { isAuthenticated, createAdminToken, getSessionCookieOptions, ADMIN_SESSION_COOKIE } from "@/lib/auth";
 
 export const prerender = false;
 
 let error = false;
-let isAuthenticated = false;
+let isAuthenticatedResult = false;
 
-const JWT_SECRET = new TextEncoder().encode(import.meta.env.JWT_SECRET);
-const sessionCookie = Astro.cookies.get("admin_session")?.value;
+const sessionCookie = Astro.cookies.get(ADMIN_SESSION_COOKIE)?.value;
 
 if (sessionCookie) {
-    try {
-        const { payload } = await jwtDecrypt(sessionCookie, JWT_SECRET);
-
-        if (payload.admin === true) {
-            isAuthenticated = true;
-        }
-    } catch {
-        Astro.cookies.delete("admin_session");
+    const valid = await isAuthenticated(sessionCookie);
+    if (valid) {
+        isAuthenticatedResult = true;
+    } else {
+        Astro.cookies.delete(ADMIN_SESSION_COOKIE);
     }
 }
 
@@ -31,19 +27,8 @@ if (Astro.request.method === "POST") {
         const password = data.get("password");
 
         if (password === import.meta.env.ADMIN_PASSWORD) {
-            const jwt = await new EncryptJWT({ admin: true })
-                .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
-                .setIssuedAt()
-                .setExpirationTime("24h")
-                .encrypt(JWT_SECRET);
-
-            Astro.cookies.set("admin_session", jwt, {
-                path: "/",
-                httpOnly: true,
-                secure: import.meta.env.PROD,
-                maxAge: 60 * 60 * 24,
-            });
-
+            const jwt = await createAdminToken();
+            Astro.cookies.set(ADMIN_SESSION_COOKIE, jwt, getSessionCookieOptions());
             return Astro.redirect(Astro.url.pathname);
         } else {
             error = true;
@@ -53,20 +38,21 @@ if (Astro.request.method === "POST") {
     }
 }
 
-// Se o usuário quiser sair (Rota ?action=logout)
 if (Astro.url.searchParams.get("action") === "logout") {
-    Astro.cookies.delete("admin_session", { path: "/" });
+    Astro.cookies.delete(ADMIN_SESSION_COOKIE, { path: "/" });
     return Astro.redirect(Astro.url.pathname);
 }
 
-const posts = (await getCollection("posts"))
-    .map(({ data, ...post }) => data)
-    .map((post) => ({ ...post, id: Number(post.id) }));
+const posts = isAuthenticatedResult
+    ? (await getCollection("posts"))
+        .map(({ data }) => data)
+        .map((post) => ({ ...post, id: Number(post.id) }))
+    : [];
 ---
 
-<Layout title={isAuthenticated ? "Admin | andre_OS" : "Login | andre_OS"}>
+<Layout title={isAuthenticatedResult ? "Admin | andre_OS" : "Login | andre_OS"}>
     {
-        isAuthenticated ? (
+        isAuthenticatedResult ? (
             <AdminView posts={posts} client:load />
         ) : (
             <div class="flex items-center justify-center min-h-screen bg-zinc-950 text-zinc-300 font-sans">
