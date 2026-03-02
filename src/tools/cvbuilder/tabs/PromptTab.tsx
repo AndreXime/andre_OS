@@ -1,17 +1,19 @@
 import { Check, Copy } from "lucide-react";
 import { useState, useMemo } from "react";
 import { useStore } from "@nanostores/react";
-import { masterProfile$ } from "../lib/store";
+import { masterProfile$, jobDescription$ } from "../lib/store";
 import IAPromptTemplate from "../markdown/promptExample.md?raw";
 
 export function PromptTab() {
 	const [copied, setCopied] = useState(false);
 	const masterProfile = useStore(masterProfile$);
+	const jobDescription = useStore(jobDescription$);
 
 	const promptFinal = useMemo(() => {
 		const userContent = masterProfile || "";
-		return IAPromptTemplate.replace("[USERDATA]", userContent);
-	}, [masterProfile]);
+		const jobContent = jobDescription || "";
+		return IAPromptTemplate.replace("[USERDATA]", userContent).replace("[JOBDATA]", jobContent);
+	}, [masterProfile, jobDescription]);
 
 	const handleCopyPrompt = () => {
 		navigator.clipboard.writeText(promptFinal);
@@ -41,7 +43,7 @@ export function PromptTab() {
 				</button>
 			</div>
 			<p className="text-xs text-slate-500 mb-2">
-				Este prompt já contém os dados da aba "Contexto". Copie e cole no ChatGPT/Claude junto com a descrição da vaga.
+				Este prompt já contém os dados das abas "Dados pessoais" e "Vaga". Basta colar diretamente na IA de sua escolha.
 			</p>
 			<textarea
 				readOnly

@@ -1,4 +1,5 @@
-import { atom, computed } from "nanostores";
+import { computed } from "nanostores";
+import { persistentAtom } from "@nanostores/persistent";
 import { parseResumeMarkdown } from "./parserMd";
 import defaultCV from "../markdown/cvExample.md?raw";
 
@@ -9,9 +10,6 @@ export interface Resume {
 	selected: boolean;
 }
 
-const STORAGE_KEY = "resume_list";
-const STORAGE_KEY_PROFILE = "resume_profile";
-
 const defaultState: Resume[] = [
 	{
 		id: "default",
@@ -21,52 +19,50 @@ const defaultState: Resume[] = [
 	},
 ];
 
-export const resumes$ = atom<Resume[]>(defaultState);
-export const masterProfile$ = atom<string>("");
-
-export function initFromStorage() {
-	if (typeof window === "undefined") return;
-
-	const saved = localStorage.getItem(STORAGE_KEY);
-	if (saved) {
+export const resumes$ = persistentAtom<Resume[]>("resume_list", defaultState, {
+	encode: JSON.stringify,
+	decode(value: string | null) {
+		if (!value) return defaultState;
 		try {
-			let parsed: Resume[] = JSON.parse(saved);
+			let parsed: Resume[] = JSON.parse(value);
 
-			// Migração: Garante selected
-			if (!parsed.some((r) => r.selected)) {
-				parsed = parsed.map((r, index) => ({ ...r, selected: index === 0 }));
-			}
+			if (parsed.length === 0) return defaultState;
 
-			// Migração: Garante apenas um selected
-			const selectedCount = parsed.filter((r) => r.selected).length;
-			if (selectedCount !== 1) {
-				// Se tiver 0 ou mais de 1, reseta para o primeiro
-				parsed = parsed.map((r, i) => ({ ...r, selected: i === 0 }));
-			}
+			// Se não tiver nenhum selecionado ou mais de um selecionado
+			let selectedIndex = parsed.findIndex((r) => r.selected);
+			if (selectedIndex === -1) selectedIndex = 0;
 
-			resumes$.set(parsed);
-		} catch (e) {
-			console.error("Erro ao carregar currículos:", e);
+			parsed = parsed.map((r, index) => ({ ...r, selected: index === selectedIndex }));
+
+			return parsed;
+		} catch {
+			return defaultState;
 		}
-	}
+	},
+});
 
-	const savedProfile = localStorage.getItem(STORAGE_KEY_PROFILE);
-	if (savedProfile) {
-		masterProfile$.set(savedProfile);
-	}
-}
+export const masterProfile$ = persistentAtom<string>("resume_profile", "", {
+	encode: JSON.stringify,
+	decode: (value: string | null) => (value ? JSON.parse(value) : ""),
+});
+
+export const jobDescription$ = persistentAtom<string>("resume_job_description", "", {
+	encode: JSON.stringify,
+	decode: (value: string | null) => (value ? JSON.parse(value) : ""),
+});
 
 // --- Computed Values ---
 
 export function updateMasterProfile(content: string) {
 	masterProfile$.set(content);
-	if (typeof window !== "undefined") {
-		localStorage.setItem(STORAGE_KEY_PROFILE, content);
-	}
+}
+
+export function updateJobDescription(content: string) {
+	jobDescription$.set(content);
 }
 
 // Encontra o currículo onde selected === true
-export const activeResume$ = computed(resumes$, (resumes) => {
+export const activeResume$ = computed(resumes$, (resumes: Resume[]) => {
 	return resumes.find((r) => r.selected) || defaultState[0];
 });
 
@@ -82,27 +78,20 @@ export const parsedContent$ = computed(activeResume$, (resume) => {
 
 // --- Actions ---
 
-function saveToStorage(list: Resume[]) {
-	if (typeof window !== "undefined") {
-		localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-	}
-}
-
 export function updateResumeContent(content: string) {
 	const list = resumes$.get();
 
 	// Atualiza o conteúdo APENAS do currículo selecionado
-	const updatedList = list.map((r) => (r.selected ? { ...r, data: content } : r));
+	const updatedList = list.map((r: Resume) => (r.selected ? { ...r, data: content } : r));
 
 	resumes$.set(updatedList);
-	saveToStorage(updatedList);
 }
 
 export function createNewResume() {
 	const name = prompt("Nome do novo currículo:");
 	if (!name) return;
 
-	const newList = resumes$.get().map((r) => ({ ...r, selected: false })); // Desmarca todos
+	const newList = resumes$.get().map((r: Resume) => ({ ...r, selected: false })); // Desmarca todos
 
 	const newResume: Resume = {
 		id: crypto.randomUUID(),
@@ -114,7 +103,6 @@ export function createNewResume() {
 	const finalList = [...newList, newResume];
 
 	resumes$.set(finalList);
-	saveToStorage(finalList);
 }
 
 export function deleteResume(id: string) {
@@ -127,9 +115,9 @@ export function deleteResume(id: string) {
 	if (!confirm("Tem certeza que deseja deletar este currículo?")) return;
 
 	// Se estamos deletando o selecionado, precisamos passar a coroa para outro
-	const isDeletingSelected = list.find((r) => r.id === id)?.selected;
+	const isDeletingSelected = list.find((r: Resume) => r.id === id)?.selected;
 
-	let newList = list.filter((r) => r.id !== id);
+	const newList = list.filter((r: Resume) => r.id !== id);
 
 	if (isDeletingSelected) {
 		// Seleciona o primeiro da lista restante
@@ -137,20 +125,18 @@ export function deleteResume(id: string) {
 	}
 
 	resumes$.set(newList);
-	saveToStorage(newList);
 }
 
 export function setActiveResume(id: string) {
 	const list = resumes$.get();
 
 	// Percorre a lista: se o ID bater, selected=true, senão selected=false
-	const updatedList = list.map((r) => ({
+	const updatedList = list.map((r: Resume) => ({
 		...r,
 		selected: r.id === id,
 	}));
 
 	resumes$.set(updatedList);
-	saveToStorage(updatedList);
 }
 
 export function resetActiveResume() {
