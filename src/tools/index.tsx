@@ -4,7 +4,7 @@ import { lazy, Suspense, type ComponentType } from "react";
 export const ToolRegistry: Record<string, ComponentType> = {
 	WebCodeEditor: lazy(() => import("./editor/App")),
 	EveryDayUtils: lazy(() => import("./utils/App")),
-	CVBuilder: lazy(() => import("./cvbuilder/Page")),
+	CVBuilder: lazy(() => import("./cvbuilder/App")),
 };
 
 export function ToolLoader({ name }: { name: string }) {

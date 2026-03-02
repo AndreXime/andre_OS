@@ -1,31 +1,8 @@
-import Sidebar from "./Sidebar";
 import type { UserData } from "./lib/types";
-import { initFromStorage, parsedContent$ } from "./lib/store";
+import { parsedContent$ } from "./lib/store";
 import { useStore } from "@nanostores/react";
-import { useEffect } from "react";
-import "./styles.css";
 
-export default function CVBuilder() {
-	useEffect(() => {
-		initFromStorage();
-	}, []);
-
-	return (
-		<div className="w-full h-full">
-			<div className="min-h-screen bg-slate-200/50 min-[1282px]:pl-[550px] transition-all duration-300 print:contents">
-				<div className="flex flex-col items-center justify-start min-h-screen overflow-hidden pt-32 pb-10 min-[1282px]:justify-center min-[1282px]:pt-10 print:contents">
-					<div className="origin-top scale-[0.45] sm:scale-75 lg:scale-100 transition-transform duration-300 shadow-2xl print:contents">
-						<ResumeContent />
-					</div>
-				</div>
-			</div>
-
-			<Sidebar />
-		</div>
-	);
-}
-
-function ResumeContent() {
+export default function ResumeContent() {
 	const content = useStore(parsedContent$);
 
 	if (!content) return null;
