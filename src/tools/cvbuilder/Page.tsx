@@ -19,6 +19,8 @@ export default function ResumeContent() {
 	);
 }
 
+const removeHttps = (url: string) => url.replace(/^https?:\/\//, "");
+
 // Para resolver negritos e italicos do markdown que podem aparecer
 function RichText({ content }: { content: string }) {
 	const html = content.replace(/\*\*(.*?)\*\*/g, "<strong >$1</strong>").replace(/\*(.*?)\*/g, "<em >$1</em>");
@@ -45,7 +47,7 @@ function Header({ data }: { data: UserData["header"] }) {
 						rel="noopener noreferrer"
 						className="text-blue-700 underline decoration-blue-700"
 					>
-						{data.links.portfolio.replace(/^https?:\/\//, "")}
+						{removeHttps(data.links.portfolio)}
 					</a>
 					{" | "}
 					<a
@@ -54,7 +56,7 @@ function Header({ data }: { data: UserData["header"] }) {
 						rel="noopener noreferrer"
 						className="text-blue-700 underline decoration-blue-700"
 					>
-						{data.links.linkedin.replace(/^https?:\/\//, "")}
+						{removeHttps(data.links.linkedin)}
 					</a>
 					{" | "}
 					<a
@@ -63,7 +65,7 @@ function Header({ data }: { data: UserData["header"] }) {
 						rel="noopener noreferrer"
 						className="text-blue-700 underline decoration-blue-700"
 					>
-						{data.links.github.replace(/^https?:\/\//, "")}
+						{removeHttps(data.links.github)}
 					</a>
 				</p>
 			</div>
@@ -117,7 +119,7 @@ function Experience({ experiences }: { experiences: UserData["experience"] }) {
 								rel="noopener noreferrer"
 								className="block text-[11px] text-blue-700 underline decoration-blue-700 break-all mt-0.5"
 							>
-								{experience.url}
+								{removeHttps(experience.url)}
 							</a>
 						)}
 					</div>
@@ -157,7 +159,7 @@ function Projects({ projects }: { projects: UserData["projects"] }) {
 								rel="noopener noreferrer"
 								className="block text-[11px] text-blue-700 underline decoration-blue-700 break-all"
 							>
-								{project.url}
+								{removeHttps(project.url)}
 							</a>
 						)}
 					</div>
@@ -198,7 +200,7 @@ function Education({ educations }: { educations: UserData["education"] }) {
 								rel="noopener noreferrer"
 								className="block text-[11px] text-blue-700 underline decoration-blue-700 break-all"
 							>
-								{edu.url}
+								{removeHttps(edu.url)}
 							</a>
 						)}
 					</div>
