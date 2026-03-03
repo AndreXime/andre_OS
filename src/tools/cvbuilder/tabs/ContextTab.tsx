@@ -1,6 +1,7 @@
 import { useStore } from "@nanostores/react";
 import { masterProfile$, updateMasterProfile } from "../lib/store";
 import { useLayoutEffect, useRef } from "react";
+import { CloudBackup } from "lucide-react";
 
 export function ContextTab() {
 	const masterProfile = useStore(masterProfile$);
@@ -15,14 +16,14 @@ export function ContextTab() {
 	return (
 		<div className="flex-1 flex flex-col p-5 animate-in fade-in slide-in-from-left-4 duration-200 h-full">
 			<div className="flex justify-between items-center mb-2">
-				<div className="text-sm font-semibold text-blue-800 uppercase tracking-wide">
-					Seus Dados (Base de Conhecimento)
+				<div className="inline-flex items-center gap-3 text-base font-semibold text-blue-800 uppercase tracking-wide">
+					Seus Dados
+					<CloudBackup />
 				</div>
-				<div className="text-[10px] text-slate-500 bg-slate-200 px-2 py-1 rounded">Salvo automaticamente</div>
 			</div>
-			<p className="text-xs text-slate-500 mb-3 text-justify">
-				Cole aqui toda sua trajetória, projetos detalhados e "About Me". Estes dados serão injetados automaticamente no
-				Prompt da IA.
+			<p className="text-sm text-slate-500 mb-3 text-justify">
+				Cole aqui toda sua trajetória, projetos detalhados e qualquer informação relevante. Estes dados serão injetados
+				automaticamente no Prompt da IA.
 			</p>
 			<textarea
 				ref={textareaRef}

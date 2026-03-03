@@ -27,10 +27,10 @@ export function PromptTab() {
 	return (
 		<div className="flex-1 flex flex-col p-5 animate-in fade-in slide-in-from-left-4 duration-200 h-full">
 			<div className="flex justify-between items-center mb-2">
-				<div className="text-sm font-semibold text-blue-800 uppercase tracking-wide">Prompt Pronto</div>
+				<div className="text-base font-semibold text-blue-800 uppercase tracking-wide">Prompt Pronto</div>
 				<button
 					onClick={handleCopyPrompt}
-					className={`flex items-center gap-2 px-3 py-1.5 rounded text-xs font-bold transition-all ${
+					className={`flex items-center gap-2 px-3 py-1.5 rounded text-sm font-bold transition-all ${
 						copied ? "bg-green-500 text-white" : "bg-blue-600 text-white hover:bg-blue-700"
 					}`}
 				>
@@ -45,7 +45,7 @@ export function PromptTab() {
 					)}
 				</button>
 			</div>
-			<p className="text-xs text-slate-500 mb-2">
+			<p className="text-sm text-slate-500 mb-2">
 				Este prompt já contém os dados das abas "Dados pessoais" e "Vaga". Basta colar diretamente na IA de sua escolha.
 			</p>
 			<textarea

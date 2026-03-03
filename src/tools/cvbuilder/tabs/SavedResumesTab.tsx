@@ -8,10 +8,10 @@ export function SavedResumesTab() {
 	return (
 		<div className="p-5 flex flex-col gap-4 animate-in fade-in slide-in-from-right-4 duration-200 h-full overflow-y-auto">
 			<div className="flex justify-between items-center">
-				<h3 className="text-sm font-bold text-blue-800 uppercase">Seus Documentos</h3>
+				<h3 className="text-base font-bold text-blue-800 uppercase">Seus Documentos</h3>
 				<button
 					onClick={createNewResume}
-					className="flex items-center gap-2 px-3 py-1.5 rounded text-xs font-bold bg-blue-600 text-white hover:bg-blue-700 shadow-sm"
+					className="flex items-center gap-2 px-3 py-1.5 rounded text-sm font-bold bg-blue-600 text-white hover:bg-blue-700 shadow-sm"
 				>
 					<Plus size={14} /> Novo CV
 				</button>

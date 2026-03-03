@@ -1,4 +1,4 @@
-import { RotateCcw } from "lucide-react";
+import { CloudBackup, RotateCcw } from "lucide-react";
 import { useLayoutEffect, useRef } from "react";
 import { useStore } from "@nanostores/react";
 import { activeResume$, updateResumeContent, resetActiveResume } from "../lib/store";
@@ -16,9 +16,12 @@ export function EditorTab() {
 
 	return (
 		<div className="flex-1 flex flex-col p-5 animate-in fade-in slide-in-from-left-4 duration-200 h-full">
-			<div className="flex justify-between items-center mb-2">
-				<label htmlFor="cv-content" className="text-sm font-semibold text-blue-800 uppercase tracking-wide truncate">
-					Editando: {activeResume?.name}
+			<div className="flex justify-between items-center mb-2 flex-wrap gap-3">
+				<label
+					htmlFor="cv-content"
+					className="inline-flex items-center gap-3 text-base font-semibold text-blue-800 uppercase tracking-wide truncate"
+				>
+					{activeResume?.name} <CloudBackup />
 				</label>
 				<button
 					onClick={resetActiveResume}
@@ -28,6 +31,10 @@ export function EditorTab() {
 					Resetar
 				</button>
 			</div>
+			<p className="text-sm text-slate-500 mb-3 text-justify">
+				Edite aqui a versão final do seu currículo. Você pode preencher tudo manualmente, mas o ideal é colar o texto
+				gerado pela IA usando o prompt configurado na aba de Prompt.
+			</p>
 			<textarea
 				ref={textareaRef}
 				id="cv-content"
