@@ -25,41 +25,7 @@ ESTRUTURA OBRIGATÓRIA (TEMPLATE):
 Siga exatamente os nomes das seções em INGLÊS e os separadores pipe (|).
 
 \`\`\`markdown
-# HEADER
-Name: Seu nome
-Role: [Título Adaptado à Vaga]
-Location: [Sua Cidade]
-Phone: [Seu Telefone]
-Email: [Seu Email]
-Portfolio: [Link]
-Linkedin: [Link]
-Github: [Link]
-
-# INTRO
-[Resumo de 3 linhas. Focado em Senioridade, Stack Principal e Resolução de Problemas. Use negrito nas techs.]
-
-# SKILLS
-(Repita o bloco abaixo para as categorias que fizerem mais sentido para a vaga. Ex: Linguagens, Cloud, Frameworks, Tools, etc)
-- **[Nome da Categoria]:** [Lista de skills]
-
-# EXPERIENCE
-(Liste todas as experiências relevantes. Repita o bloco abaixo quantas vezes for necessário)
-## Cargo | Empresa | Data Início – Data Fim
-[Opcional: Breve parágrafo de 1-2 linhas resumindo o contexto do projeto ou da empresa.]
-- [Ação técnica com verbo forte] utilizando **[Tech]**, resultando em **[Métrica/Impacto]**.
-- [Outro ponto relevante para a vaga].
-
-# PROJECTS
-(Liste os projetos relevantes. Repita o bloco abaixo quantas vezes for necessário)
-## Nome do Projeto | Stack (ex: Go, React)
-[Parágrafo descrevendo o problema que o software resolve e a arquitetura escolhida.]
-- [Opcional: Bullet point para destacar uma feature técnica específica]
-- [Opcional: Bullet point para destacar uma otimização ou métrica]
-
-# EDUCATION
-(Repita o bloco abaixo se houver mais de uma formação relevante)
-## Nome do Curso | Instituição | Data
-[Descrição breve]
+[CVEXAMPLE]
 \`\`\`
 
 ---
