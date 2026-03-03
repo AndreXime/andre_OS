@@ -17,12 +17,13 @@ export interface UserData {
 		role: string;
 		company: string;
 		period: string;
+		url: string;
 		shortdescription?: string;
 		descriptionList?: string[];
 	}[];
 	projects: {
 		title: string;
-		stack: string;
+		url: string;
 		description: string;
 		descriptionList?: string[];
 	}[];
@@ -30,6 +31,6 @@ export interface UserData {
 		degree: string;
 		institution: string;
 		period: string;
-		description: string;
+		url: string;
 	}[];
 }

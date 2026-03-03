@@ -71,83 +71,96 @@ export function parseResumeMarkdown(markdown: string): UserData {
 				}
 				break;
 
-			case "EXPERIENCE":
+			case "EXPERIENCE": {
 				if (line.startsWith("## ")) {
-					const parts = line
-						.replace("## ", "")
-						.split("|")
-						.map((s) => s.trim());
-
-					if (tempExp?.role && tempExp.company) {
+					const rest = line.replace("## ", "").trim();
+					const sep = rest.includes(" – ") ? " – " : " - ";
+					const [rolePart, companyPart] = rest.split(sep).map((s) => s.trim());
+					if (tempExp && (tempExp.role || tempExp.company)) {
 						data.experience.push(tempExp as UserData["experience"][0]);
 					}
 					tempExp = {
-						role: parts[0] || "",
-						company: parts[1] || "",
-						period: parts[2] || "",
+						role: rolePart || "",
+						company: companyPart || "",
+						period: "",
+						url: "",
 						shortdescription: "",
 						descriptionList: [],
 					};
-				} else if (isBullet(line) && tempExp) {
-					// Garante array inicializado
-					if (!tempExp.descriptionList) tempExp.descriptionList = [];
-					tempExp.descriptionList.push(cleanBullet(line));
-				} else if (tempExp && !line.startsWith("##")) {
-					tempExp.shortdescription = (tempExp.shortdescription || "") + (tempExp.shortdescription ? " " : "") + line;
+				} else {
+					const colonIndex = line.indexOf(":");
+					if (colonIndex > 0 && tempExp) {
+						const key = line.slice(0, colonIndex).trim().toLowerCase();
+						const value = line.slice(colonIndex + 1).trim();
+						if (key === "data") tempExp.period = value;
+						else if (key === "url") tempExp.url = value;
+						else if (key === "descrição" || key === "descricao") tempExp.shortdescription = value;
+					} else if (isBullet(line) && tempExp) {
+						if (!tempExp.descriptionList) tempExp.descriptionList = [];
+						tempExp.descriptionList.push(cleanBullet(line));
+					} else if (tempExp && line) {
+						tempExp.shortdescription = (tempExp.shortdescription || "") + (tempExp.shortdescription ? " " : "") + line;
+					}
 				}
 				break;
+			}
 
-			case "PROJECTS":
+			case "PROJECTS": {
 				if (line.startsWith("## ")) {
-					const parts = line
-						.replace("## ", "")
-						.split("|")
-						.map((s) => s.trim());
-
 					if (tempProject?.title) {
 						data.projects.push(tempProject as UserData["projects"][0]);
 					}
 					tempProject = {
-						title: parts[0] || "",
-						stack: parts[1] || "",
+						title: line.replace("## ", "").trim(),
+						url: "",
 						description: "",
 						descriptionList: [],
 					};
-				} else if (isBullet(line) && tempProject) {
-					if (!tempProject.descriptionList) tempProject.descriptionList = [];
-					tempProject.descriptionList.push(cleanBullet(line));
-				}
-				// Se não for bullet, concatena na descrição
-				else if (tempProject && !line.startsWith("##")) {
-					tempProject.description += (tempProject.description ? " " : "") + line;
+				} else {
+					const colonIndex = line.indexOf(":");
+					if (colonIndex > 0 && tempProject) {
+						const key = line.slice(0, colonIndex).trim().toLowerCase();
+						const value = line.slice(colonIndex + 1).trim();
+						if (key === "url") tempProject.url = value;
+						else if (key === "descrição" || key === "descricao") tempProject.description = value;
+					} else if (isBullet(line) && tempProject) {
+						if (!tempProject.descriptionList) tempProject.descriptionList = [];
+						tempProject.descriptionList.push(cleanBullet(line));
+					} else if (tempProject && line) {
+						tempProject.description = (tempProject.description || "") + (tempProject.description ? " " : "") + line;
+					}
 				}
 				break;
+			}
 
-			case "EDUCATION":
+			case "EDUCATION": {
 				if (line.startsWith("## ")) {
-					const parts = line
-						.replace("## ", "")
-						.split("|")
-						.map((s) => s.trim());
-
 					if (tempEdu?.degree) {
 						data.education.push(tempEdu as UserData["education"][0]);
 					}
 					tempEdu = {
-						degree: parts[0] || "",
-						institution: parts[1] || "",
-						period: parts[2] || "",
-						description: "",
+						degree: line.replace("## ", "").trim(),
+						institution: "",
+						period: "",
+						url: "",
 					};
-				} else if (tempEdu && !line.startsWith("##")) {
-					tempEdu.description += (tempEdu.description ? " " : "") + line;
+				} else {
+					const colonIndex = line.indexOf(":");
+					if (colonIndex > 0 && tempEdu) {
+						const key = line.slice(0, colonIndex).trim().toLowerCase();
+						const value = line.slice(colonIndex + 1).trim();
+						if (key === "instituição" || key === "instituicao") tempEdu.institution = value;
+						else if (key === "data") tempEdu.period = value;
+						else if (key === "url") tempEdu.url = value;
+					}
 				}
 				break;
+			}
 		}
 	}
 
 	// Push final
-	if (tempExp?.role) data.experience.push(tempExp as UserData["experience"][0]);
+	if (tempExp && (tempExp.role || tempExp.company)) data.experience.push(tempExp as UserData["experience"][0]);
 	if (tempProject?.title) data.projects.push(tempProject as UserData["projects"][0]);
 	if (tempEdu?.degree) data.education.push(tempEdu as UserData["education"][0]);
 

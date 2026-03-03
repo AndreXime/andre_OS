@@ -20,10 +20,10 @@ export default function ResumeContent() {
 }
 
 // Para resolver negritos e italicos do markdown que podem aparecer
-const RichText = ({ content }: { content: string }) => {
+function RichText({ content }: { content: string }) {
 	const html = content.replace(/\*\*(.*?)\*\*/g, "<strong >$1</strong>").replace(/\*(.*?)\*/g, "<em >$1</em>");
 	return <span dangerouslySetInnerHTML={{ __html: html }} />;
-};
+}
 
 function Header({ data }: { data: UserData["header"] }) {
 	return (
@@ -104,11 +104,23 @@ function Experience({ experiences }: { experiences: UserData["experience"] }) {
 
 			{experiences.map((experience) => (
 				<div key={experience.company} className="mb-2 last:mb-0">
-					<div className="flex justify-between items-baseline mb-0.5">
+					<div className="flex justify-between items-baseline">
 						<h3 className="font-bold text-[13px]">{experience.role}</h3>
 						<span className="text-[12px] font-bold">{experience.period}</span>
 					</div>
-					<div className="text-[12px] italic mb-1">{experience.company}</div>
+					<div className="mb-1 flex justify-between items-baseline">
+						<div className="text-[12px] italic">{experience.company}</div>
+						{experience.url && (
+							<a
+								href={experience.url}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="block text-[11px] text-blue-700 underline decoration-blue-700 break-all mt-0.5"
+							>
+								{experience.url}
+							</a>
+						)}
+					</div>
 					{experience.shortdescription && (
 						<div className="text-[12px] leading-normal mb-1">
 							<RichText content={experience.shortdescription} />
@@ -136,11 +148,20 @@ function Projects({ projects }: { projects: UserData["projects"] }) {
 
 			{projects.map((project) => (
 				<div key={project.title} className="mb-3 last:mb-0">
-					<div className="flex justify-between items-baseline">
+					<div className="flex justify-between items-baseline mb-1">
 						<h3 className="font-bold text-[13px]">{project.title}</h3>
-						<span className="text-[12px] italic">{project.stack}</span>
+						{project.url && (
+							<a
+								href={project.url}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="block text-[11px] text-blue-700 underline decoration-blue-700 break-all"
+							>
+								{project.url}
+							</a>
+						)}
 					</div>
-					<p className="text-[12px] leading-normal text-left my-1">
+					<p className="text-[12px] leading-normal text-left">
 						<RichText content={project.description} />
 					</p>
 					{project.descriptionList && project.descriptionList.length > 0 && (
@@ -168,10 +189,19 @@ function Education({ educations }: { educations: UserData["education"] }) {
 						<span className="font-bold">{edu.degree}</span>
 						<span className="font-bold whitespace-nowrap ml-2">{edu.period}</span>
 					</div>
-					<span className="block italic text-[11px] mt-0.5">{edu.institution}</span>
-					<span className="block text-[11px] mt-0.5 text-left">
-						<RichText content={edu.description} />
-					</span>
+					<div className="flex justify-between items-baseline">
+						<span className="block italic text-[11px] mt-0.5">{edu.institution}</span>
+						{edu.url && (
+							<a
+								href={edu.url}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="block text-[11px] text-blue-700 underline decoration-blue-700 break-all"
+							>
+								{edu.url}
+							</a>
+						)}
+					</div>
 				</div>
 			))}
 		</section>
