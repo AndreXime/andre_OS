@@ -1,12 +1,10 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap");
-
 @page {
 	size: A4;
 	margin: 0;
 }
 
 body {
-	font-family: "Roboto", sans-serif;
+	font-family: sans-serif;
 	margin: 0;
 	padding: 0;
 	background-color: #f3f4f6;
@@ -32,7 +30,6 @@ a {
 /* --- CONFIGURAÇÃO DE IMPRESSÃO LIMPA E PADRÃO --- */
 @media print {
 	body {
-		font-family: "Roboto", sans-serif;
 		background-color: white;
 		margin: 0;
 		padding: 0;
