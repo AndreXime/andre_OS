@@ -18,13 +18,11 @@ body {
 
 .a4-page {
 	width: 210mm;
-	min-height: 297mm;
+	height: 297mm;
+	overflow: hidden;
+	margin: 0;
 	background-color: white;
-	margin: 0 auto;
-	position: relative;
-	padding: 10mm 14mm 10mm 14mm;
-	display: flex;
-	flex-direction: column;
+	padding: 10mm;
 }
 
 a {
@@ -34,7 +32,12 @@ a {
 /* --- CONFIGURAÇÃO DE IMPRESSÃO LIMPA E PADRÃO --- */
 @media print {
 	body {
+		font-family: "Roboto", sans-serif;
 		background-color: white;
+		margin: 0;
+		padding: 0;
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
 	}
 
 	.a4-page {
@@ -44,6 +47,6 @@ a {
 		margin: 0;
 		box-shadow: none;
 		background: transparent;
-		padding: 10mm 14mm 10mm 14mm;
+		padding: 10mm;
 	}
 }

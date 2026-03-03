@@ -1,6 +1,5 @@
 ---
 import Layout from "../../layout/Layout.astro";
-import { ChevronLeft, EyeOff, Menu, Terminal, X } from "lucide-react";
 import { ToolLoader, ToolRegistry } from "@/tools";
 
 export function getStaticPaths() {
@@ -15,16 +14,7 @@ const { name } = Astro.params;
 ---
 
 <Layout title={name + " | andre_OS"}>
-    <div class="flex flex-col min-h-screen overflow-hidden">
-        <div
-            id="restore-zone"
-            class="fixed top-0 right-0 w-24 h-24 z-[60] cursor-pointer hidden"
-            title="Clique ou passe o mouse para restaurar o menu"
-        >
-        </div>
-
-        <main class="flex flex-1 overflow-auto">
-            <ToolLoader name={name} client:load />
-        </main>
+    <div class="flex flex-col">
+        <ToolLoader name={name} client:load />
     </div>
 </Layout>
