@@ -1,7 +1,6 @@
 ---
 import Layout from "../layout/Layout.astro";
 import Header from "../components/layout/Header.astro";
-import Footer from "../components/layout/Footer.astro";
 import Sidebar from "../components/layout/Sidebar.astro";
 import PreviewCard from "@/components/ui/PreviewCards";
 import { getCollection, getEntry } from "astro:content";
@@ -37,6 +36,7 @@ const filteredPosts = posts
 		return true;
 	})
 	.map((post) => ({ ...post, id: Number(post.id) }));
+
 Astro.response.headers.set(
 	"Cache-Control",
 	"public, max-age=0, s-maxage=31536000, must-revalidate",
@@ -44,14 +44,15 @@ Astro.response.headers.set(
 ---
 
 <Layout title="andre_OS">
-	<div class="min-h-screen relative">
+	<div class="min-h-screen relative flex flex-col lg:flex-row">
 		<Header searchParam={searchParam} filterParam={categoryParam} />
 
 		<div
-			class="pt-20 px-4 md:px-6 max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 transition-all"
+			class="flex-1 pt-8 px-4 pb-1 mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 transition-all"
 		>
 			<Sidebar
 				tagCounts={tags}
+				lastDate={lastDate}
 				currentFilter={categoryParam}
 				currentSearch={searchParam}
 			/>
@@ -80,6 +81,16 @@ Astro.response.headers.set(
 									default:
 										itemUrl = "";
 										break;
+								}
+
+								if (item.type == "intro") {
+									return (
+										<div
+											class={`block group h-full relative ${item.featured ? "md:col-span-2" : "col-span-1"} outline-none focus-visible:ring-2 ring-emerald-500/50 rounded-md`}
+										>
+											<PreviewCard post={item} />
+										</div>
+									);
 								}
 
 								return (
@@ -126,7 +137,5 @@ Astro.response.headers.set(
 				</div>
 			</main>
 		</div>
-
-		<Footer lastDate={lastDate} />
 	</div>
 </Layout>

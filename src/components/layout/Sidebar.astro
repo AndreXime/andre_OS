@@ -5,132 +5,139 @@ import {
     ExternalLink,
     Terminal,
     Search,
+    SquareTerminal,
 } from "lucide-react";
 
 interface Props {
     tagCounts: Record<string, number> | undefined;
     currentFilter: string;
     currentSearch: string;
+    lastDate: string | undefined;
 }
-const { tagCounts, currentFilter, currentSearch } = Astro.props;
+const { tagCounts, currentFilter, currentSearch, lastDate } = Astro.props;
 ---
 
 <aside
     id="sidebar"
-    class="lg:col-span-2 hidden sticky top-24 h-[calc(100vh-8rem)] transition-all duration-300 lg:block opacity-100 translate-x-0"
+    class="lg:col-span-2 space-y-8 hidden sticky top-24 h-full transition-all duration-300 lg:flex opacity-100 translate-x-0 flex-col"
 >
-    <div class="space-y-8">
-        <form
-            action="/"
-            method="GET"
-            class="md:hidden flex items-center group relative"
+    <a
+        href="/"
+        class="hidden lg:flex justify-center items-center gap-2 cursor-pointer text-xl font-mono font-bold text-zinc-100 tracking-tight leading-none"
+    >
+        <SquareTerminal />
+        andre_OS
+    </a>
+    <form action="/" method="GET" class="flex items-center group relative">
+        <Search
+            size={14}
+            className="absolute left-3 top-2 text-zinc-500 group-focus-within:text-emerald-500 transition-colors"
+        />
+        <input
+            type="text"
+            name="q"
+            value={currentSearch}
+            placeholder="Pesquisar notas, ferramentas..."
+            class="w-full bg-zinc-900 border border-zinc-800 text-sm py-1.5 pl-9 pr-4 rounded-md text-zinc-300 placeholder-zinc-600 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all font-mono"
+        />
+        <input
+            type="hidden"
+            name="category"
+            value={currentFilter !== "all" ? currentFilter : ""}
+        />
+    </form>
+
+    <div class="space-y-1">
+        <p
+            class="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-2 pl-2"
         >
-            <Search
-                size={14}
-                className="absolute left-3 top-2 text-zinc-500 group-focus-within:text-emerald-500 transition-colors"
-            />
-            <input
-                type="text"
-                name="q"
-                value={currentSearch}
-                placeholder="Pesquisar notas, ferramentas..."
-                class="w-full bg-zinc-900 border border-zinc-800 text-sm py-1.5 pl-9 pr-4 rounded-md text-zinc-300 placeholder-zinc-600 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/20 transition-all font-mono"
-            />
-            <input
-                type="hidden"
-                name="category"
-                value={currentFilter !== "all" ? currentFilter : ""}
-            />
-        </form>
-
-        <div class="space-y-1">
-            <p
-                class="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-2 pl-2"
-            >
-                Diretórios
-            </p>
-            {
-                [
-                    { id: "all", label: "~/root", Icon: Command },
-                    { id: "note", label: "~/notas", Icon: FileText },
-                    { id: "link", label: "~/links", Icon: ExternalLink },
-                    { id: "tool", label: "~/bin", Icon: Terminal },
-                ].map((f) => {
-                    const isActive = currentFilter === f.id;
-                    const activeClass =
-                        "bg-zinc-800 text-zinc-100 border-zinc-700";
-                    const inactiveClass =
-                        "border-transparent text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200";
-
-                    return (
-                        <a
-                            href={
-                                f.id === "all"
-                                    ? "/"
-                                    : `/?category=${f.id}${currentSearch ? `&q=${currentSearch}` : ""}`
-                            }
-                            class={`w-full text-left px-3 py-2 rounded-md text-sm font-medium flex items-center gap-3 transition-colors border ${isActive ? activeClass : inactiveClass}`}
-                        >
-                            <f.Icon size={14} />
-                            {f.label}
-                        </a>
-                    );
-                })
-            }
-        </div>
-
+            Diretórios
+        </p>
         {
-            tagCounts && (
-                <div>
-                    <p class="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-3 pl-2">
-                        Tags Populares
-                    </p>
-                    <div class="flex flex-wrap gap-2">
-                        {Object.entries(tagCounts).map(([tag, count]) => (
-                            <span class="text-xs text-zinc-500 hover:text-zinc-300 font-mono transition-colors cursor-default">
-                                #{tag}{" "}
-                                <span class="text-zinc-700">({count})</span>
-                            </span>
-                        ))}
-                    </div>
-                </div>
-            )
+            [
+                { id: "all", label: "~/root", Icon: Command },
+                { id: "note", label: "~/notas", Icon: FileText },
+                { id: "link", label: "~/links", Icon: ExternalLink },
+                { id: "tool", label: "~/bin", Icon: Terminal },
+            ].map((f) => {
+                const isActive = currentFilter === f.id;
+                const activeClass = "bg-zinc-800 text-zinc-100 border-zinc-700";
+                const inactiveClass =
+                    "border-transparent text-zinc-400 hover:bg-zinc-900 hover:text-zinc-200";
+
+                return (
+                    <a
+                        href={
+                            f.id === "all"
+                                ? "/"
+                                : `/?category=${f.id}${currentSearch ? `&q=${currentSearch}` : ""}`
+                        }
+                        class={`w-full text-left px-3 py-2 rounded-md text-sm font-medium flex items-center gap-3 transition-colors border ${isActive ? activeClass : inactiveClass}`}
+                    >
+                        <f.Icon size={14} />
+                        {f.label}
+                    </a>
+                );
+            })
         }
     </div>
-</aside>
-<script is:inline>
-    const toggleSidebarBtn = document.getElementById("toggle-sidebar");
-    const sidebar = document.getElementById("sidebar");
-    const mainContent = document.querySelector("main");
 
-    toggleSidebarBtn?.addEventListener("click", () => {
-        const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
-
-        if (isDesktop) {
-            sidebar?.classList.toggle("lg:block");
-            if (mainContent) {
-                if (mainContent.classList.contains("lg:col-span-10")) {
-                    mainContent.classList.remove("lg:col-span-10");
-                    mainContent.classList.add("lg:col-span-12");
-                } else {
-                    mainContent.classList.remove("lg:col-span-12");
-                    mainContent.classList.add("lg:col-span-10");
-                }
+    <div>
+        <p
+            class="text-xs font-mono text-zinc-500 uppercase tracking-wider mb-3 pl-2"
+        >
+            Tags Populares
+        </p>
+        <div class="flex flex-wrap gap-2 pl-2">
+            {
+                Object.entries(tagCounts || {}).map(([tag, count]) => (
+                    <span class="text-xs text-zinc-500 hover:text-zinc-300 font-mono transition-colors cursor-default">
+                        #{tag} <span class="text-zinc-700">({count})</span>
+                    </span>
+                ))
             }
-        } else {
-            const isOpen = sidebar?.classList.contains("hidden");
+        </div>
+    </div>
+
+    <footer class="mt-auto mb-3 w-full text-xs font-mono pl-2">
+        Última atualização: {
+            lastDate
+                ? new Intl.DateTimeFormat("pt-BR", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                  }).format(new Date(lastDate))
+                : "00:00"
+        }
+    </footer>
+</aside>
+<script>
+    function setupSidebar() {
+        const toggleSidebarBtn = document.getElementById("toggle-sidebar");
+        const sidebar = document.getElementById("sidebar");
+        const mainContent = document.querySelector("main");
+
+        if (!toggleSidebarBtn || !sidebar || !mainContent) {
+            throw new Error("Elementos necessarios não existem");
+        }
+
+        const activeSidebarClasses = ["fixed", "inset-0", "z-50", "flex"];
+
+        toggleSidebarBtn.addEventListener("click", () => {
+            const isOpen = sidebar.classList.contains("hidden");
 
             if (isOpen) {
-                sidebar?.classList.remove("hidden");
-                sidebar?.classList.add("fixed", "inset-0", "z-50");
+                sidebar.classList.remove("hidden");
+                sidebar.classList.add(...activeSidebarClasses);
                 document.body.classList.add("overflow-hidden");
-                mainContent?.classList.add("hidden");
+                mainContent.classList.add("hidden");
             } else {
-                sidebar?.classList.add("hidden");
-                sidebar?.classList.remove("fixed", "inset-0", "z-50");
+                sidebar.classList.add("hidden");
+                sidebar.classList.remove(...activeSidebarClasses);
                 document.body.classList.remove("overflow-hidden");
-                mainContent?.classList.remove("hidden");
+                mainContent.classList.remove("hidden");
             }
-        }
-    });
+        });
+    }
+    setupSidebar();
 </script>
