@@ -1,6 +1,4 @@
-import { Suspense } from "react";
 import type { ActiveTool } from "./toolsData";
-import { Loader2Icon } from "lucide-react";
 
 export default function ToolLoader({ tool }: { tool: ActiveTool }) {
 	const IconComponent = tool.icon;
@@ -14,15 +12,7 @@ export default function ToolLoader({ tool }: { tool: ActiveTool }) {
 				{tool.title}
 			</h2>
 
-			<Suspense
-				fallback={
-					<div className="flex justify-center items-center w-full h-[100px]">
-						<Loader2Icon className="animate-spin" size={40} />
-					</div>
-				}
-			>
-				<ToolComponent colors={colors} />
-			</Suspense>
+			<ToolComponent colors={colors} />
 		</div>
 	);
 }

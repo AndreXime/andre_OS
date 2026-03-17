@@ -15,18 +15,20 @@ const { name } = Astro.params;
 ---
 
 <Layout title={name + " | andre_OS"}>
-	<div class="flex flex-col">
-		{(() => {
-			switch (name) {
-				case "WebCodeEditor":
-					return <WebCodeEditor client:load />;
-				case "EveryDayUtils":
-					return <EveryDayUtils client:load />;
-				case "CVBuilder":
-					return <CVBuilder client:load />;
-				default:
-					return <div>Ferramenta não encontrada.</div>;
-			}
-		})()}
+	<div class="flex flex-col min-h-screen">
+		{
+			(() => {
+				switch (name) {
+					case "WebCodeEditor":
+						return <WebCodeEditor client:load />;
+					case "EveryDayUtils":
+						return <EveryDayUtils client:load />;
+					case "CVBuilder":
+						return <CVBuilder client:load />;
+					default:
+						return <div>Ferramenta não encontrada.</div>;
+				}
+			})()
+		}
 	</div>
 </Layout>

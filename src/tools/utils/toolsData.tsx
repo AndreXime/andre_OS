@@ -1,7 +1,11 @@
 import { DollarSign, Fuel, Lock, type LucideIcon, Percent } from "lucide-react";
-import { lazy } from "react";
+import type { ComponentType } from "react";
+import FuelCost from "./tools/FuelCost";
+import Investiment from "./tools/Investiment";
+import PercentageCalculator from "./tools/PercentageCalculator";
+import Password from "./tools/Password";
 
-export const ColorThemes = {
+export const ColorThemes: Record<string, ToolThemeSchema> = {
 	Emerald: {
 		alias: "green",
 		icon: "text-emerald-500",
@@ -38,15 +42,15 @@ export const ColorThemes = {
 		button: "bg-orange-600 hover:bg-orange-500 text-white shadow-orange-900/20",
 		ring: "focus:ring-orange-500",
 	},
-} as const;
+};
 
 export const toolCategories: ToolCategory[] = [
 	{
 		name: "Matemática e Finanças",
 		theme: ColorThemes.Emerald,
 		tools: [
-			{ title: "Gerador de Orçamento de Combustível", icon: Fuel, component: lazy(() => import("./tools/FuelCost")) },
-			{ title: "Calculadora de renda passiva", icon: DollarSign, component: lazy(() => import("./tools/Investiment")) },
+			{ title: "Gerador de Orçamento de Combustível", icon: Fuel, component: FuelCost },
+			{ title: "Calculadora de renda passiva", icon: DollarSign, component: Investiment },
 		],
 	},
 	{
@@ -56,18 +60,26 @@ export const toolCategories: ToolCategory[] = [
 			{
 				title: "Calculos de porcentagem",
 				icon: Percent,
-				component: lazy(() => import("./tools/PercentageCalculator")),
+				component: PercentageCalculator,
 			},
 		],
 	},
 	{
 		name: "Utilitários Web e Dev",
 		theme: ColorThemes.Indigo,
-		tools: [{ title: "Gerador de Senhas", icon: Lock, component: lazy(() => import("./tools/Password")) }],
+		tools: [{ title: "Gerador de Senhas", icon: Lock, component: Password }],
 	},
 ];
 
-export type ToolThemeSchema = (typeof ColorThemes)[keyof typeof ColorThemes];
+export type ToolThemeSchema = {
+	alias: string;
+	icon: string;
+	text: string;
+	border: string;
+	softBg: string;
+	button: string;
+	ring: string;
+};
 
 export interface ActiveTool extends ToolListItem {
 	colors: ToolThemeSchema;
@@ -76,7 +88,7 @@ export interface ActiveTool extends ToolListItem {
 interface ToolListItem {
 	title: string;
 	icon: LucideIcon;
-	component: React.FC<{ colors: ToolThemeSchema }>;
+	component: ComponentType<{ colors: ToolThemeSchema }>;
 }
 
 interface ToolCategory {
