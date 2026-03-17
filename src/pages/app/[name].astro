@@ -1,20 +1,32 @@
 ---
 import Layout from "../../layout/Layout.astro";
-import { ToolLoader, ToolRegistry } from "@/tools";
+import WebCodeEditor from "../../tools/editor/WebEditor";
+import EveryDayUtils from "../../tools/utils/UtilsApp";
+import CVBuilder from "../../tools/cvbuilder/CVBuilder";
+import { ToolNames } from "../../tools";
 
 export function getStaticPaths() {
-    const paths = Object.keys(ToolRegistry).map((tool) => ({
-        params: { name: tool },
-    }));
-
-    return paths;
+	return ToolNames.map((tool) => ({
+		params: { name: tool },
+	}));
 }
 
 const { name } = Astro.params;
 ---
 
 <Layout title={name + " | andre_OS"}>
-    <div class="flex flex-col">
-        <ToolLoader name={name} client:load />
-    </div>
+	<div class="flex flex-col">
+		{(() => {
+			switch (name) {
+				case "WebCodeEditor":
+					return <WebCodeEditor client:load />;
+				case "EveryDayUtils":
+					return <EveryDayUtils client:load />;
+				case "CVBuilder":
+					return <CVBuilder client:load />;
+				default:
+					return <div>Ferramenta não encontrada.</div>;
+			}
+		})()}
+	</div>
 </Layout>

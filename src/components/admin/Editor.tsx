@@ -17,7 +17,7 @@ import {
 import { useState, type FormEvent } from "react";
 import PreviewCard from "../ui/PreviewCards";
 import DetailPostView from "../ui/DetailCard";
-import { ToolRegistry } from "@/tools";
+import { ToolNames } from "@/tools";
 
 export default function AdminEditor() {
 	const { editingId, currentType, showSuccess } = useStore($formState);
@@ -184,9 +184,9 @@ export default function AdminEditor() {
 											Selecione uma opção...
 										</option>
 
-										{Object.keys(ToolRegistry).map((option) => (
-											<option key={option} value={option}>
-												{option}
+										{ToolNames.map((toolName) => (
+											<option key={toolName} value={toolName}>
+												{toolName}
 											</option>
 										))}
 									</select>

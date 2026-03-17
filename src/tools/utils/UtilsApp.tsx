@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 import { ChevronRight, ArrowLeft } from "lucide-react";
 import ToolLoader from "./ToolLoader";
 
-export default function EveryDayUtils() {
+export default function UtilsApp() {
 	const [selectedTool, setSelectedTool] = useState<ActiveTool>();
 	const isListView = !selectedTool;
 
