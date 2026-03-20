@@ -6,7 +6,8 @@
 		"dev": "astro dev",
 		"build": "astro build",
 		"preview": "astro preview",
-		"astro": "astro"
+		"astro": "astro",
+		"seed": "bun src/database/seed.ts"
 	},
 	"dependencies": {
 		"@astrojs/react": "^5.0.0",
