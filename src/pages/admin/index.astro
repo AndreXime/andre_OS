@@ -1,9 +1,14 @@
 ---
 import AdminView from "@/components/admin/Admin";
-import Layout from "@/layout/Layout.astro";
+import Layout from "../../components/layout/BaseLayout.astro";
 import { Lock } from "lucide-react";
 import { getCollection } from "astro:content";
-import { isAuthenticated, createAdminToken, getSessionCookieOptions, ADMIN_SESSION_COOKIE } from "@/lib/auth";
+import {
+    isAuthenticated,
+    createAdminToken,
+    getSessionCookieOptions,
+    ADMIN_SESSION_COOKIE,
+} from "@/lib/auth";
 
 export const prerender = false;
 
@@ -28,7 +33,11 @@ if (Astro.request.method === "POST") {
 
         if (password === import.meta.env.ADMIN_PASSWORD) {
             const jwt = await createAdminToken();
-            Astro.cookies.set(ADMIN_SESSION_COOKIE, jwt, getSessionCookieOptions());
+            Astro.cookies.set(
+                ADMIN_SESSION_COOKIE,
+                jwt,
+                getSessionCookieOptions(),
+            );
             return Astro.redirect(Astro.url.pathname);
         } else {
             error = true;
@@ -45,8 +54,8 @@ if (Astro.url.searchParams.get("action") === "logout") {
 
 const posts = isAuthenticatedResult
     ? (await getCollection("posts"))
-        .map(({ data }) => data)
-        .map((post) => ({ ...post, id: Number(post.id) }))
+          .map(({ data }) => data)
+          .map((post) => ({ ...post, id: Number(post.id) }))
     : [];
 ---
 
