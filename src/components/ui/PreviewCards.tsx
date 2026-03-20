@@ -91,25 +91,36 @@ function CardNote({ post }: { post: Post }) {
 }
 
 function CardTool({ post }: { post: Post }) {
+	const { badgeClass } = getThemeClasses(post.type);
+
 	return (
-		<div className="cursor-pointer h-full p-5 bg-zinc-900/40 border border-zinc-800 hover:border-emerald-500/50 hover:bg-emerald-900/5 transition-all duration-300 flex flex-col justify-between rounded-md relative shadow-none hover:shadow-[0_0_15px_-5px_rgba(16,185,129,0.1)] card-trigger">
-			<div>
-				<div className="flex items-center gap-2 mb-4">
-					<div className="bg-emerald-500/10 p-2 rounded-md border border-emerald-500/20 text-emerald-400 group-hover:bg-emerald-500/20 transition-colors">
-						<Code2 size={20} />
-					</div>
-					<h3 className="text-lg font-semibold text-emerald-400 group-hover:text-emerald-300 transition-colors">
+		<div className="cursor-pointer h-full bg-zinc-900/40 border border-zinc-800 hover:border-emerald-500/50 hover:bg-emerald-900/5 transition-all duration-300 flex flex-col rounded-md overflow-hidden relative shadow-none hover:shadow-[0_0_15px_-5px_rgba(16,185,129,0.1)] card-trigger">
+			<div className="h-20 w-full shrink-0 relative border-b border-zinc-800 group-hover:border-emerald-900/30 transition-colors overflow-hidden bg-zinc-950">
+				<div className="h-full w-full bg-gradient-to-br from-emerald-900/20 to-teal-900/20 flex items-center justify-center gap-2 px-2">
+					<Code2 className="text-emerald-500/20 shrink-0" size={36} strokeWidth={1.5} />
+					{post.tool_name ? (
+						<span className="font-mono text-xs sm:text-sm text-emerald-500/25 truncate max-w-[min(100%,12rem)]">
+							./bin/{post.tool_name}
+						</span>
+					) : null}
+				</div>
+			</div>
+			<div className="p-4 flex flex-col flex-1 justify-between">
+				<div>
+					<h3 className="font-medium text-emerald-400 mb-1 group-hover:text-emerald-300 transition-colors">
 						{post.title}
 					</h3>
+					<p className="text-xs text-zinc-400 leading-relaxed">{post.description}</p>
 				</div>
-				<p className="text-sm text-zinc-400 mb-4">{post.description}</p>
-			</div>
-			<div className="mt-auto pt-4 border-t border-dashed border-zinc-800 group-hover:border-emerald-900/50 flex justify-between items-center transition-colors">
-				<span className="text-xs font-mono text-zinc-300 group-hover:text-emerald-600/70 transition-colors">
-					./bin/{post.tool_name}
-				</span>
-				<div className="flex items-center gap-2 text-xs font-bold text-emerald-400 bg-emerald-950/30 hover:bg-emerald-900 border border-emerald-900/50 hover:border-emerald-500/50 px-3 py-1.5 rounded transition-all uppercase tracking-wide">
-					<Terminal size={12} /> Executar
+				<div className="mt-auto pt-4 flex flex-col gap-3 transition-colors">
+					<div className="flex gap-2 flex-wrap">
+						{post.tags.map((tag: string) => (
+							<Badge key={tag} text={`#${tag}`} colorClass={badgeClass} />
+						))}
+					</div>
+					<div className="w-full justify-center flex items-center gap-2 text-xs font-bold text-emerald-400 bg-emerald-950/30 hover:bg-emerald-900 border border-emerald-900/50 hover:border-emerald-500/50 px-3 py-1.5 rounded transition-all uppercase tracking-wide">
+						<Terminal size={12} /> Ver Ferramentar
+					</div>
 				</div>
 			</div>
 		</div>
