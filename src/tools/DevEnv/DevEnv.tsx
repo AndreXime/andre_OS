@@ -34,7 +34,7 @@ const App = () => {
 
 	if (!booted) {
 		return (
-			<div className="h-screen bg-[#0a0a0a] text-[#33ff00] font-mono p-10 flex flex-col justify-center items-center overflow-hidden">
+			<div className="min-h-dvh h-dvh bg-[#0a0a0a] text-[#33ff00] font-mono p-10 flex flex-col justify-center items-center overflow-hidden">
 				<div className="w-full max-w-md">
 					{logs.map((log) => (
 						<div key={log} className="mb-1">
@@ -48,7 +48,7 @@ const App = () => {
 	}
 
 	return (
-		<div className="h-screen bg-[#0a0a0a] text-[#33ff00] font-mono selection:bg-[#33ff00] selection:text-[#0a0a0a] relative overflow-hidden flex flex-col">
+		<div className="min-h-dvh h-dvh bg-[#0a0a0a] text-[#33ff00] font-mono selection:bg-[#33ff00] selection:text-[#0a0a0a] relative overflow-hidden flex flex-col">
 			{/* Scanline Effect */}
 			<div className="fixed inset-0 pointer-events-none z-50 overflow-hidden opacity-[0.03]">
 				<div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%]"></div>
@@ -58,10 +58,10 @@ const App = () => {
 				{/* Header Section */}
 				<DevEnvHeader />
 
-				{/* Main Content Split Area */}
-				<main className="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1 overflow-hidden min-h-0">
+				{/* Main: flex-col + flex-1 no mobile para o grid de tools ter altura limitada e scroll; lg volta grid */}
+				<main className="flex flex-col flex-1 min-h-0 overflow-hidden gap-6 lg:grid lg:grid-cols-12 lg:gap-6">
 					{/* Sidebar / Quick Menu */}
-					<aside className="lg:col-span-3 space-y-6 h-full min-h-0">
+					<aside className="shrink-0 space-y-6 lg:col-span-3 lg:h-full lg:min-h-0">
 						<Pane title="NAVIGATION">
 							<nav className="flex flex-col gap-2 text-sm">
 								<button
@@ -89,14 +89,14 @@ const App = () => {
 										activeTab === "REPOS" ? "text-[#ffb000]" : ""
 									}`}
 								>
-									<ChevronRight size={14} /> [ 04 ] REPOS
+									<ChevronRight size={14} /> [ 03 ] REPOS
 								</button>
 							</nav>
 						</Pane>
 					</aside>
 
-					{/* Tools Grid */}
-					<section className="lg:col-span-9 grid grid-cols-1 md:grid-cols-2 gap-4 overflow-auto h-full min-h-0 auto-rows-max content-start items-start">
+					{/* Tools Grid: flex-1 min-h-0 obrigatório no mobile para overflow-auto funcionar */}
+					<section className="flex-1 min-h-[50dvh] lg:min-h-0 overflow-auto lg:col-span-9 lg:h-full grid grid-cols-1 md:grid-cols-2 gap-4 auto-rows-max content-start items-start">
 						{(activeTab === "ENV_CONFIG" ? ENV_CONFIG : activeTab === "NPM_PACKAGES" ? NPM_PACKAGE : REPOS).map(
 							(tool: Card) => {
 								const isRepo = "githubLink" in tool;

@@ -43,9 +43,7 @@ export function Footer() {
 			<div className="bg-[#1f521f] text-[#33ff00] px-4 flex items-center skew-x-[-20deg] -ml-2">
 				<span className="skew-x-[20deg]">main*</span>
 			</div>
-			<div className="flex-1 flex items-center px-4 overflow-hidden italic opacity-50">
-				~/workspace/dev-env/setup.sh
-			</div>
+			<div className="flex-1 flex items-center px-4 overflow-hidden italic opacity-50">~/workspace/setup.sh</div>
 			<div className="hidden md:flex items-center gap-4 px-4 bg-[#0a0a0a] border-l border-[#1f521f]">
 				<span className="text-[#ffb000]">UTF-8</span>
 				<span className="text-[#33ff00]">LN: 120, COL: 42</span>

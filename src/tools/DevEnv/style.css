@@ -10,9 +10,8 @@
 .cpu-loader {
 	height: 100%;
 	background: #33ff00;
-	transform-origin: left;
-	transform: scaleX(var(--progress, 0));
-	transition: transform 0.25s ease;
+	width: 0%;
+	transition: width 0.35s ease-out;
 }
 
 ::-webkit-scrollbar {
