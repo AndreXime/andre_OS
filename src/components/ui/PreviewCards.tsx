@@ -44,8 +44,10 @@ function CardLink({ post }: { post: Post }) {
 			</div>
 			<div className="p-4 flex flex-col flex-1 justify-between">
 				<div>
-					<h3 className="font-medium text-zinc-100 mb-1 group-hover:text-violet-100 transition-colors">{post.title}</h3>
-					<p className="text-xs text-zinc-400 leading-relaxed">{post.description}</p>
+					<h3 className="text-lg font-medium text-zinc-100 mb-2 leading-tight group-hover:text-violet-100 transition-colors">
+						{post.title}
+					</h3>
+					<p className="text-sm text-zinc-400 mb-4 line-clamp-3 leading-relaxed">{post.description}</p>
 				</div>
 				<div className="mt-auto pt-4 flex flex-col gap-3 transition-colors">
 					<div className="flex gap-2 flex-wrap">
@@ -107,10 +109,10 @@ function CardTool({ post }: { post: Post }) {
 			</div>
 			<div className="p-4 flex flex-col flex-1 justify-between">
 				<div>
-					<h3 className="font-medium text-emerald-400 mb-1 group-hover:text-emerald-300 transition-colors">
+					<h3 className="text-lg font-medium text-emerald-400 mb-2 leading-tight group-hover:text-emerald-300 transition-colors">
 						{post.title}
 					</h3>
-					<p className="text-xs text-zinc-400 leading-relaxed">{post.description}</p>
+					<p className="text-sm text-zinc-400 mb-4 line-clamp-3 leading-relaxed">{post.description}</p>
 				</div>
 				<div className="mt-auto pt-4 flex flex-col gap-3 transition-colors">
 					<div className="flex gap-2 flex-wrap">
@@ -118,8 +120,8 @@ function CardTool({ post }: { post: Post }) {
 							<Badge key={tag} text={`#${tag}`} colorClass={badgeClass} />
 						))}
 					</div>
-					<div className="w-full justify-center flex items-center gap-2 text-xs font-bold text-emerald-400 bg-emerald-950/30 hover:bg-emerald-900 border border-emerald-900/50 hover:border-emerald-500/50 px-3 py-1.5 rounded transition-all uppercase tracking-wide">
-						<Terminal size={12} /> Ver Ferramentar
+					<div className="w-full flex justify-center items-center gap-2 text-xs font-bold text-emerald-400 bg-emerald-950/30 hover:bg-emerald-900 border border-emerald-900/50 hover:border-emerald-500/50 px-3 py-1.5 rounded transition-all uppercase tracking-wide">
+						<Terminal size={12} /> Ver ferramenta
 					</div>
 				</div>
 			</div>
