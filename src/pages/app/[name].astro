@@ -4,7 +4,6 @@ import WebCodeEditor from "../../tools/WebEditor/WebEditor";
 import EveryDayUtils from "../../tools/EveryDayUtils/UtilsApp";
 import CVBuilder from "../../tools/CVBuilder/CVBuilder";
 import DevEnv from "../../tools/DevEnv/DevEnv";
-import NewTab from "../../tools/NewTab/NewTab";
 import { ToolNames } from "../../tools";
 
 export function getStaticPaths() {
@@ -29,8 +28,6 @@ const { name } = Astro.params;
 						return <CVBuilder client:load />;
 					case "DevEnv":
 						return <DevEnv client:load />;
-					case "NewTab":
-						return <NewTab client:load />;
 					default:
 						return <div>Ferramenta não encontrada.</div>;
 				}
