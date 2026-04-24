@@ -1,4 +1,3 @@
-import type { ToolThemeSchema } from "../toolsData";
 import { useState, useMemo } from "react";
 
 function calcularCustoCombustivel(distancia: number, kml: number, preco: number, freq: number) {
@@ -22,7 +21,7 @@ function calcularCustoCombustivel(distancia: number, kml: number, preco: number,
 	};
 }
 
-export default function FuelCostCard({ colors }: { colors: ToolThemeSchema }) {
+export default function FuelCostCard() {
 	const [inputs, setInputs] = useState({
 		distanciaTotalDiaria: 54,
 		kmPorLitroMedio: 15.0,
@@ -61,14 +60,15 @@ export default function FuelCostCard({ colors }: { colors: ToolThemeSchema }) {
 		);
 	}, [inputs]);
 
-	const inputClasses = `w-full p-3 rounded-lg bg-[#2a2a2a] border border-white/10 text-slate-200 focus:outline-none focus:ring-2 ${colors.ring}`;
+	const inputClasses =
+		"w-full p-3 rounded-lg bg-[#2a2a2a] border border-white/10 text-slate-200 focus:outline-none focus:outline-2 focus:outline-solid focus:outline-[var(--primary)] focus:outline-offset-2";
 
 	return (
 		<div className="space-y-6">
 			<p className="text-sm text-slate-400">Descubra o impacto do combustível no seu orçamento mensal e anual.</p>
 
 			{/* --- Campos de Entrada --- */}
-			<div className="space-y-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+			<div className="space-y-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
 				<InputGroup
 					label="Distância Diária (Km)"
 					name="distanciaTotalDiaria"
@@ -105,20 +105,20 @@ export default function FuelCostCard({ colors }: { colors: ToolThemeSchema }) {
 
 			{/* --- Resultados --- */}
 			<div className="mt-8 border-t border-white/5 pt-6 space-y-3">
-				<h3 className={`text-lg font-bold mb-4 ${colors.text}`}>Estimativa de Gastos</h3>
+				<h3 className="text-lg font-bold mb-4 text-[var(--primary)]">Estimativa de Gastos</h3>
 
 				<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 					{/* Coluna da Esquerda (Curto Prazo) */}
 					<div className="space-y-3">
-						<ResultItem label="Litros/Dia" value={`${res.litros.toFixed(1)} L`} colors={colors} />
-						<ResultItem label="Custo Diário" value={`R$ ${res.diario.toFixed(2)}`} colors={colors} />
-						<ResultItem label="Custo Semanal" value={`R$ ${res.semanal.toFixed(2)}`} colors={colors} />
+						<ResultItem label="Litros/Dia" value={`${res.litros.toFixed(1)} L`} />
+						<ResultItem label="Custo Diário" value={`R$ ${res.diario.toFixed(2)}`} />
+						<ResultItem label="Custo Semanal" value={`R$ ${res.semanal.toFixed(2)}`} />
 					</div>
 
 					{/* Coluna da Direita (Longo Prazo - Destaque) */}
 					<div className="space-y-3">
-						<ResultItem label="Custo Mensal" value={`R$ ${res.mensal.toFixed(2)}`} colors={colors} isTotal />
-						<ResultItem label="Custo Anual" value={`R$ ${res.anual.toFixed(2)}`} colors={colors} isTotal />
+						<ResultItem label="Custo Mensal" value={`R$ ${res.mensal.toFixed(2)}`} isTotal />
+						<ResultItem label="Custo Anual" value={`R$ ${res.anual.toFixed(2)}`} isTotal />
 					</div>
 				</div>
 			</div>
@@ -155,14 +155,13 @@ const InputGroup: React.FC<InputGroupProps> = ({ label, name, value, classes, ..
 interface ResultItemProps {
 	label: string;
 	value: string;
-	colors: ToolThemeSchema;
 	isTotal?: boolean;
 }
 
-const ResultItem: React.FC<ResultItemProps> = ({ label, value, colors }) => (
-	<div className={`flex justify-between items-center p-3 rounded-lg bg-[#252525] border-l-4 ${colors.border}`}>
+const ResultItem: React.FC<ResultItemProps> = ({ label, value }) => (
+	<div className="flex justify-between items-center p-3 rounded-lg bg-[#252525] border-l-4 border-[var(--primary)]/20">
 		{/* Removi as condições isTotal ? ... : ... e fixei as cores claras */}
 		<span className="font-medium text-slate-300">{label}</span>
-		<span className={`text-lg font-bold ${colors.text}`}>{value}</span>
+		<span className="text-lg font-bold text-[var(--primary)]">{value}</span>
 	</div>
 );

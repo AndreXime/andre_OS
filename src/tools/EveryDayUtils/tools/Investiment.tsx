@@ -1,5 +1,4 @@
 import { useEffect, useState, useMemo } from "react";
-import type { ToolThemeSchema } from "../toolsData";
 
 interface TaxaApiItem {
 	nome: string;
@@ -34,7 +33,7 @@ function formatarMoeda(valor: number) {
 	return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
-export default function InvestmentCard({ colors }: { colors: ToolThemeSchema }) {
+export default function InvestmentCard() {
 	const [metaRenda, setMetaRenda] = useState(1518);
 	const [percCDI, setPercCDI] = useState(100);
 	const [dadosMercado, setDadosMercado] = useState({ inflacao: 0, cdi: 0, isFallback: false });
@@ -68,7 +67,8 @@ export default function InvestmentCard({ colors }: { colors: ToolThemeSchema }) 
 		};
 	}, [metaRenda, percCDI, dadosMercado]);
 
-	const inputClass = `w-full p-3 rounded-lg bg-[#2a2a2a] border border-white/10 text-slate-200 focus:outline-none focus:ring-2 ${colors.ring}`;
+	const inputClass =
+		"w-full p-3 rounded-lg bg-[#2a2a2a] border border-white/10 text-slate-200 focus:outline-none focus:outline-2 focus:outline-solid focus:outline-[var(--primary)] focus:outline-offset-2";
 	const cardClass = `p-5 rounded-lg border-l-4 bg-[#252525] border-white/5 shadow-sm`;
 
 	// Componente interno para os cards de indicadores
@@ -83,7 +83,7 @@ export default function InvestmentCard({ colors }: { colors: ToolThemeSchema }) 
 				/>
 			)}
 			<span className="text-slate-400 text-xs uppercase font-bold tracking-wider">{label}</span>
-			<strong className={`text-xl ${colorClass}`}>{value}</strong>
+			<strong className={`text-xl ${colorClass || "text-[var(--primary)]"}`}>{value}</strong>
 		</div>
 	);
 
@@ -124,11 +124,7 @@ export default function InvestmentCard({ colors }: { colors: ToolThemeSchema }) 
 
 				{/* Cards de Indicadores de Mercado */}
 				<div className="grid grid-cols-2 gap-4">
-					<MarketIndicator
-						label="CDI Atual (Ano)"
-						value={`${(dadosMercado.cdi * 100).toFixed(2)}%`}
-						colorClass={colors.text}
-					/>
+					<MarketIndicator label="CDI Atual (Ano)" value={`${(dadosMercado.cdi * 100).toFixed(2)}%`} colorClass="" />
 					<MarketIndicator
 						label="Inflação (IPCA)"
 						value={`${(dadosMercado.inflacao * 100).toFixed(2)}%`}
@@ -142,8 +138,10 @@ export default function InvestmentCard({ colors }: { colors: ToolThemeSchema }) 
 
 			{/* --- Resultado --- */}
 			{resultado && (
-				<div className={`${cardClass} ${colors.border} animate-in fade-in slide-in-from-bottom-2 duration-500`}>
-					<h3 className={`text-lg font-bold mb-4 ${colors.text} uppercase tracking-wide`}>Planejamento Financeiro</h3>
+				<div className={`${cardClass} border-[var(--primary)]/20 animate-in fade-in slide-in-from-bottom-2 duration-500`}>
+					<h3 className="text-lg font-bold mb-4 uppercase tracking-wide text-[var(--primary)]">
+						Planejamento Financeiro
+					</h3>
 
 					<div className="flex flex-col gap-6">
 						{/* Capital Principal */}

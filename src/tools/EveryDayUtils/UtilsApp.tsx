@@ -1,19 +1,10 @@
-import { toolCategories, type ActiveTool } from "./toolsData";
-import { useCallback, useState } from "react";
+import { tools, type ToolListItem } from "./toolsData";
+import { useState } from "react";
 import { ChevronRight, ArrowLeft } from "lucide-react";
-import ToolLoader from "./ToolLoader";
 
 export default function UtilsApp() {
-	const [selectedTool, setSelectedTool] = useState<ActiveTool>();
+	const [selectedTool, setSelectedTool] = useState<ToolListItem>();
 	const isListView = !selectedTool;
-
-	const handleSelectTool = useCallback((tool: ActiveTool) => {
-		setSelectedTool(tool);
-	}, []);
-
-	const handleBackToList = useCallback(() => {
-		setSelectedTool(undefined);
-	}, []);
 
 	return (
 		<div className="flex justify-center bg-[#121212] flex-1">
@@ -25,44 +16,29 @@ export default function UtilsApp() {
 					>
 						<h2 className="text-2xl font-bold text-[#E2E8F0] mb-8 border-b border-white/10 pb-4">Ferramentas Úteis</h2>
 
-						<div className="space-y-8">
-							{toolCategories.map((category) => {
-								const theme = category.theme;
+						<div className="grid gap-3">
+							{tools.map((tool) => {
+								const Icon = tool.icon;
 
 								return (
-									<div key={category.name} className="space-y-3">
-										<div className="flex items-center gap-2 mb-3">
-											<div className={`h-6 w-1 rounded-full ${theme.button.split(" ")[0]}`} />{" "}
-											<h3 className={`font-bold ${theme.text} text-lg tracking-wide`}>{category.name}</h3>
-										</div>
-
-										<div className="grid gap-3">
-											{category.tools.map((tool) => {
-												const Icon = tool.icon;
-												return (
-													<button
-														key={tool.title}
-														// Botão da ferramenta: Fundo escuro (#252525) com hover colorido sutil
-														className={`group w-full text-left p-4 rounded-lg flex items-center justify-between 
-                                                            bg-[#252525] border border-white/5 hover:border-opacity-0
-                                                            ${theme.border} hover:${theme.softBg} 
-                                                            transition-all duration-200 shadow-sm hover:shadow-md`}
-														onClick={() => handleSelectTool({ ...tool, colors: category.theme })}
-													>
-														<span className="text-base sm:text-lg font-medium text-slate-200 flex items-center flex-1 pr-2 group-hover:text-white transition-colors">
-															<Icon
-																className={`w-5 h-5 ${theme.icon} mr-3 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all`}
-															/>
-															{tool.title}
-														</span>
-														<ChevronRight
-															className={`${theme.icon} h-5 w-5 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all`}
-														/>
-													</button>
-												);
-											})}
-										</div>
-									</div>
+									<button
+										key={tool.title}
+										className={`cursor-pointer group w-full text-left p-4 rounded-lg flex items-center justify-between 
+                                            bg-[#252525] border border-[var(--primary)]/20 hover:border-opacity-0
+                                            hover:bg-[var(--primary)]/10 
+                                            transition-all duration-200 shadow-sm hover:shadow-md`}
+										onClick={() => setSelectedTool(tool)}
+									>
+										<span className="text-base sm:text-lg font-medium text-slate-200 flex items-center flex-1 pr-2 group-hover:text-white transition-colors">
+											<Icon
+												className="w-5 h-5 mr-3 opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all text-[var(--primary)]"
+											/>
+											{tool.title}
+										</span>
+										<ChevronRight
+											className="h-5 w-5 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all text-[var(--primary)]"
+										/>
+									</button>
 								);
 							})}
 						</div>
@@ -70,14 +46,27 @@ export default function UtilsApp() {
 
 					<section className={isListView ? "hidden" : "animate-in fade-in slide-in-from-right-8 duration-300"}>
 						<button
-							onClick={handleBackToList}
+							onClick={() => setSelectedTool(undefined)}
 							className="flex items-center text-slate-400 hover:text-white mb-6 transition-colors group px-2 py-1 -ml-2 rounded-md hover:bg-white/5"
 						>
 							<ArrowLeft className="h-5 w-5 mr-1 group-hover:-translate-x-1 transition-transform" />
 							Voltar
 						</button>
 
-						{selectedTool && <ToolLoader tool={selectedTool} />}
+						{selectedTool && (
+							<div className="tool-card space-y-4">
+								<h2
+									className="text-2xl font-bold mb-4 flex items-center border-b border-white/5 pb-2 text-[var(--primary)]"
+								>
+									<selectedTool.icon
+										className="w-6 h-6 mr-2 flex-shrink-0 text-[var(--primary)]"
+									/>
+									{selectedTool.title}
+								</h2>
+
+								<selectedTool.component />
+							</div>
+						)}
 					</section>
 				</main>
 			</div>

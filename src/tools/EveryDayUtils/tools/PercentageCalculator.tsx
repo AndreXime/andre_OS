@@ -1,5 +1,4 @@
 import { useState, useMemo } from "react";
-import type { ToolThemeSchema } from "../toolsData";
 
 // --- Funções de Cálculo (Mantidas iguais) ---
 function calculatePercentageOfValue(x: number, y: number): number {
@@ -40,15 +39,13 @@ const Row = ({
 	children,
 	result,
 	unit = "",
-	colors,
 }: {
 	children: React.ReactNode;
 	result: number | null;
 	unit?: string;
-	colors: ToolThemeSchema;
 }) => {
-	// Definimos o estilo aqui dentro, baseado na prop colors
-	const resultBox = `flex flex-col justify-center items-end px-4 py-2 rounded-lg bg-[#2a2a2a] border-l-4 ${colors.border}`;
+	const resultBox =
+		"flex flex-col justify-center items-end px-4 py-2 rounded-lg bg-[#2a2a2a] border-l-4 border-[var(--primary)]/20";
 
 	return (
 		<div className="bg-[#252525] p-5 rounded-xl border border-white/5 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -59,14 +56,14 @@ const Row = ({
 				<span className="text-xs uppercase tracking-wider text-slate-500 font-semibold text-right w-full block">
 					Resultado
 				</span>
-				<span className={`text-2xl font-bold ${colors.text} leading-none`}>{formatResult(result, unit)}</span>
+				<span className="text-2xl font-bold leading-none text-[var(--primary)]">{formatResult(result, unit)}</span>
 			</div>
 		</div>
 	);
 };
 
 // --- COMPONENTE PRINCIPAL ---
-export default function PercentageCalculatorCard({ colors }: { colors: ToolThemeSchema }) {
+export default function PercentageCalculatorCard() {
 	const [inputs, setInputs] = useState({
 		percentOfX: "",
 		totalOfY: "",
@@ -112,12 +109,12 @@ export default function PercentageCalculatorCard({ colors }: { colors: ToolTheme
 	);
 
 	// Estilo do Input
-	const inlineInput = `inline-block w-24 sm:w-32 mx-2 p-1 text-center font-bold bg-transparent border-b-2 border-white/20 text-white placeholder-white/20 transition-colors focus:outline-none focus:border-current ${colors.text}`;
+	const inlineInput =
+		"inline-block w-24 sm:w-32 mx-2 p-1 text-center font-bold bg-transparent border-b-2 border-white/20 text-white placeholder-white/20 transition-colors focus:outline-none focus:border-current text-[var(--primary)]";
 
 	return (
 		<div className="space-y-6">
-			{/* Agora passamos 'colors' para o Row */}
-			<Row result={res1} colors={colors}>
+			<Row result={res1}>
 				Quanto é
 				<input
 					name="percentOfX"
@@ -139,7 +136,7 @@ export default function PercentageCalculatorCard({ colors }: { colors: ToolTheme
 				?
 			</Row>
 
-			<Row result={res2} unit="%" colors={colors}>
+			<Row result={res2} unit="%">
 				O valor
 				<input
 					name="partOfY"
@@ -161,7 +158,7 @@ export default function PercentageCalculatorCard({ colors }: { colors: ToolTheme
 				?
 			</Row>
 
-			<Row result={resChange} unit="%" colors={colors}>
+			<Row result={resChange} unit="%">
 				Se o valor for de
 				<input
 					name="oldVal"
@@ -183,7 +180,7 @@ export default function PercentageCalculatorCard({ colors }: { colors: ToolTheme
 				a variação é:
 			</Row>
 
-			<Row result={resTotal} colors={colors}>
+			<Row result={resTotal}>
 				Se
 				<input
 					name="knownPart"
@@ -212,13 +209,21 @@ export default function PercentageCalculatorCard({ colors }: { colors: ToolTheme
 					<div className="flex bg-[#1a1a1a] p-1 rounded-lg">
 						<button
 							onClick={() => setIsDiscount(true)}
-							className={`px-3 py-1 text-sm font-bold rounded-md transition-all ${isDiscount ? colors.button : "text-slate-500 hover:text-slate-300"}`}
+							className={`px-3 py-1 text-sm font-bold rounded-md transition-all ${
+								isDiscount
+									? "bg-[var(--primary)] text-[var(--primary-text)] hover:brightness-105 shadow-lg"
+									: "text-slate-500 hover:text-slate-300"
+							}`}
 						>
 							Desconto
 						</button>
 						<button
 							onClick={() => setIsDiscount(false)}
-							className={`px-3 py-1 text-sm font-bold rounded-md transition-all ${!isDiscount ? colors.button : "text-slate-500 hover:text-slate-300"}`}
+							className={`px-3 py-1 text-sm font-bold rounded-md transition-all ${
+								!isDiscount
+									? "bg-[var(--primary)] text-[var(--primary-text)] hover:brightness-105 shadow-lg"
+									: "text-slate-500 hover:text-slate-300"
+							}`}
 						>
 							Aumento
 						</button>
@@ -256,7 +261,7 @@ export default function PercentageCalculatorCard({ colors }: { colors: ToolTheme
 				<div className="grid grid-cols-2 gap-4 pt-2">
 					<div className={`p-3 rounded-lg bg-[#2a2a2a] border border-white/5`}>
 						<p className="text-slate-500 text-sm mb-1">Valor Final</p>
-						<span className={`text-2xl font-bold ${colors.text}`}>{formatResult(res3?.finalValue)}</span>
+						<span className="text-2xl font-bold text-[var(--primary)]">{formatResult(res3?.finalValue)}</span>
 					</div>
 					<div className={`p-3 rounded-lg bg-[#2a2a2a] border border-white/5 text-right`}>
 						<p className="text-slate-500 text-sm mb-1">Diferença</p>

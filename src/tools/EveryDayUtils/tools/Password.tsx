@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import type { ToolThemeSchema } from "../toolsData";
 
 // --- Utilitários de Lógica ---
 
@@ -63,7 +62,7 @@ function handleBase64(text: string, mode: "encode" | "decode"): string {
 // --- Tipos de Modos ---
 type GenMode = "password" | "uuid" | "hash" | "base64";
 
-export default function SecurityToolsCard({ colors }: { colors: ToolThemeSchema }) {
+export default function SecurityToolsCard() {
 	// Estado Global
 	const [mode, setMode] = useState<GenMode>("password");
 	const [output, setOutput] = useState("");
@@ -133,10 +132,13 @@ export default function SecurityToolsCard({ colors }: { colors: ToolThemeSchema 
 	// Estilos comuns
 	const tabClass = (active: boolean) =>
 		`flex-1 py-2 text-sm font-bold rounded-md transition-all ${
-			active ? `${colors.button} shadow-lg` : "text-slate-500 hover:text-slate-300 hover:bg-[#2a2a2a]"
+			active
+				? "bg-[var(--primary)] text-[var(--primary-text)] hover:brightness-105 shadow-lg"
+				: "text-slate-500 hover:text-slate-300 hover:bg-[#2a2a2a]"
 		}`;
-	const inputClass = `w-full p-3 rounded-lg bg-[#1a1a1a] border border-white/10 text-slate-200 focus:outline-none focus:ring-1 ${colors.ring}`;
-	const checkboxClass = `w-5 h-5 rounded bg-slate-700 border-slate-600 text-current focus:ring-0 ${colors.text}`;
+	const inputClass =
+		"w-full p-3 rounded-lg bg-[#1a1a1a] border border-white/10 text-slate-200 focus:outline-none focus:outline-2 focus:outline-solid focus:outline-[var(--primary)] focus:outline-offset-2";
+	const checkboxClass = "w-5 h-5 rounded bg-slate-700 border-slate-600 text-[var(--primary)] focus:ring-0";
 
 	return (
 		<div className="space-y-6">
@@ -169,8 +171,7 @@ export default function SecurityToolsCard({ colors }: { colors: ToolThemeSchema 
 								max="64"
 								value={pwLength}
 								onInput={(e) => setPwLength(Number(e.currentTarget.value))}
-								className={`w-1/2 h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-${colors.alias}-500`}
-								style={{ accentColor: colors.icon.split("-")[1] }} // Fallback
+								className="w-1/2 h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-[var(--primary)]"
 							/>
 						</div>
 						<div className="grid grid-cols-2 gap-3">
@@ -197,7 +198,7 @@ export default function SecurityToolsCard({ colors }: { colors: ToolThemeSchema 
 						</div>
 						<button
 							onClick={executeAction}
-							className={`w-full py-3 rounded-lg font-bold text-white shadow-lg active:scale-[0.98] transition-transform ${colors.button}`}
+							className="w-full py-3 rounded-lg font-bold shadow-lg active:scale-[0.98] transition-transform bg-[var(--primary)] text-[var(--primary-text)] hover:brightness-105"
 						>
 							Gerar Nova Senha
 						</button>
@@ -212,7 +213,7 @@ export default function SecurityToolsCard({ colors }: { colors: ToolThemeSchema 
 						</p>
 						<button
 							onClick={executeAction}
-							className={`w-full py-3 rounded-lg font-bold text-white shadow-lg active:scale-[0.98] transition-transform ${colors.button}`}
+							className="w-full py-3 rounded-lg font-bold shadow-lg active:scale-[0.98] transition-transform bg-[var(--primary)] text-[var(--primary-text)] hover:brightness-105"
 						>
 							Gerar Novo UUID
 						</button>
@@ -235,7 +236,7 @@ export default function SecurityToolsCard({ colors }: { colors: ToolThemeSchema 
 									onClick={() => setHashAlgo(algo)}
 									className={`flex-1 py-2 rounded border border-white/10 text-sm font-bold transition-colors ${
 										hashAlgo === algo
-											? `${colors.softBg} ${colors.text} border-transparent`
+											? "bg-[var(--primary)]/10 border-transparent text-[var(--primary)]"
 											: "text-slate-500 bg-[#252525]"
 									}`}
 								>
@@ -280,7 +281,7 @@ export default function SecurityToolsCard({ colors }: { colors: ToolThemeSchema 
 			{/* --- Área de Resultado (Comum a todos) --- */}
 			<div
 				onClick={copyToClipboard}
-				className={`group relative mt-6 flex flex-col justify-center p-5 rounded-lg border-l-4 bg-[#252525] cursor-pointer hover:bg-[#2a2a2a] transition-all ${colors.border}`}
+				className="group relative mt-6 flex flex-col justify-center p-5 rounded-lg border-l-4 bg-[#252525] cursor-pointer hover:bg-[#2a2a2a] transition-all border-[var(--primary)]/20"
 				title="Clique para Copiar"
 			>
 				<div className="flex justify-between items-start w-full">
