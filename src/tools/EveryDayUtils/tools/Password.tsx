@@ -134,16 +134,17 @@ export default function SecurityToolsCard() {
 		`flex-1 py-2 text-sm font-bold rounded-md transition-all ${
 			active
 				? "bg-[var(--primary)] text-[var(--primary-text)] hover:brightness-105 shadow-lg"
-				: "text-slate-500 hover:text-slate-300 hover:bg-[#2a2a2a]"
+				: "text-[var(--text)]/90 hover:text-[var(--headline)] hover:bg-[color-mix(in_srgb,var(--card-bg)_90%,#0000)]"
 		}`;
 	const inputClass =
-		"w-full p-3 rounded-lg bg-[#1a1a1a] border border-white/10 text-slate-200 focus:outline-none focus:outline-2 focus:outline-solid focus:outline-[var(--primary)] focus:outline-offset-2";
-	const checkboxClass = "w-5 h-5 rounded bg-slate-700 border-slate-600 text-[var(--primary)] focus:ring-0";
+		"w-full p-3 rounded-lg bg-[color-mix(in_srgb,var(--background)_50%,#0000)] border border-[var(--card-border)]/80 text-[var(--card-text)] focus:outline-none focus:outline-2 focus:outline-solid focus:outline-[var(--primary)] focus:outline-offset-2";
+	const checkboxClass =
+		"w-5 h-5 rounded bg-[var(--card-border)]/60 border border-[var(--card-border)] text-[var(--primary)] focus:ring-0";
 
 	return (
 		<div className="space-y-6">
 			{/* --- Seletor de Abas (Modo) --- */}
-			<div className="bg-[#252525] p-1 rounded-lg flex space-x-1 border border-white/5">
+			<div className="bg-[color-mix(in_srgb,var(--card-bg)_88%,#0000)] p-1 rounded-lg flex space-x-1 border border-[var(--card-border)]/50">
 				<button onClick={() => setMode("password")} className={tabClass(mode === "password")}>
 					Senha
 				</button>
@@ -164,14 +165,14 @@ export default function SecurityToolsCard() {
 				{mode === "password" && (
 					<div className="space-y-4 animate-in fade-in zoom-in-95 duration-300">
 						<div className="flex justify-between items-center px-1">
-							<span className="text-slate-300 font-medium">Tamanho: {pwLength}</span>
+							<span className="text-[var(--card-text)] font-medium">Tamanho: {pwLength}</span>
 							<input
 								type="range"
 								min="8"
 								max="64"
 								value={pwLength}
 								onInput={(e) => setPwLength(Number(e.currentTarget.value))}
-								className="w-1/2 h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-[var(--primary)]"
+								className="w-1/2 h-2 bg-[var(--card-border)]/50 rounded-lg appearance-none cursor-pointer accent-[var(--primary)]"
 							/>
 						</div>
 						<div className="grid grid-cols-2 gap-3">
@@ -183,7 +184,7 @@ export default function SecurityToolsCard() {
 							].map((opt) => (
 								<label
 									key={opt.name}
-									className="flex items-center space-x-3 p-3 rounded-lg bg-[#252525] border border-transparent hover:border-white/10 cursor-pointer"
+									className="flex items-center space-x-3 p-3 rounded-lg bg-[color-mix(in_srgb,var(--card-bg)_90%,#0000)] border border-transparent hover:border-[var(--card-border)]/80 cursor-pointer"
 								>
 									<input
 										type="checkbox"
@@ -192,7 +193,7 @@ export default function SecurityToolsCard() {
 										onChange={handlePwOption}
 										className={checkboxClass}
 									/>
-									<span className="text-slate-300 text-sm">{opt.label}</span>
+									<span className="text-[var(--card-text)] text-sm">{opt.label}</span>
 								</label>
 							))}
 						</div>
@@ -208,7 +209,7 @@ export default function SecurityToolsCard() {
 				{/* MODO: UUID */}
 				{mode === "uuid" && (
 					<div className="space-y-4 animate-in fade-in zoom-in-95 duration-300 text-center py-4">
-						<p className="text-slate-400 text-sm mb-4">
+						<p className="text-[var(--text)] text-sm mb-4">
 							Gera um Identificador Único Universal (UUID v4) criptograficamente seguro.
 						</p>
 						<button
@@ -234,10 +235,10 @@ export default function SecurityToolsCard() {
 								<button
 									key={algo}
 									onClick={() => setHashAlgo(algo)}
-									className={`flex-1 py-2 rounded border border-white/10 text-sm font-bold transition-colors ${
+									className={`flex-1 py-2 rounded border border-[var(--card-border)]/80 text-sm font-bold transition-colors ${
 										hashAlgo === algo
 											? "bg-[var(--primary)]/10 border-transparent text-[var(--primary)]"
-											: "text-slate-500 bg-[#252525]"
+											: "text-[var(--text)]/90 bg-[color-mix(in_srgb,var(--card-bg)_90%,#0000)]"
 									}`}
 								>
 									{algo}
@@ -256,11 +257,11 @@ export default function SecurityToolsCard() {
 							placeholder={base64Mode === "encode" ? "Texto para codificar..." : "Cole o Base64 aqui..."}
 							className={`${inputClass} h-24 resize-none`}
 						/>
-						<div className="flex bg-[#252525] p-1 rounded-lg border border-white/5">
+						<div className="flex bg-[color-mix(in_srgb,var(--card-bg)_90%,#0000)] p-1 rounded-lg border border-[var(--card-border)]/50">
 							<button
 								onClick={() => setBase64Mode("encode")}
 								className={`flex-1 py-1.5 rounded text-sm font-bold transition-all ${
-									base64Mode === "encode" ? "bg-white/10 text-white" : "text-slate-500"
+									base64Mode === "encode" ? "bg-[var(--primary)]/15 text-[var(--headline)]" : "text-[var(--text)]/90"
 								}`}
 							>
 								Codificar (Encode)
@@ -268,7 +269,7 @@ export default function SecurityToolsCard() {
 							<button
 								onClick={() => setBase64Mode("decode")}
 								className={`flex-1 py-1.5 rounded text-sm font-bold transition-all ${
-									base64Mode === "decode" ? "bg-white/10 text-white" : "text-slate-500"
+									base64Mode === "decode" ? "bg-[var(--primary)]/15 text-[var(--headline)]" : "text-[var(--text)]/90"
 								}`}
 							>
 								Decodificar (Decode)
@@ -281,23 +282,23 @@ export default function SecurityToolsCard() {
 			{/* --- Área de Resultado (Comum a todos) --- */}
 			<div
 				onClick={copyToClipboard}
-				className="group relative mt-6 flex flex-col justify-center p-5 rounded-lg border-l-4 bg-[#252525] cursor-pointer hover:bg-[#2a2a2a] transition-all border-[var(--primary)]/20"
+				className="group relative mt-6 flex flex-col justify-center p-5 rounded-lg border-l-4 bg-[color-mix(in_srgb,var(--card-bg)_88%,#0000)] cursor-pointer hover:bg-[color-mix(in_srgb,var(--card-bg)_95%,#0000)] transition-all border-[var(--primary)]/20"
 				title="Clique para Copiar"
 			>
 				<div className="flex justify-between items-start w-full">
-					<code className="font-mono text-lg font-bold break-all text-slate-200 group-hover:text-white transition-colors w-full pr-8">
+					<code className="font-mono text-lg font-bold break-all text-[var(--card-text)] group-hover:text-[var(--headline)] transition-colors w-full pr-8">
 						{output || (mode === "password" || mode === "uuid" ? "Clique em Gerar" : "Aguardando entrada...")}
 					</code>
 					<span
 						className={`absolute top-5 right-5 text-xs font-bold uppercase tracking-wider transition-colors ${
-							copyFeedback ? "text-emerald-400" : "text-slate-600 group-hover:text-slate-400"
+							copyFeedback ? "text-[var(--primary)]" : "text-[var(--text)]/70 group-hover:text-[var(--text)]"
 						}`}
 					>
 						{copyFeedback || "Copiar"}
 					</span>
 				</div>
 				{mode === "hash" && output && (
-					<span className="text-xs text-slate-500 mt-2 font-mono uppercase">{hashAlgo}</span>
+					<span className="text-xs text-[var(--text)]/80 mt-2 font-mono uppercase">{hashAlgo}</span>
 				)}
 			</div>
 		</div>
