@@ -4,6 +4,7 @@ import WebCodeEditor from "../../tools/WebEditor/WebEditor";
 import EveryDayUtils from "../../tools/EveryDayUtils/UtilsApp";
 import CVBuilder from "../../tools/CVBuilder/CVBuilder";
 import DevEnv from "../../tools/DevEnv/DevEnv";
+import WeekPlanner from "../../tools/WeekPlanner/WeekPlanner";
 import { ToolNames } from "../../tools";
 
 export function getStaticPaths() {
@@ -28,6 +29,8 @@ const { name } = Astro.params;
 						return <CVBuilder client:load />;
 					case "DevEnv":
 						return <DevEnv client:load />;
+					case "WeekPlanner":
+						return <WeekPlanner client:load />;
 					default:
 						return <div>Ferramenta não encontrada.</div>;
 				}

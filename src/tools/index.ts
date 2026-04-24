@@ -1,1 +1,1 @@
-export const ToolNames = ["WebCodeEditor", "EveryDayUtils", "CVBuilder", "DevEnv"] as const;
+export const ToolNames = ["WebCodeEditor", "EveryDayUtils", "CVBuilder", "DevEnv", "WeekPlanner"] as const;
