@@ -5,6 +5,7 @@ import EveryDayUtils from "../../tools/EveryDayUtils/UtilsApp";
 import CVBuilder from "../../tools/CVBuilder/CVBuilder";
 import DevEnv from "../../tools/DevEnv/DevEnv";
 import WeekPlanner from "../../tools/WeekPlanner/WeekPlanner";
+import FinancePlanner from "../../tools/FinancePlanner/FinancePlanner";
 import { ToolNames } from "../../tools";
 import "../../tools/theme.css";
 
@@ -32,6 +33,8 @@ const { name } = Astro.params;
 						return <DevEnv client:load />;
 					case "WeekPlanner":
 						return <WeekPlanner client:load />;
+					case "FinancePlanner":
+						return <FinancePlanner client:load />;
 					default:
 						return <div>Ferramenta não encontrada.</div>;
 				}
