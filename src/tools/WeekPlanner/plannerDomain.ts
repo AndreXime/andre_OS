@@ -19,11 +19,6 @@ export function isTimeRangeOk(start: string, end: string): boolean {
 	return toMinutes(end) > toMinutes(start);
 }
 
-/** @deprecated Nome antigo: usar isTimeRangeOk. */
-export function isEndAfterStart(start: string, end: string): boolean {
-	return isTimeRangeOk(start, end);
-}
-
 export function blockSpanMinutes(start: string, end: string): number {
 	if (!hasTime(start) || !hasTime(end)) return 0;
 	if (toMinutes(end) <= toMinutes(start)) return 0;
