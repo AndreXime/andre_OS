@@ -8,7 +8,7 @@ export default function ContextMenu() {
 
 	return (
 		<div
-			className="fixed z-[100] bg-[#252526] border border-zinc-700 shadow-xl py-1 rounded text-zinc-300 w-48"
+			className="fixed z-[100] bg-[var(--card-bg)] border border-[var(--card-border)] shadow-xl py-1 rounded text-[var(--card-text)] w-48"
 			style={{ top: menu?.y, left: menu?.x }}
 			onMouseLeave={() => setMenu(null)}
 		>
@@ -17,7 +17,7 @@ export default function ContextMenu() {
 					setAddingType({ type: "file", parentId: menu?.parentId || null });
 					setMenu(null);
 				}}
-				className="w-full text-left px-4 py-1.5 hover:bg-[#094771] hover:text-white text-xs"
+				className="w-full text-left px-4 py-1.5 hover:bg-[color-mix(in_srgb,var(--primary)_18%,var(--card-bg))] hover:text-[var(--headline)] text-xs"
 			>
 				Novo Arquivo
 			</button>
@@ -26,17 +26,17 @@ export default function ContextMenu() {
 					setAddingType({ type: "folder", parentId: menu?.parentId || null });
 					setMenu(null);
 				}}
-				className="w-full text-left px-4 py-1.5 hover:bg-[#094771] hover:text-white text-xs"
+				className="w-full text-left px-4 py-1.5 hover:bg-[color-mix(in_srgb,var(--primary)_18%,var(--card-bg))] hover:text-[var(--headline)] text-xs"
 			>
 				Nova Pasta
 			</button>
-			<div className="border-t border-zinc-700 my-1"></div>
+			<div className="border-t border-[var(--card-border)] my-1"></div>
 			<button
 				onClick={() => {
 					if (menu?.parentId) deleteNode(menu.parentId);
 					setMenu(null);
 				}}
-				className="w-full text-left px-4 py-1.5 hover:bg-red-900/40 text-xs text-red-400"
+				className="w-full text-left px-4 py-1.5 hover:bg-[color-mix(in_srgb,var(--primary)_12%,#0000)] text-xs text-[var(--primary)]"
 			>
 				Excluir
 			</button>
