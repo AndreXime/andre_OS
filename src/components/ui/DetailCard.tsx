@@ -1,8 +1,8 @@
 import { ExternalLink, Terminal } from "lucide-react";
 import Badge from "./Bagde";
-import type { Post } from "@/database/types";
 import { formatDate, getDomain, getThemeClasses } from "@/lib/utils";
 import { marked, type Tokens } from "marked";
+import type { Post } from "@/content.config";
 
 function parseMarkdown(content: string) {
 	const renderer = {
@@ -38,7 +38,7 @@ export default function DetailPostView({ post }: { post: Post }) {
 					<h1 className="text-3xl md:text-4xl font-bold text-zinc-100 ">{post.title}</h1>
 					{post.type === "tool" && (
 						<a
-							href={`/app/${post.slug}`}
+							href={`/app/${post.tool_name ?? post.slug}`}
 							className="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-2 rounded-md font-medium transition-colors flex items-center justi gap-2"
 						>
 							<Terminal size={16} /> Ver ferramenta
@@ -64,7 +64,6 @@ export default function DetailPostView({ post }: { post: Post }) {
 				{post.content && (
 					<div
 						className="text-zinc-200 leading-relaxed content-container [&>*:first-child]:mt-0"
-						// biome-ignore lint/security/noDangerouslySetInnerHtml: ""
 						dangerouslySetInnerHTML={{ __html: parseMarkdown(post.content) }}
 					/>
 				)}

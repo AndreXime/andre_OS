@@ -3,67 +3,66 @@ import Layout from "../../components/layout/BaseLayout.astro";
 import DetailView from "../../components/ui/DetailCard";
 import Header from "@/components/layout/Header.astro";
 import Sidebar from "@/components/layout/Sidebar.astro";
-import {
-    getPostsTags,
-    getLastPostDate,
-    getAllPostNotes,
-} from "@/database/post/queries";
+import { getCollection } from "astro:content";
+import { entryToPost, getLastPostDate, getPostsTags } from "@/lib/posts";
 import { ChevronLeft } from "lucide-react";
 
 export async function getStaticPaths() {
-    const [posts, tags, lastDate] = await Promise.all([
-        getAllPostNotes(), // Somente posts tipo notas tem essa pagina
-        getPostsTags(),
-        getLastPostDate(),
-    ]);
-    return posts.map((post) => ({
-        params: { slug: post.slug },
-        props: { post, tags, lastDate },
-    }));
+	const entries = await getCollection(
+		"posts",
+		({ data }) => data.type === "note",
+	);
+	const tags = getPostsTags(entries);
+	const lastDate = getLastPostDate(entries);
+
+	return entries.map((entry) => ({
+		params: { slug: entry.data.slug },
+		props: { post: entryToPost(entry), tags, lastDate },
+	}));
 }
 
 const { post, tags, lastDate } = Astro.props;
 ---
 
 <Layout title={post.title + " | andre_OS"}>
-    <div class="min-h-screen relative flex flex-col lg:flex-row">
-        <Header searchParam={""} filterParam={""} />
+	<div class="min-h-screen relative flex flex-col lg:flex-row">
+		<Header searchParam={""} filterParam={""} />
 
-        <div
-            class="flex-1 pt-8 px-4 pb-1 mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 transition-all"
-        >
-            <Sidebar
-                tagCounts={tags}
-                currentFilter={""}
-                currentSearch={""}
-                lastDate={lastDate}
-            />
+		<div
+			class="flex-1 pt-8 px-4 pb-1 mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 transition-all"
+		>
+			<Sidebar
+				tagCounts={tags}
+				currentFilter={""}
+				currentSearch={""}
+				lastDate={lastDate}
+			/>
 
-            <main class={`flex lg:col-span-10`}>
-                <div class="flex flex-col w-full">
-                    <div class="mb-6 flex items-center gap-4 flex-shrink-0">
-                        <a
-                            href="/"
-                            class="flex items-center gap-2 px-3 py-1.5 rounded-md bg-zinc-900 border border-zinc-800 hover:border-zinc-600 hover:bg-zinc-800 text-sm transition-colors text-zinc-400 hover:text-white group"
-                        >
-                            <ChevronLeft
-                                size={16}
-                                className="group-hover:-translate-x-0.5 transition-transform"
-                            />
-                            Home
-                        </a>
-                        <div class="h-4 w-px bg-zinc-800"></div>
-                        <div
-                            class="flex items-center gap-2 text-xs font-mono text-zinc-500"
-                        >
-                            <span>
-                                ~/{post.type}s/{post.slug}
-                            </span>
-                        </div>
-                    </div>
-                    <DetailView post={post} />
-                </div>
-            </main>
-        </div>
-    </div>
+			<main class={`flex lg:col-span-10`}>
+				<div class="flex flex-col w-full">
+					<div class="mb-6 flex items-center gap-4 flex-shrink-0">
+						<a
+							href="/"
+							class="flex items-center gap-2 px-3 py-1.5 rounded-md bg-zinc-900 border border-zinc-800 hover:border-zinc-600 hover:bg-zinc-800 text-sm transition-colors text-zinc-400 hover:text-white group"
+						>
+							<ChevronLeft
+								size={16}
+								className="group-hover:-translate-x-0.5 transition-transform"
+							/>
+							Home
+						</a>
+						<div class="h-4 w-px bg-zinc-800"></div>
+						<div
+							class="flex items-center gap-2 text-xs font-mono text-zinc-500"
+						>
+							<span>
+								~/{post.type}s/{post.slug}
+							</span>
+						</div>
+					</div>
+					<DetailView post={post} />
+				</div>
+			</main>
+		</div>
+	</div>
 </Layout>

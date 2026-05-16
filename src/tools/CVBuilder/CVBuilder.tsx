@@ -14,12 +14,12 @@ import ResumeContent from "./Page";
 type TabId = 1 | 2 | 3 | 4 | 5 | 6;
 
 const TABS: { id: TabId; label: string; icon: React.ReactNode }[] = [
-	{ id: 1, label: "Editor", icon: <User size={16} /> },
-	{ id: 2, label: "Dados pessoais", icon: <BookOpen size={16} /> },
-	{ id: 3, label: "Vaga", icon: <FileSearch size={16} /> },
-	{ id: 4, label: "Prompt IA", icon: <Briefcase size={16} /> },
-	{ id: 5, label: "Salvos", icon: <Database size={16} /> },
+	{ id: 1, label: "Dados pessoais", icon: <BookOpen size={16} /> },
+	{ id: 2, label: "Vaga", icon: <FileSearch size={16} /> },
+	{ id: 3, label: "Prompt IA", icon: <Briefcase size={16} /> },
+	{ id: 4, label: "Editor", icon: <User size={16} /> },
 	{ id: 6, label: "Preview", icon: <Eye size={16} /> },
+	{ id: 5, label: "Salvos", icon: <Database size={16} /> },
 ];
 
 export default function CVBuilderApp() {
@@ -74,10 +74,10 @@ export default function CVBuilderApp() {
 								</div>
 							) : (
 								<div className="flex-1 flex flex-col bg-slate-50 relative overflow-hidden pointer-events-auto rounded-lg border border-slate-200 min-h-[400px]">
-									{activeTab === 1 && <EditorTab />}
-									{activeTab === 2 && <ContextTab />}
-									{activeTab === 3 && <JobTab />}
-									{activeTab === 4 && <PromptTab />}
+									{activeTab === 1 && <ContextTab />}
+									{activeTab === 2 && <JobTab />}
+									{activeTab === 3 && <PromptTab />}
+									{activeTab === 4 && <EditorTab />}
 									{activeTab === 5 && <SavedResumesTab />}
 								</div>
 							)}

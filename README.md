@@ -4,10 +4,8 @@ Um blog pessoal e portfólio criativo que utiliza a estética de um sistema oper
 
 ## Tecnologias Utilizadas
 
-* **[Astro](https://astro.build/)**: Serve a estrutura base do site e as páginas de conteúdo (posts) com máxima performance, utilizando renderização no servidor (SSR) para dados dinâmicos.
-* **[React](https://react.dev/)**: Gerencia a interatividade das ferramentas web (Apps) e do painel administrativo.
-* **[LibSQL (Turso)](https://turso.tech/libsql)**: Atua como a base de dados central para armazenar todos os posts, referências de links e configurações das ferramentas.
-* **[Docker](https://www.docker.com/)**: Simplifica o ambiente de desenvolvimento ao rodar uma instância local do banco de dados LibSQL isolada do sistema principal.
+* **[Astro](https://astro.build/)**: Serve a estrutura base do site e as páginas de conteúdo (posts) com máxima performance, utilizando content collections em Markdown.
+* **[React](https://react.dev/)**: Gerencia a interatividade das ferramentas web (Apps).
 * **[Tailwind CSS v4](https://tailwindcss.com/)**: Permite criar o design visual complexo estilo "Desktop" e os componentes de UI de forma rápida e responsiva.
 
 ## Funcionalidades
@@ -17,5 +15,11 @@ O projeto organiza o conhecimento em três formatos distintos acessíveis a part
 * **Posts**: Artigos técnicos e textos explicativos renderizados em páginas dedicadas focadas na leitura.
 * **Ferramentas (Apps)**: Aplicações web completas e interativas desenvolvidas por mim, executadas dentro do próprio ambiente do site.
 * **Links**: Cartões de recomendação rápida que direcionam para referências externas ou recursos interessantes.
-* **Painel Administrativo**: Interface interna para criação e gestão de todo o conteúdo (CMS) e ferramentas.
 
+## Conteúdo
+
+Os posts ficam em `src/content/posts/` como arquivos Markdown. Para importar de um CSV exportado:
+
+```bash
+node scripts/import-posts-from-csv.mjs caminho/para/posts.csv
+```

@@ -1,7 +1,7 @@
 import { formatDate, getDomain, getThemeClasses } from "@/lib/utils";
 import { Code2, Cpu, ExternalLink, FileText, Terminal } from "lucide-react";
-import type { Post } from "@/database/types";
 import Badge from "./Bagde";
+import type { Post } from "@/content.config";
 
 export default function PreviewCard({ post }: { post: Post }) {
 	switch (post.type) {

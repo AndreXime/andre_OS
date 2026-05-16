@@ -3,7 +3,13 @@ import Layout from "../components/layout/BaseLayout.astro";
 import Header from "../components/layout/Header.astro";
 import Sidebar from "../components/layout/Sidebar.astro";
 import PreviewCard from "@/components/ui/PreviewCards";
-import { getCollection, getEntry } from "astro:content";
+import { getCollection } from "astro:content";
+import {
+	entryToPost,
+	getLastPostDate,
+	getPostsTags,
+	sortPosts,
+} from "@/lib/posts";
 
 export const prerender = false;
 
@@ -11,36 +17,28 @@ const { searchParams } = Astro.url;
 const categoryParam = searchParams.get("category") || "all";
 const searchParam = searchParams.get("q") || "";
 
-const posts = (await getCollection("posts")).map(({ data, ...post }) => data);
+const entries = sortPosts(await getCollection("posts"));
+const posts = entries.map(entryToPost);
+const tags = getPostsTags(entries);
+const lastDate = getLastPostDate(entries);
 
-const metaEntry = await getEntry("meta", "global");
-const tags = metaEntry?.data.tags || {};
-const lastDate = metaEntry?.data.lastDate || undefined;
+const filteredPosts = posts.filter((post) => {
+	if (categoryParam !== "all" && post.type !== categoryParam) return false;
 
-const filteredPosts = posts
-	.filter((post) => {
-		const data = post;
+	if (searchParam) {
+		return (
+			post.title.toLowerCase().includes(searchParam.toLowerCase()) ||
+			post.description
+				.toLowerCase()
+				.includes(searchParam.toLowerCase()) ||
+			post.tags.some((tag) =>
+				tag.toLowerCase().includes(searchParam.toLowerCase()),
+			)
+		);
+	}
 
-		// Filtro de Categoria
-		if (categoryParam !== "all" && data.type !== categoryParam)
-			return false;
-
-		// Filtro de Texto
-		if (searchParam) {
-			return (
-				data.title.toLowerCase().includes(searchParam) ||
-				data.description.toLowerCase().includes(searchParam) ||
-				data.tags.some((t) => t.toLowerCase().includes(searchParam))
-			);
-		}
-		return true;
-	})
-	.map((post) => ({ ...post, id: Number(post.id) }));
-
-Astro.response.headers.set(
-	"Cache-Control",
-	"public, max-age=0, s-maxage=31536000, must-revalidate",
-);
+	return true;
+});
 ---
 
 <Layout title="andre_OS">
