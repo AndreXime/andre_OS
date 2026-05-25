@@ -1,0 +1,21 @@
+---
+import { Cpu, Terminal } from "lucide-react";
+import type { Post } from "@/content.config";
+
+interface Props {
+	post: Post;
+}
+
+const { post } = Astro.props;
+---
+
+<div class="h-full p-6 bg-zinc-900 border border-zinc-700 flex flex-col justify-center rounded-md relative overflow-hidden">
+	<div class="absolute top-0 right-0 p-4 opacity-5 text-zinc-100">
+		<Cpu size={120} />
+	</div>
+	<h2 class="text-sm font-mono text-emerald-500 mb-2 flex items-center gap-2">
+		<Terminal size={14} /> README.md
+	</h2>
+	<p class="text-lg font-bold text-zinc-200 leading-relaxed relative z-10">{post.title}</p>
+	<p class="text-base font-medium text-zinc-200 leading-relaxed relative z-10">{post.description}</p>
+</div>

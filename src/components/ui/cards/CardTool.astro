@@ -1,0 +1,45 @@
+---
+import { getThemeClasses } from "@/lib/utils";
+import { Code2, Terminal } from "lucide-react";
+import type { Post } from "@/content.config";
+
+interface Props {
+	post: Post;
+}
+
+const { post } = Astro.props;
+const { badgeClass } = getThemeClasses(post.type);
+---
+
+<div class="cursor-pointer h-full bg-zinc-900/40 border border-zinc-800 hover:border-emerald-500/50 hover:bg-emerald-900/5 transition-all duration-300 flex flex-col rounded-md overflow-hidden relative shadow-none hover:shadow-[0_0_15px_-5px_rgba(16,185,129,0.1)] card-trigger">
+	<div class="h-20 w-full shrink-0 relative border-b border-zinc-800 group-hover:border-emerald-900/30 transition-colors overflow-hidden bg-zinc-950">
+		<div class="h-full w-full bg-gradient-to-br from-emerald-900/20 to-teal-900/20 flex items-center justify-center gap-2 px-2">
+			<Code2 className="text-emerald-500/20 shrink-0" size={36} strokeWidth={1.5} />
+			{post.tool_name ? (
+				<span class="font-mono text-xs sm:text-sm text-emerald-500/25 truncate max-w-[min(100%,12rem)]">
+					./bin/{post.tool_name}
+				</span>
+			) : null}
+		</div>
+	</div>
+	<div class="p-4 flex flex-col flex-1 justify-between">
+		<div>
+			<h3 class="text-lg font-medium text-emerald-400 mb-2 leading-tight group-hover:text-emerald-300 transition-colors">
+				{post.title}
+			</h3>
+			<p class="text-sm text-zinc-400 mb-4 line-clamp-4 leading-relaxed">{post.description}</p>
+		</div>
+		<div class="mt-auto pt-4 flex flex-col gap-3 transition-colors">
+			<div class="flex gap-2 flex-wrap">
+				{post.tags.map((tag: string) => (
+					<span class={`px-2 py-0.5 text-[10px] font-mono border rounded-sm uppercase tracking-wider ${badgeClass}`}>
+						#{tag}
+					</span>
+				))}
+			</div>
+			<div class="w-full flex justify-center items-center gap-2 text-xs font-bold text-emerald-400 bg-emerald-950/30 hover:bg-emerald-900 border border-emerald-900/50 hover:border-emerald-500/50 px-3 py-1.5 rounded transition-all uppercase tracking-wide">
+				<Terminal size={12} /> Ver ferramenta
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,18 @@
+---
+import CardIntro from "./cards/CardIntro.astro";
+import CardLink from "./cards/CardLink.astro";
+import CardNote from "./cards/CardNote.astro";
+import CardTool from "./cards/CardTool.astro";
+import type { Post } from "@/content.config";
+
+interface Props {
+	post: Post;
+}
+
+const { post } = Astro.props;
+---
+
+{post.type === "intro" && <CardIntro post={post} />}
+{post.type === "link" && <CardLink post={post} />}
+{post.type === "note" && <CardNote post={post} />}
+{post.type === "tool" && <CardTool post={post} />}
