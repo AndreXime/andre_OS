@@ -1,4 +1,5 @@
-import { formatDate, getDomain, getThemeClasses } from "@/lib/utils";
+import { getLinkInfo } from "@/lib/getLinkInfo";
+import { formatDate, getThemeClasses } from "@/lib/utils";
 import { Code2, Cpu, ExternalLink, FileText, Terminal } from "lucide-react";
 import Badge from "./Bagde";
 import type { Post } from "@/content.config";
@@ -32,22 +33,44 @@ function CardIntro({ post }: { post: Post }) {
 	);
 }
 
-function CardLink({ post }: { post: Post }) {
+async function CardLink({ post }: { post: Post }) {
 	const { badgeClass } = getThemeClasses(post.type);
+	const siteInfo = await getLinkInfo(post.url || "");
 
 	return (
 		<div className="cursor-pointer h-full bg-zinc-900 border border-zinc-800 hover:border-violet-500/50 hover:bg-violet-900/5 transition-all duration-300 flex flex-col rounded-md overflow-hidden card-trigger">
-			<div className="h-20 w-full bg-gradient-to-br from-violet-900/20 to-fuchsia-900/20 relative flex items-center justify-center border-b border-zinc-800 group-hover:border-violet-900/30 transition-colors">
-				<span className="font-bold gap-1 text-xl text-white/10 tracking-widest uppercase group-hover:text-violet-500/20 transition-colors px-2">
-					{getDomain(post.url || "")}
-				</span>
+			<div className="relative flex h-20 w-full items-center justify-center overflow-hidden border-b border-zinc-800 bg-gradient-to-br from-violet-900/20 to-fuchsia-900/20 group-hover:border-violet-900/30 transition-colors">
+				{siteInfo.ogImage ? (
+					<>
+						<img
+							src={siteInfo.ogImage}
+							alt=""
+							className="absolute inset-0 size-full object-fill object-center"
+							loading="lazy"
+							decoding="async"
+						/>
+						<div className="absolute inset-0 bg-zinc-950/50 group-hover:bg-zinc-950/30 transition-colors" />
+					</>
+				) : siteInfo.favicon ? (
+					<img
+						src={siteInfo.favicon}
+						alt=""
+						className="relative z-10 h-10 w-10 object-contain drop-shadow-sm"
+						loading="lazy"
+						decoding="async"
+					/>
+				) : (
+					<span className="font-bold gap-1 text-xl text-white/10 tracking-widest uppercase group-hover:text-violet-500/20 transition-colors px-2">
+						{siteInfo.title}
+					</span>
+				)}
 			</div>
 			<div className="p-4 flex flex-col flex-1 justify-between">
 				<div>
 					<h3 className="text-lg font-medium text-zinc-100 mb-2 leading-tight group-hover:text-violet-100 transition-colors">
 						{post.title}
 					</h3>
-					<p className="text-sm text-zinc-400 mb-4 line-clamp-3 leading-relaxed">{post.description}</p>
+					<p className="text-sm text-zinc-400 mb-4 line-clamp-4 leading-relaxed">{post.description}</p>
 				</div>
 				<div className="mt-auto pt-4 flex flex-col gap-3 transition-colors">
 					<div className="flex gap-2 flex-wrap">
@@ -76,7 +99,7 @@ function CardNote({ post }: { post: Post }) {
 				<h3 className="text-lg font-medium text-zinc-100 mb-2 leading-tight group-hover:text-blue-100 transition-colors">
 					{post.title}
 				</h3>
-				<p className="text-sm text-zinc-400 mb-4 line-clamp-3 leading-relaxed">{post.description}</p>
+				<p className="text-sm text-zinc-400 mb-4 line-clamp-4 leading-relaxed">{post.description}</p>
 			</div>
 			<div className="mt-auto pt-4 flex flex-col gap-3 transition-colors">
 				<div className="flex gap-2 flex-wrap">
@@ -112,7 +135,7 @@ function CardTool({ post }: { post: Post }) {
 					<h3 className="text-lg font-medium text-emerald-400 mb-2 leading-tight group-hover:text-emerald-300 transition-colors">
 						{post.title}
 					</h3>
-					<p className="text-sm text-zinc-400 mb-4 line-clamp-3 leading-relaxed">{post.description}</p>
+					<p className="text-sm text-zinc-400 mb-4 line-clamp-4 leading-relaxed">{post.description}</p>
 				</div>
 				<div className="mt-auto pt-4 flex flex-col gap-3 transition-colors">
 					<div className="flex gap-2 flex-wrap">

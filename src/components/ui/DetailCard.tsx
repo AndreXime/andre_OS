@@ -1,6 +1,6 @@
-import { ExternalLink, Terminal } from "lucide-react";
+import { Terminal } from "lucide-react";
 import Badge from "./Bagde";
-import { formatDate, getDomain, getThemeClasses } from "@/lib/utils";
+import { formatDate, getThemeClasses } from "@/lib/utils";
 import { marked, type Tokens } from "marked";
 import type { Post } from "@/content.config";
 
@@ -46,16 +46,6 @@ export default function DetailPostView({ post }: { post: Post }) {
 					)}
 				</div>
 				<div className="flex items-center justify-between gap-4 text-sm text-zinc-400 font-mono">
-					{post.url && (
-						<a
-							href={post.url}
-							target="_blank"
-							rel="noopener noreferrer"
-							className="flex items-center gap-1.5 text-violet-400 hover:text-violet-300 transition-colors"
-						>
-							<ExternalLink size={14} /> {getDomain(post.url)}
-						</a>
-					)}
 					{post.date && <span>{formatDate(post.date)}</span>}
 				</div>
 			</div>

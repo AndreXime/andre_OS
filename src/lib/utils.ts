@@ -5,8 +5,6 @@ export const formatDate = (date: Date) =>
 		year: "numeric",
 	}).format(date);
 
-export const getDomain = (url: string) => url.replace(/^(https?:\/\/)?(www\.)?/, "").split("/")[0];
-
 export const getThemeClasses = (toolType: string) => {
 	switch (toolType) {
 		case "tool":
