@@ -4,12 +4,7 @@ import Header from "../components/layout/Header.astro";
 import Sidebar from "../components/layout/Sidebar.astro";
 import PreviewCard from "@/components/ui/PreviewCard.astro";
 import { getCollection } from "astro:content";
-import {
-	entryToPost,
-	getLastPostDate,
-	getPostsTags,
-	sortPosts,
-} from "@/lib/posts";
+import { getLastPostDate, getPostsTags, sortPosts } from "@/lib/posts";
 
 export const prerender = false;
 
@@ -17,10 +12,10 @@ const { searchParams } = Astro.url;
 const categoryParam = searchParams.get("category") || "all";
 const searchParam = searchParams.get("q") || "";
 
-const entries = sortPosts(await getCollection("posts"));
-const posts = entries.map(entryToPost);
-const tags = getPostsTags(entries);
-const lastDate = getLastPostDate(entries);
+const entries = (await getCollection("posts")).map((entry) => entry.data);
+const posts = sortPosts(entries);
+const tags = getPostsTags(posts);
+const lastDate = getLastPostDate(posts);
 
 const filteredPosts = posts.filter((post) => {
 	if (categoryParam !== "all" && post.type !== categoryParam) return false;
