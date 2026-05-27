@@ -51,19 +51,19 @@ const rowMeta = await (async () => {
 <article class="group ui-card ui-focus-ring px-4 py-3">
 	<div class="flex items-start gap-3">
 		<div
-			class="pt-1 text-[var(--color-dim)] shrink-0 flex items-center justify-center size-5"
+			class="pt-1 text-[var(--color-dim)] shrink-0 flex items-center justify-center size-6"
 		>
 			{
 				rowMeta.linkFavicon ? (
 					<img
 						src={rowMeta.linkFavicon}
 						alt=""
-						class="size-4 rounded-sm object-contain"
+						class="size-5 rounded-sm object-contain"
 						loading="lazy"
 						decoding="async"
 					/>
 				) : (
-					<rowMeta.Icon size={14} />
+					<rowMeta.Icon size={20} strokeWidth={1.75} />
 				)
 			}
 		</div>
