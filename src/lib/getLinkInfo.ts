@@ -1,9 +1,3 @@
-export interface LinkMetadata {
-	title: string | null;
-	ogImage: string | null;
-	favicon: string | null;
-}
-
 const FETCH_TIMEOUT_MS = 5000;
 const HTML_SCAN_LIMIT = 50_000;
 
@@ -72,7 +66,7 @@ function parseFavicon(html: string, baseUrl: string): string | null {
 
 const getDomain = (url: string) => url.replace(/^(https?:\/\/)?(www\.)?/, "").split("/")[0];
 
-export async function getLinkInfo(targetUrl: string): Promise<LinkMetadata> {
+export async function getLinkInfo(targetUrl: string) {
 	const domain = getDomain(targetUrl);
 
 	try {
@@ -89,13 +83,15 @@ export async function getLinkInfo(targetUrl: string): Promise<LinkMetadata> {
 		const resolveBase = parseBaseHref(html, getDocumentBase(documentUrl));
 
 		return {
-			title: parseTitle(html) ?? domain,
+			title: parseTitle(html),
+			domain,
 			ogImage: parseOgImage(html, resolveBase),
 			favicon: parseFavicon(html, resolveBase),
 		};
 	} catch {
 		return {
-			title: domain,
+			title: null,
+			domain,
 			ogImage: null,
 			favicon: null,
 		};
