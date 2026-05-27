@@ -26,29 +26,27 @@ const htmlContent = marked.parse(post.content || "", { async: false });
 ---
 
 <div
-	class={`min-h-[200px] rounded-lg border ${borderClass} bg-zinc-900/50 backdrop-blur-sm overflow-hidden flex flex-col`}
+	class={`min-h-[200px] rounded-lg border ${borderClass} bg-[color-mix(in_oklch,var(--color-surface-1)_70%,transparent_30%)] backdrop-blur-sm overflow-hidden flex flex-col`}
 >
 	<div class={`p-6 md:p-8 border-b ${borderClass} ${bgClass} flex-shrink-0`}>
 		<div class="flex gap-2 mb-4">
 			{
 				post.tags?.map((tag: string) => (
-					<span
-						class={`px-2 py-0.5 text-[10px] font-mono border rounded-sm uppercase tracking-wider ${badgeClass}`}
-					>
+					<span class={badgeClass}>
 						#{tag}
 					</span>
 				))
 			}
 		</div>
 		<div class="flex items-end justify-between gap-4 mb-4">
-			<h1 class="text-3xl md:text-4xl font-bold text-zinc-100">
+			<h1 class="text-3xl md:text-4xl font-bold text-[var(--color-fg)]">
 				{post.title}
 			</h1>
 			{
 				post.type === "tool" && (
 					<a
 						href={`/app/${post.tool_name ?? post.slug}`}
-						class="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-2 rounded-md font-medium transition-colors flex items-center gap-2"
+						class="ui-prompt ui-focus-ring font-medium"
 					>
 						<Terminal size={16} />
 						Ver ferramenta
@@ -57,7 +55,7 @@ const htmlContent = marked.parse(post.content || "", { async: false });
 			}
 		</div>
 		<div
-			class="flex items-center justify-between gap-4 text-sm text-zinc-400 font-mono"
+			class="flex items-center justify-between gap-4 text-sm text-[var(--color-dim)] font-mono"
 		>
 			{post.date && <span>{formatDate(post.date)}</span>}
 		</div>
@@ -69,7 +67,7 @@ const htmlContent = marked.parse(post.content || "", { async: false });
 		{
 			htmlContent && (
 				<div
-					class="text-zinc-200 leading-relaxed content-container [&>*:first-child]:mt-0"
+					class="text-[var(--color-muted)] leading-relaxed content-container [&>*:first-child]:mt-0"
 					set:html={htmlContent}
 				/>
 			)

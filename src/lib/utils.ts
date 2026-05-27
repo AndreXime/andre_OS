@@ -9,28 +9,32 @@ export const getThemeClasses = (toolType: string) => {
 	switch (toolType) {
 		case "tool":
 			return {
-				borderClass: "border-emerald-500/30",
-				bgClass: "bg-emerald-950/20",
-				badgeClass: "bg-emerald-950/30 text-emerald-400 border-emerald-900/50",
+				borderClass: "border-[var(--color-border)]",
+				bgClass: "bg-[color-mix(in_oklch,var(--color-accent-bg)_55%,transparent_45%)]",
+				badgeClass: "ui-pill",
+				markerClass: "text-[var(--color-accent)]",
 			};
 		case "note":
 			return {
-				borderClass: "border-blue-500/30",
-				bgClass: "bg-blue-950/20",
-				badgeClass: "bg-blue-950/30 text-blue-400 border-blue-900/50",
+				borderClass: "border-[var(--color-border)]",
+				bgClass: "bg-[color-mix(in_oklch,var(--color-surface-2)_85%,transparent_15%)]",
+				badgeClass: "ui-pill",
+				markerClass: "text-[color-mix(in_oklch,var(--color-accent)_55%,var(--color-muted)_45%)]",
 			};
 		case "link":
 			return {
-				borderClass: "border-violet-500/30",
-				bgClass: "bg-violet-950/20",
-				badgeClass: "bg-violet-950/30 text-violet-400 border-violet-900/50",
+				borderClass: "border-[var(--color-border)]",
+				bgClass: "bg-[color-mix(in_oklch,var(--color-surface-2)_85%,transparent_15%)]",
+				badgeClass: "ui-pill",
+				markerClass: "text-[color-mix(in_oklch,var(--color-accent)_45%,var(--color-muted)_55%)]",
 			};
 
 		default:
 			return {
-				borderClass: "border-zinc-700",
-				bgClass: "bg-zinc-900",
-				badgeClass: "bg-zinc-800 text-zinc-400 border-zinc-700",
+				borderClass: "border-[var(--color-border)]",
+				bgClass: "bg-[color-mix(in_oklch,var(--color-surface-1)_85%,transparent_15%)]",
+				badgeClass: "ui-pill",
+				markerClass: "text-[var(--color-dim)]",
 			};
 	}
 };

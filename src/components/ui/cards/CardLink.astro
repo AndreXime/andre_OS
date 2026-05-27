@@ -9,12 +9,20 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const { badgeClass } = getThemeClasses(post.type);
+const { badgeClass, markerClass } = getThemeClasses(post.type);
 const siteInfo = await getLinkInfo(post.url || "");
+const linkHost = (() => {
+	if (!post.url) return "link";
+	try {
+		return new URL(post.url).host.replace(/^www\./, "");
+	} catch {
+		return "link";
+	}
+})();
 ---
 
-<div class="cursor-pointer h-full bg-zinc-900 border border-zinc-800 hover:border-violet-500/50 hover:bg-violet-900/5 transition-all duration-300 flex flex-col rounded-md overflow-hidden card-trigger">
-	<div class="relative flex h-20 w-full items-center justify-center overflow-hidden border-b border-zinc-800 bg-gradient-to-br from-violet-900/20 to-fuchsia-900/20 group-hover:border-violet-900/30 transition-colors">
+<div class="ui-card ui-focus-ring cursor-pointer h-full overflow-hidden card-trigger">
+	<div class="relative flex h-20 w-full items-center justify-center overflow-hidden border-b border-[var(--color-border)] bg-[color-mix(in_oklch,var(--color-surface-2)_85%,transparent_15%)]">
 		{siteInfo.ogImage ? (
 			<>
 				<img
@@ -24,7 +32,7 @@ const siteInfo = await getLinkInfo(post.url || "");
 					loading="lazy"
 					decoding="async"
 				/>
-				<div class="absolute inset-0 bg-zinc-950/50 group-hover:bg-zinc-950/30 transition-colors" />
+				<div class="absolute inset-0 bg-black/50 transition-colors" />
 			</>
 		) : siteInfo.favicon ? (
 			<img
@@ -35,28 +43,35 @@ const siteInfo = await getLinkInfo(post.url || "");
 				decoding="async"
 			/>
 		) : (
-			<span class="font-bold gap-1 text-xl text-white/10 tracking-widest uppercase group-hover:text-violet-500/20 transition-colors px-2">
+			<span class="font-bold gap-1 text-xl text-white/10 tracking-widest uppercase transition-colors px-2">
 				{siteInfo.title}
 			</span>
 		)}
 	</div>
 	<div class="p-4 flex flex-col flex-1 justify-between">
 		<div>
-			<h3 class="text-lg font-medium text-zinc-100 mb-2 leading-tight group-hover:text-violet-100 transition-colors">
+			<h3 class="text-lg font-medium text-[var(--color-fg)] mb-2 leading-tight">
 				{post.title}
 			</h3>
-			<p class="text-sm text-zinc-400 mb-4 line-clamp-4 leading-relaxed">{post.description}</p>
+			<p class="text-sm text-[var(--color-dim)] mb-4 line-clamp-4 leading-relaxed">
+				{post.description}
+			</p>
 		</div>
 		<div class="mt-auto pt-4 flex flex-col gap-3 transition-colors">
 			<div class="flex gap-2 flex-wrap">
 				{post.tags.map((tag: string) => (
-					<span class={`px-2 py-0.5 text-[10px] font-mono border rounded-sm uppercase tracking-wider ${badgeClass}`}>
+					<span class={badgeClass}>
 						#{tag}
 					</span>
 				))}
 			</div>
-			<div class="w-full flex justify-center items-center gap-2 text-xs font-bold text-violet-400 bg-violet-950/30 hover:bg-violet-900 border border-violet-900/50 hover:border-violet-500/50 px-3 py-1.5 rounded transition-all uppercase tracking-wide">
-				<ExternalLink size={12} /> Ver link
+			<div class="ui-prompt">
+				<span class="truncate">
+					<ExternalLink size={12} className={`inline -mt-0.5 ${markerClass}`} /> open
+					{" "}
+					{linkHost}
+				</span>
+				<span class="ui-prompt-arrow shrink-0">{">"}</span>
 			</div>
 		</div>
 	</div>

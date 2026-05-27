@@ -1,0 +1,99 @@
+---
+import { formatDate } from "@/lib/utils";
+import { ExternalLink, FileText, Terminal } from "lucide-react";
+import type { Post } from "@/content.config";
+
+interface Props {
+	post: Post;
+}
+
+const { post } = Astro.props;
+
+const rowMeta = (() => {
+	switch (post.type) {
+		case "tool":
+			return {
+				Icon: Terminal,
+				label: "bin",
+				path: `./bin/${post.tool_name ?? post.slug}`,
+				verb: "exec",
+			};
+		case "note":
+			return {
+				Icon: FileText,
+				label: "notas",
+				path: `./notas/${post.slug}.md`,
+				verb: "cat",
+			};
+		case "link": {
+			const host = (() => {
+				if (!post.url) return "link";
+				try {
+					return new URL(post.url).host.replace(/^www\./, "");
+				} catch {
+					return "link";
+				}
+			})();
+
+			return {
+				Icon: ExternalLink,
+				label: "links",
+				path: host,
+				verb: "open",
+			};
+		}
+		default:
+			return {
+				Icon: FileText,
+				label: "root",
+				path: `./${post.slug}`,
+				verb: "view",
+			};
+	}
+})();
+---
+
+<article class="group ui-card ui-focus-ring px-4 py-3">
+	<div class="flex items-start gap-3">
+		<div class="pt-1 text-[var(--color-dim)] shrink-0">
+			<rowMeta.Icon size={14} />
+		</div>
+
+		<div class="min-w-0 flex-1">
+			<div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+				<span class="font-mono text-xs text-[var(--color-dim)]">
+					<span class="text-[var(--color-accent)]">{rowMeta.verb}</span>
+					{" "}
+					<span class="text-[var(--color-muted)]">{rowMeta.path}</span>
+				</span>
+
+				{post.date ? (
+					<span class="font-mono text-xs text-[var(--color-dim)]">
+						{formatDate(post.date)}
+					</span>
+				) : null}
+			</div>
+
+			<h3 class="mt-1 text-base font-semibold text-[var(--color-fg)] leading-snug">
+				{post.title}
+			</h3>
+			<p class="mt-1 text-sm text-[var(--color-dim)] leading-relaxed line-clamp-2">
+				{post.description}
+			</p>
+
+			{post.tags?.length ? (
+				<div class="mt-3 flex flex-wrap gap-2">
+					{post.tags.map((tag) => (
+						<span class="ui-pill">#{tag}</span>
+					))}
+				</div>
+			) : null}
+		</div>
+
+		<div class="hidden lg:flex items-center gap-2 pl-4 text-[var(--color-dim)] font-mono text-xs">
+			<span class="uppercase tracking-widest">{rowMeta.label}</span>
+			<span class="ui-prompt-arrow">{">"}</span>
+		</div>
+	</div>
+</article>
+

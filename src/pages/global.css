@@ -1,28 +1,116 @@
 @import "tailwindcss";
+@import "../styles/tokens.css";
 @plugin "@tailwindcss/typography";
 
+@layer base {
+	html,
+	body {
+		background: var(--color-bg);
+		color: var(--color-muted);
+		font-family: var(--font-sans);
+		overflow-x: clip;
+	}
+}
+
+@layer components {
+	.ui-focus-ring {
+		outline: none;
+	}
+
+	.ui-focus-ring:focus-visible {
+		box-shadow: 0 0 0 2px color-mix(in oklch, var(--color-focus-ring) 50%, transparent 50%);
+	}
+
+	.ui-card {
+		background: color-mix(in oklch, var(--color-surface-1) 85%, transparent 15%);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-md);
+		transition:
+			border-color var(--dur-med) var(--ease-out),
+			background-color var(--dur-med) var(--ease-out),
+			box-shadow var(--dur-med) var(--ease-out),
+			transform var(--dur-med) var(--ease-out);
+		box-shadow: var(--shadow-card);
+	}
+
+	.ui-card:hover {
+		border-color: color-mix(in oklch, var(--color-accent) 22%, var(--color-border) 78%);
+		box-shadow: var(--shadow-card-hover);
+	}
+
+	.ui-card:active {
+		transform: translateY(1px);
+	}
+
+	.ui-pill {
+		font-family: var(--font-mono);
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-sm);
+		padding: 0.15rem 0.45rem;
+		font-size: 10px;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: var(--color-dim);
+		background: color-mix(in oklch, var(--color-surface-2) 85%, transparent 15%);
+	}
+
+	.ui-prompt {
+		font-family: var(--font-mono);
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem;
+		border: 1px solid var(--color-border);
+		border-radius: var(--radius-sm);
+		padding: 0.4rem 0.6rem;
+		color: color-mix(in oklch, var(--color-accent) 70%, var(--color-muted) 30%);
+		background: color-mix(in oklch, var(--color-accent-bg) 55%, transparent 45%);
+	}
+
+	.ui-prompt .ui-prompt-arrow {
+		color: var(--color-dim);
+	}
+}
+
+.content-container a {
+	color: color-mix(in oklch, var(--color-accent) 75%, var(--color-fg) 25%);
+	text-decoration: underline;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.18em;
+}
+
+.content-container a:hover {
+	color: var(--color-accent);
+}
+
+.content-container :is(h1, h2, h3, h4) {
+	color: var(--color-fg);
+}
+
+.content-container blockquote {
+	border-left: 2px solid color-mix(in oklch, var(--color-accent) 25%, var(--color-border) 75%);
+	padding-left: 1rem;
+	color: var(--color-muted);
+}
+
 .content-container pre {
-	background-color: #0d1117;
-	border-radius: 6px;
+	background-color: var(--color-code-bg);
+	border: 1px solid var(--color-code-border);
+	border-radius: var(--radius-sm);
 	padding: 16px;
 	overflow: auto;
 	margin: 1.5rem 0;
 }
 
 .content-container code {
-	font-family:
-		ui-monospace,
-		SFMono-Regular,
-		SF Mono,
-		Menlo,
-		monospace;
+	font-family: var(--font-mono);
 	font-size: 85%;
-	color: #e6edf3;
+	color: var(--color-code-fg);
 }
 
 .content-container :not(pre) > code {
-	background-color: rgba(110, 118, 129, 0.4);
+	background-color: var(--color-inline-code-bg);
 	padding: 0.2em 0.4em;
-	border-radius: 6px;
+	border-radius: var(--radius-sm);
 	color: inherit;
 }

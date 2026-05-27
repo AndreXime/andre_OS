@@ -1,0 +1,46 @@
+/* Tokens globais do site */
+:root {
+	/* Core surfaces */
+	--color-bg: oklch(16% 0.02 260);
+	--color-surface-1: oklch(20% 0.02 260);
+	--color-surface-2: oklch(24% 0.02 260);
+	--color-border: oklch(28% 0.02 260);
+	--color-border-strong: oklch(38% 0.02 260);
+
+	/* Text */
+	--color-fg: oklch(92% 0.02 260);
+	--color-muted: oklch(72% 0.02 260);
+	--color-dim: oklch(58% 0.02 260);
+
+	/* Accent (terminal phosphor, controlado) */
+	--color-accent: oklch(78% 0.18 160);
+	--color-accent-weak: oklch(78% 0.12 160);
+	--color-accent-bg: oklch(22% 0.08 160);
+
+	/* Focus */
+	--color-focus-ring: color-mix(in oklch, var(--color-accent) 65%, white 0%);
+
+	/* Code */
+	--color-code-bg: oklch(14% 0.02 260);
+	--color-code-border: oklch(22% 0.02 260);
+	--color-code-fg: oklch(92% 0.02 260);
+	--color-inline-code-bg: color-mix(in oklch, var(--color-border) 60%, var(--color-bg) 40%);
+
+	/* Radius */
+	--radius-sm: 6px;
+	--radius-md: 10px;
+
+	/* Shadow */
+	--shadow-card: 0 0 0 1px color-mix(in oklch, var(--color-border) 70%, transparent 30%);
+	--shadow-card-hover: 0 0 0 1px color-mix(in oklch, var(--color-accent) 35%, transparent 65%);
+
+	/* Fonts */
+	--font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	--font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+
+	/* Motion */
+	--dur-fast: 120ms;
+	--dur-med: 180ms;
+	--ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+

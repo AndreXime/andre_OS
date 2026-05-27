@@ -1,25 +1,101 @@
 ---
-import { PanelRight, SquareTerminal } from "lucide-react";
+import {
+    Command,
+    ExternalLink,
+    FileText,
+    Search,
+    SquareTerminal,
+    Terminal,
+} from "lucide-react";
+
+interface Props {
+    searchParam: string;
+    filterParam: string;
+}
+
+const { searchParam, filterParam } = Astro.props;
+
+const categoryValue = filterParam !== "all" ? filterParam : "";
 ---
 
 <header
-    class="lg:hidden w-full z-50 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800 h-14 flex items-center px-4 md:px-6 justify-between transition-all duration-300"
+    class="w-full z-50 bg-[color-mix(in_oklch,var(--color-bg)_85%,transparent_15%)] backdrop-blur-md border-b border-[var(--color-border)] transition-all duration-300"
 >
-    <a
-        href="/"
-        class="flex items-center gap-2 cursor-pointer text-lg font-mono font-bold text-zinc-100 tracking-tight leading-none"
-    >
-        <SquareTerminal />
-        andre_OS
-    </a>
-
-    <div class="flex items-center gap-4 text-xs font-mono text-zinc-300">
-        <button
-            id="toggle-sidebar"
-            aria-label="Abrir e fechar sidebar"
-            class="p-1.5 rounded-md text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
+    <div class="mx-auto w-full max-w-5xl px-4 py-4">
+        <div
+            class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between"
         >
-            <PanelRight size={18} />
-        </button>
+            <a
+                href="/"
+                class="flex items-center gap-2 cursor-pointer text-lg font-mono font-bold text-[var(--color-fg)] tracking-tight leading-none"
+            >
+                <SquareTerminal />
+                andre_OS
+            </a>
+
+            <form
+                action="/"
+                method="GET"
+                class="flex items-center group relative flex-1 lg:max-w-md"
+            >
+                <Search
+                    size={14}
+                    className="absolute left-3 top-2.5 text-[var(--color-dim)] group-focus-within:text-[var(--color-accent)] transition-colors"
+                />
+                <input
+                    type="text"
+                    name="q"
+                    value={searchParam}
+                    placeholder="Pesquisar notas, ferramentas..."
+                    class="w-full bg-[color-mix(in_oklch,var(--color-surface-1)_85%,transparent_15%)] border border-[var(--color-border)] text-sm py-2 pl-9 pr-4 rounded-md text-[var(--color-muted)] placeholder-[var(--color-dim)] focus:outline-none focus:border-[color-mix(in_oklch,var(--color-accent)_30%,var(--color-border)_70%)] focus:ring-1 focus:ring-[color-mix(in_oklch,var(--color-focus-ring)_35%,transparent_65%)] transition-all font-mono"
+                />
+                <input type="hidden" name="category" value={categoryValue} />
+            </form>
+
+            <nav
+                class="flex flex-wrap items-center gap-2 font-mono text-xs text-[var(--color-muted)]"
+            >
+                <a
+                    href={searchParam ? `/?q=${searchParam}` : "/"}
+                    class={`ui-focus-ring rounded-md px-2 py-1 border transition-colors ${
+                        filterParam === "all"
+                            ? "border-[color-mix(in_oklch,var(--color-accent)_18%,var(--color-border)_82%)] bg-[color-mix(in_oklch,var(--color-surface-2)_85%,transparent_15%)] text-[var(--color-fg)]"
+                            : "border-transparent hover:border-[var(--color-border)] hover:bg-[color-mix(in_oklch,var(--color-surface-1)_85%,transparent_15%)]"
+                    }`}
+                >
+                    <Command size={12} className="inline -mt-0.5" /> ~/root
+                </a>
+                <a
+                    href={`/?category=tool${searchParam ? `&q=${searchParam}` : ""}`}
+                    class={`ui-focus-ring rounded-md px-2 py-1 border transition-colors ${
+                        filterParam === "tool"
+                            ? "border-[color-mix(in_oklch,var(--color-accent)_18%,var(--color-border)_82%)] bg-[color-mix(in_oklch,var(--color-surface-2)_85%,transparent_15%)] text-[var(--color-fg)]"
+                            : "border-transparent hover:border-[var(--color-border)] hover:bg-[color-mix(in_oklch,var(--color-surface-1)_85%,transparent_15%)]"
+                    }`}
+                >
+                    <Terminal size={12} className="inline -mt-0.5" /> ~/bin
+                </a>
+                <a
+                    href={`/?category=note${searchParam ? `&q=${searchParam}` : ""}`}
+                    class={`ui-focus-ring rounded-md px-2 py-1 border transition-colors ${
+                        filterParam === "note"
+                            ? "border-[color-mix(in_oklch,var(--color-accent)_18%,var(--color-border)_82%)] bg-[color-mix(in_oklch,var(--color-surface-2)_85%,transparent_15%)] text-[var(--color-fg)]"
+                            : "border-transparent hover:border-[var(--color-border)] hover:bg-[color-mix(in_oklch,var(--color-surface-1)_85%,transparent_15%)]"
+                    }`}
+                >
+                    <FileText size={12} className="inline -mt-0.5" /> ~/notas
+                </a>
+                <a
+                    href={`/?category=link${searchParam ? `&q=${searchParam}` : ""}`}
+                    class={`ui-focus-ring rounded-md px-2 py-1 border transition-colors ${
+                        filterParam === "link"
+                            ? "border-[color-mix(in_oklch,var(--color-accent)_18%,var(--color-border)_82%)] bg-[color-mix(in_oklch,var(--color-surface-2)_85%,transparent_15%)] text-[var(--color-fg)]"
+                            : "border-transparent hover:border-[var(--color-border)] hover:bg-[color-mix(in_oklch,var(--color-surface-1)_85%,transparent_15%)]"
+                    }`}
+                >
+                    <ExternalLink size={12} className="inline -mt-0.5" /> ~/links
+                </a>
+            </nav>
+        </div>
     </div>
 </header>
