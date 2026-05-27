@@ -5,4 +5,5 @@ export const ToolNames = [
 	"DevEnv",
 	"WeekPlanner",
 	"FinancePlanner",
+	"ImageTools",
 ] as const;

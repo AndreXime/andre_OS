@@ -6,11 +6,13 @@
 		"dev": "astro dev",
 		"build": "astro build",
 		"preview": "astro preview",
-		"astro": "astro"
+		"astro": "astro",
+		"lint": "npx biome lint"
 	},
 	"dependencies": {
 		"@astrojs/react": "^5.0.5",
 		"@astrojs/vercel": "^10.0.7",
+		"@imgly/background-removal": "^1.7.0",
 		"@monaco-editor/react": "^4.7.0",
 		"@nanostores/persistent": "^1.3.4",
 		"@nanostores/react": "^1.1.0",
@@ -20,6 +22,7 @@
 		"lucide-react": "^1.16.0",
 		"marked": "^18.0.4",
 		"nanostores": "^1.3.0",
+		"onnxruntime-web": "^1.21.0",
 		"react": "^19.2.6",
 		"react-dom": "^19.2.6",
 		"tailwindcss": "^4.3.0"

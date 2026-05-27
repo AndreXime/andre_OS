@@ -45,8 +45,8 @@ export default function InvestmentCard() {
 	const resultado = useMemo(() => {
 		if (!dadosMercado.cdi || metaRenda <= 0 || percCDI <= 0) return null;
 
-		const cdiMensal = Math.pow(1 + dadosMercado.cdi, 1 / 12) - 1;
-		const inflacaoMensal = Math.pow(1 + dadosMercado.inflacao, 1 / 12) - 1;
+		const cdiMensal = (1 + dadosMercado.cdi) ** (1 / 12) - 1;
+		const inflacaoMensal = (1 + dadosMercado.inflacao) ** (1 / 12) - 1;
 
 		const rendimentoBrutoMensal = cdiMensal * (percCDI / 100);
 		const aliquotaIR = 0.15;
