@@ -1,22 +1,35 @@
 ---
 import Layout from "../../components/layout/BaseLayout.astro";
-import DetailView from "../../components/ui/DetailCard.astro";
 import Header from "@/components/layout/Header.astro";
+import { getThemeClasses, formatDate } from "@/lib/utils";
 import { getCollection } from "astro:content";
 import { ChevronLeft } from "lucide-react";
+import { marked, type Tokens } from "marked";
 
 export async function getStaticPaths() {
-	const entries = (
-		await getCollection("posts", ({ data }) => data.type === "note")
-	).map((entry) => entry.data);
+	const entries = await getCollection("posts", ({ data }) => data.type === "note");
 
 	return entries.map((entry) => ({
-		params: { slug: entry.slug },
-		props: { post: entry },
+		params: { slug: entry.data.slug },
+		props: { post: { ...entry.data, content: entry.body } },
 	}));
 }
 
 const { post } = Astro.props;
+const { bgClass, borderClass, badgeClass } = getThemeClasses(post.type);
+
+const renderer = {
+	link({ href, title, text }: Tokens.Link): string {
+		return `<a href="${href}" title="${title ?? ""}" target="_blank" rel="noopener noreferrer">${text}</a>`;
+	},
+	code({ text, lang }: Tokens.Code): string {
+		const languageClass = lang ? `language-${lang}` : "language-text";
+		return `<pre><code class="${languageClass}">${text}</code></pre>`;
+	},
+};
+
+marked.use({ renderer });
+const htmlContent = marked.parse(post.content || "", { async: false });
 ---
 
 <Layout title={post.title + " | andre_OS"}>
@@ -44,7 +57,52 @@ const { post } = Astro.props;
 							<span>~/notas/{post.slug}.md</span>
 						</div>
 					</div>
-					<DetailView post={post} />
+					<div
+						class={`min-h-[200px] rounded-lg border ${borderClass} bg-[color-mix(in_oklch,var(--color-surface-1)_70%,transparent_30%)] backdrop-blur-sm overflow-hidden flex flex-col`}
+					>
+						<div
+							class={`p-6 md:p-8 border-b ${borderClass} ${bgClass} flex-shrink-0`}
+						>
+							<div class="flex gap-2 mb-4">
+								{
+									post.tags?.map((tag: string) => (
+										<span class={badgeClass}>#{tag}</span>
+									))
+								}
+							</div>
+							<div
+								class="flex items-end justify-between gap-4 mb-4"
+							>
+								<h1
+									class="text-3xl md:text-4xl font-bold text-[var(--color-fg)]"
+								>
+									{post.title}
+								</h1>
+							</div>
+							<div
+								class="flex items-center justify-between gap-4 text-sm text-[var(--color-dim)] font-mono"
+							>
+								{
+									post.date && (
+										<span>{formatDate(post.date)}</span>
+									)
+								}
+							</div>
+						</div>
+
+						<div
+							class="p-6 md:p-8 overflow-y-auto flex-1 prose prose-invert prose-zinc prose-pre:text-base max-w-none"
+						>
+							{
+								htmlContent && (
+									<div
+										class="text-[var(--color-muted)] leading-relaxed content-container [&>*:first-child]:mt-0"
+										set:html={htmlContent}
+									/>
+								)
+							}
+						</div>
+					</div>
 				</div>
 			</div>
 		</main>
