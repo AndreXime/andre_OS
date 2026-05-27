@@ -34,9 +34,24 @@ const filteredPosts = posts.filter((post) => {
 });
 
 const introPosts = filteredPosts.filter((p) => p.type === "intro");
-const toolPosts = filteredPosts.filter((p) => p.type === "tool");
-const notePosts = filteredPosts.filter((p) => p.type === "note");
-const linkPosts = filteredPosts.filter((p) => p.type === "link");
+const recentPosts = filteredPosts
+	.filter((p) => p.type !== "intro")
+	.sort((a, b) => b.date.getTime() - a.date.getTime());
+
+function getPostUrl(post: (typeof recentPosts)[number]) {
+	switch (post.type) {
+		case "note":
+			return `/post/${post.slug}`;
+		case "tool":
+			return `/app/${post.tool_name}`;
+		case "link":
+			return post.url ?? "#";
+		default:
+			return "#";
+	}
+}
+
+const showEmpty = filteredPosts.length === 0;
 ---
 
 <Layout title="andre_OS">
@@ -67,14 +82,20 @@ const linkPosts = filteredPosts.filter((p) => p.type === "link");
 				}
 
 				{
-					toolPosts.length || notePosts.length || linkPosts.length ? (
+					recentPosts.length ? (
 						<section class="space-y-6">
+							<div class="flex items-center justify-between">
+								<h2 class="font-mono text-xs uppercase tracking-widest text-[var(--color-dim)]">
+									~/recentes
+								</h2>
+							</div>
+
 							<div class="ui-card px-4 py-3">
 								<div class="font-mono text-xs text-[var(--color-dim)]">
 									<span class="text-[var(--color-accent)]">
 										ls
 									</span>{" "}
-									-la{" "}
+									-t{" "}
 									<span class="text-[var(--color-muted)]">
 										{categoryParam !== "all"
 											? `./${categoryParam}`
@@ -89,63 +110,28 @@ const linkPosts = filteredPosts.filter((p) => p.type === "link");
 								</div>
 							</div>
 
-							{toolPosts.length ? (
-								<div class="space-y-3">
-									<h2 class="font-mono text-xs uppercase tracking-widest text-[var(--color-dim)]">
-										~/bin
-									</h2>
-									<div class="space-y-3">
-										{toolPosts.map((item) => (
-											<a
-												href={`/app/${item.tool_name}`}
-												class="block"
-											>
-												<WorkbenchRow post={item} />
-											</a>
-										))}
-									</div>
-								</div>
-							) : null}
-
-							{notePosts.length ? (
-								<div class="space-y-3">
-									<h2 class="font-mono text-xs uppercase tracking-widest text-[var(--color-dim)]">
-										~/notas
-									</h2>
-									<div class="space-y-3">
-										{notePosts.map((item) => (
-											<a
-												href={`/post/${item.slug}`}
-												class="block"
-											>
-												<WorkbenchRow post={item} />
-											</a>
-										))}
-									</div>
-								</div>
-							) : null}
-
-							{linkPosts.length ? (
-								<div class="space-y-3">
-									<h2 class="font-mono text-xs uppercase tracking-widest text-[var(--color-dim)]">
-										~/links
-									</h2>
-									<div class="space-y-3">
-										{linkPosts.map((item) => (
-											<a
-												href={item.url}
-												target="_blank"
-												rel="noopener noreferrer"
-												class="block"
-											>
-												<WorkbenchRow post={item} />
-											</a>
-										))}
-									</div>
-								</div>
-							) : null}
+							<div class="space-y-3">
+								{recentPosts.map((item) => (
+									<a
+										href={getPostUrl(item)}
+										{...(item.type === "link"
+											? {
+													target: "_blank",
+													rel: "noopener noreferrer",
+												}
+											: {})}
+										class="block"
+									>
+										<WorkbenchRow post={item} />
+									</a>
+								))}
+							</div>
 						</section>
-					) : (
+					) : null
+				}
+
+				{
+					showEmpty ? (
 						<div class="py-20 text-center border border-dashed border-[var(--color-border)] rounded-lg">
 							{searchParam ? (
 								<>
@@ -169,7 +155,7 @@ const linkPosts = filteredPosts.filter((p) => p.type === "link");
 								</div>
 							)}
 						</div>
-					)
+					) : null
 				}
 			</div>
 		</main>
