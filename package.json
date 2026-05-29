@@ -7,9 +7,10 @@
 		"build": "astro build",
 		"preview": "astro preview",
 		"astro": "astro",
-		"lint": "npx biome lint"
+		"lint": "npx biome lint && npx astro check"
 	},
 	"dependencies": {
+		"@astrojs/check": "^0.9.9",
 		"@astrojs/react": "^5.0.5",
 		"@astrojs/vercel": "^10.0.7",
 		"@imgly/background-removal": "^1.7.0",
@@ -25,7 +26,8 @@
 		"onnxruntime-web": "^1.21.0",
 		"react": "^19.2.6",
 		"react-dom": "^19.2.6",
-		"tailwindcss": "^4.3.0"
+		"tailwindcss": "^4.3.0",
+		"typescript": "^6.0.3"
 	},
 	"overrides": {
 		"@vercel/routing-utils": {
