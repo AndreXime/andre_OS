@@ -9,11 +9,11 @@ export interface Post {
 	title: string;
 	description: string;
 	tags: string[];
-	featured?: boolean;
+	featured?: boolean | undefined;
 	date: Date;
-	content?: string;
-	url?: string;
-	tool_name?: string;
+	content?: string | undefined;
+	url?: string | undefined;
+	tool_name?: string | undefined;
 }
 
 const posts = defineCollection({
