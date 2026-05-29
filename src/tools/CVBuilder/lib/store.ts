@@ -120,8 +120,10 @@ export function deleteResume(id: string) {
 	const newList = list.filter((r: Resume) => r.id !== id);
 
 	if (isDeletingSelected) {
-		// Seleciona o primeiro da lista restante
-		newList[0] = { ...newList[0], selected: true };
+		const first = newList.at(0);
+		if (first) {
+			newList[0] = { ...first, selected: true };
+		}
 	}
 
 	resumes$.set(newList);
