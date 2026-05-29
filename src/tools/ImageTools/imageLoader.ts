@@ -52,7 +52,8 @@ async function detectAlpha(bitmap: ImageBitmap, signal?: AbortSignal): Promise<b
 
 	const data = ctx.getImageData(0, 0, width, height).data;
 	for (let i = 3; i < data.length; i += 4) {
-		if (data[i] < 255) return true;
+		const alpha = data[i];
+		if (alpha !== undefined && alpha < 255) return true;
 	}
 	return false;
 }
