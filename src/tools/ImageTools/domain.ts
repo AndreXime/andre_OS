@@ -1,6 +1,6 @@
-export const ACCEPTED_EXTENSIONS = ".png,.jpg,.jpeg,.webp,.bmp,.tiff,.avif";
+export const ACCEPTED_EXTENSIONS = ".png,.jpg,.jpeg,.webp,.avif";
 
-export const ACCEPTED_FORMATS_LABEL = "PNG, JPEG, WebP, BMP, TIFF, AVIF";
+export const ACCEPTED_FORMATS_LABEL = "PNG, JPEG, WebP, AVIF";
 
 export const MAX_FILE_BYTES = 25 * 1024 * 1024;
 export const MAX_DIMENSION = 8192;
@@ -17,7 +17,7 @@ export const COMPRESS_MAX_WIDTH_OPTIONS = [
 	{ value: 2560, label: "2560px" },
 ] as const;
 
-export type OutputFormat = "png" | "jpeg" | "webp" | "avif" | "bmp";
+export type OutputFormat = "png" | "jpeg" | "webp" | "avif";
 
 export type OperationType = "convert" | "compress" | "bg-removal";
 
@@ -26,14 +26,13 @@ export interface ImageDimensions {
 	height: number;
 }
 
-const OUTPUT_FORMATS: OutputFormat[] = ["png", "jpeg", "webp", "avif", "bmp"];
+const OUTPUT_FORMATS: OutputFormat[] = ["png", "jpeg", "webp", "avif"];
 
 const MIME_TO_EXTENSION: Record<string, string> = {
 	"image/png": "png",
 	"image/jpeg": "jpg",
 	"image/webp": "webp",
 	"image/avif": "avif",
-	"image/bmp": "bmp",
 };
 
 const FORMAT_TO_MIME: Record<OutputFormat, string> = {
@@ -41,7 +40,13 @@ const FORMAT_TO_MIME: Record<OutputFormat, string> = {
 	jpeg: "image/jpeg",
 	webp: "image/webp",
 	avif: "image/avif",
-	bmp: "image/bmp",
+};
+
+const UNSUPPORTED_MIME_TYPES: Record<string, string> = {
+	"image/gif": "GIF",
+	"image/bmp": "BMP",
+	"image/tiff": "TIFF",
+	"image/x-tiff": "TIFF",
 };
 
 export function isOutputFormat(value: unknown): value is OutputFormat {
@@ -76,8 +81,9 @@ export function formatFileSize(bytes: number): string {
 }
 
 export function validateImageFile(file: File): string | null {
-	if (file.type === "image/gif") {
-		return "GIF nao e suportado. Use PNG, JPEG ou WebP.";
+	const unsupported = UNSUPPORTED_MIME_TYPES[file.type];
+	if (unsupported) {
+		return `${unsupported} nao e suportado. Use PNG, JPEG, WebP ou AVIF.`;
 	}
 	if (!file.type.startsWith("image/")) {
 		return "Arquivo selecionado nao e uma imagem valida.";

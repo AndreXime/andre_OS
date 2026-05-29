@@ -1,7 +1,7 @@
 import { formatToMime, type OutputFormat } from "./domain";
 import { canvasToBlob } from "./imageLoader";
 
-const ALL_FORMATS: OutputFormat[] = ["png", "jpeg", "webp", "avif", "bmp"];
+const ALL_FORMATS: OutputFormat[] = ["png", "jpeg", "webp", "avif"];
 
 let cachedSupport: Record<OutputFormat, boolean> | null = null;
 

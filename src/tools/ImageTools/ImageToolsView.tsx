@@ -49,7 +49,7 @@ const OPERATIONS: { id: OperationType; label: string; icon: typeof Upload }[] = 
 	{ id: "bg-removal", label: "Remover Fundo", icon: Scissors },
 ];
 
-const CONVERT_FORMATS: OutputFormat[] = ["png", "jpeg", "webp", "avif", "bmp"];
+const CONVERT_FORMATS: OutputFormat[] = ["png", "jpeg", "webp", "avif"];
 
 const PROGRESS_BAR_CLASS =
 	"block w-full h-1.5 appearance-none overflow-hidden rounded-full bg-[var(--background)] [&::-webkit-progress-bar]:rounded-full [&::-webkit-progress-bar]:bg-[var(--background)] [&::-webkit-progress-value]:rounded-full [&::-webkit-progress-value]:bg-[var(--primary)] transition-all duration-300 [&::-moz-progress-bar]:rounded-full [&::-moz-progress-bar]:bg-[var(--primary)]";
