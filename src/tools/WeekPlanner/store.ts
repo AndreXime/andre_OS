@@ -201,7 +201,12 @@ export function moveWeekBlock(day: WeekDayId, blockId: string, direction: -1 | 1
 			const L = [...next[d]];
 			const i = L.findIndex((b) => b.groupId === g);
 			const j = i + direction;
-			[L[i], L[j]] = [L[j], L[i]];
+			if (i === -1 || j < 0 || j >= L.length) continue;
+			const current = L[i];
+			const target = L[j];
+			if (!current || !target) continue;
+			L[i] = target;
+			L[j] = current;
 			next = replaceDay(next, d, L);
 		}
 		weekPlan$.set(next);
@@ -212,6 +217,10 @@ export function moveWeekBlock(day: WeekDayId, blockId: string, direction: -1 | 1
 	if (i === -1) return;
 	const j = i + direction;
 	if (j < 0 || j >= local.length) return;
-	[local[i], local[j]] = [local[j], local[i]];
+	const current = local[i];
+	const target = local[j];
+	if (!current || !target) return;
+	local[i] = target;
+	local[j] = current;
 	weekPlan$.set(replaceDay(plan, day, local));
 }

@@ -8,9 +8,9 @@ export function hasTime(t: string): boolean {
 
 export function toMinutes(t: string): number {
 	if (!hasTime(t)) return 0;
-	const [h, m] = t.split(":").map(Number);
-	if (Number.isNaN(h)) return 0;
-	return h * 60 + (m || 0);
+	const [hoursPart, minutesPart] = t.split(":").map(Number);
+	if (hoursPart === undefined || Number.isNaN(hoursPart)) return 0;
+	return hoursPart * 60 + (minutesPart ?? 0);
 }
 
 /** Só rejeita quando início e fim estão ambos preenchidos e fim ≤ início. */
