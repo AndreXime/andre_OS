@@ -6,4 +6,5 @@ export const ToolNames = [
 	"WeekPlanner",
 	"FinancePlanner",
 	"ImageTools",
+	"CookingBook",
 ] as const;

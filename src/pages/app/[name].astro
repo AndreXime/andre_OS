@@ -7,6 +7,7 @@ import DevEnv from "../../tools/DevEnv/DevEnv";
 import WeekPlanner from "../../tools/WeekPlanner/WeekPlanner";
 import FinancePlanner from "../../tools/FinancePlanner/FinancePlanner";
 import ImageTools from "../../tools/ImageTools/ImageTools";
+import CookingBook from "../../tools/CookingBook/CookingBook";
 import { ToolNames } from "../../tools";
 import "../../tools/theme.css";
 
@@ -38,6 +39,14 @@ const { name } = Astro.params;
 						return <FinancePlanner client:load />;
 					case "ImageTools":
 						return <ImageTools client:load />;
+					case "CookingBook":
+						return (
+							<CookingBook client:only="react">
+								<p slot="fallback" class="p-8 text-sm text-[var(--color-muted)]">
+									Carregando livro de receitas…
+								</p>
+							</CookingBook>
+						);
 					default:
 						return <div>Ferramenta não encontrada.</div>;
 				}
