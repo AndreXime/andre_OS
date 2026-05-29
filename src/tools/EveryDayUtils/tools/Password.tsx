@@ -31,7 +31,8 @@ function generateRandomPassword(length: number, options: PasswordOptions): strin
 	crypto.getRandomValues(array); // Mais seguro que Math.random()
 
 	for (let i = 0; i < length; i++) {
-		password += allChars[array[i] % allChars.length];
+		const random = array[i] ?? 0;
+		password += allChars[random % allChars.length];
 	}
 	return password;
 }
