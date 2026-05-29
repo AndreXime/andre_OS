@@ -124,13 +124,9 @@ const App = () => {
 													<div className="bg-[#0f0f0f] border border-[#1f521f] p-2 flex items-center justify-between group-hover:border-[#33ff00]">
 														<code className="text-[10px] text-[#ffb000] truncate">$ {tool.cmd}</code>
 														<button
+															type="button"
 															onClick={() => {
-																const el = document.createElement("textarea");
-																el.value = tool.cmd;
-																document.body.appendChild(el);
-																el.select();
-																document.execCommand("copy");
-																document.body.removeChild(el);
+																void navigator.clipboard.writeText(tool.cmd);
 															}}
 															className="ml-2 hover:text-[#ffb000]"
 															title="Copy to clipboard"

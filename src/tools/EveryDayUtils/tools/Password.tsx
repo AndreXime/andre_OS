@@ -47,14 +47,25 @@ async function generateHash(text: string, algorithm: "SHA-1" | "SHA-256" | "SHA-
 }
 
 // 3. Base64 (UTF-8 Safe)
+function utf8ToBase64(text: string): string {
+	const bytes = new TextEncoder().encode(text);
+	let binary = "";
+	for (const byte of bytes) {
+		binary += String.fromCharCode(byte);
+	}
+	return btoa(binary);
+}
+
+function base64ToUtf8(base64: string): string {
+	const binary = atob(base64);
+	const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+	return new TextDecoder().decode(bytes);
+}
+
 function handleBase64(text: string, mode: "encode" | "decode"): string {
 	if (!text) return "";
 	try {
-		if (mode === "encode") {
-			return btoa(unescape(encodeURIComponent(text)));
-		} else {
-			return decodeURIComponent(escape(atob(text)));
-		}
+		return mode === "encode" ? utf8ToBase64(text) : base64ToUtf8(text);
 	} catch {
 		return "Erro: Entrada inválida para Base64.";
 	}

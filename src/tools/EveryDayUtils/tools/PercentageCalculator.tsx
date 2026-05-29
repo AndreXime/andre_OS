@@ -79,7 +79,7 @@ export default function PercentageCalculatorCard() {
 
 	const [isDiscount, setIsDiscount] = useState(true);
 
-	const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
+	const handleInput = (e: React.InputEvent<HTMLInputElement>) => {
 		const { name, value } = e.currentTarget;
 		if (/^[\d.-]*$/.test(value)) {
 			setInputs((prev) => ({ ...prev, [name]: value }));
