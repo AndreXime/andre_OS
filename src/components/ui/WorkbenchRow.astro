@@ -1,7 +1,7 @@
 ---
 import { getLinkInfo } from "@/lib/getLinkInfo";
 import { formatDate } from "@/lib/utils";
-import { ExternalLink, FileText, Terminal } from "lucide-react";
+import { Code2, ExternalLink, FileText } from "lucide-react";
 import type { Post } from "@/content.config";
 
 interface Props {
@@ -14,24 +14,29 @@ const rowMeta = await (async () => {
 	switch (post.type) {
 		case "tool":
 			return {
-				Icon: Terminal,
-				label: "bin",
+				Icon: Code2,
+				kind: "tool" as const,
+				kindLabel: "bin",
 				path: `./bin/${post.tool_name ?? post.slug}`,
 				verb: "exec",
+				linkFavicon: null as string | null,
 			};
 		case "note":
 			return {
 				Icon: FileText,
-				label: "notas",
+				kind: "note" as const,
+				kindLabel: "md",
 				path: `./notas/${post.slug}.md`,
 				verb: "cat",
+				linkFavicon: null as string | null,
 			};
 		case "link": {
 			const info = await getLinkInfo(post.url || "");
 
 			return {
 				Icon: ExternalLink,
-				label: "links",
+				kind: "link" as const,
+				kindLabel: "url",
 				path: info.domain,
 				verb: "open",
 				linkFavicon: info.favicon,
@@ -40,9 +45,11 @@ const rowMeta = await (async () => {
 		default:
 			return {
 				Icon: FileText,
-				label: "root",
+				kind: "note" as const,
+				kindLabel: "root",
 				path: `./${post.slug}`,
 				verb: "view",
+				linkFavicon: null as string | null,
 			};
 	}
 })();
@@ -50,9 +57,7 @@ const rowMeta = await (async () => {
 
 <article class="group ui-card ui-focus-ring px-4 py-3">
 	<div class="flex items-start gap-3">
-		<div
-			class="pt-1 text-[var(--color-dim)] shrink-0 flex items-center justify-center size-6"
-		>
+		<div class={`workbench-row-icon workbench-row-icon--${rowMeta.kind} pt-0.5`}>
 			{
 				rowMeta.linkFavicon ? (
 					<img
@@ -63,20 +68,21 @@ const rowMeta = await (async () => {
 						decoding="async"
 					/>
 				) : (
-					<rowMeta.Icon size={20} strokeWidth={1.75} />
+					<rowMeta.Icon size={18} strokeWidth={1.75} />
 				)
 			}
 		</div>
 
 		<div class="min-w-0 flex-1">
 			<div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+				<span class={`workbench-row-kind workbench-row-kind--${rowMeta.kind}`}>
+					{rowMeta.kindLabel}
+				</span>
+
 				<span class="font-mono text-xs text-[var(--color-dim)]">
-					<span class="text-[var(--color-accent)]"
-						>{rowMeta.verb}</span
-					>
+					<span class="text-[var(--color-accent)]">{rowMeta.verb}</span>
 					{" "}
-					<span class="text-[var(--color-muted)]">{rowMeta.path}</span
-					>
+					<span class="text-[var(--color-muted)]">{rowMeta.path}</span>
 				</span>
 
 				{
@@ -88,14 +94,10 @@ const rowMeta = await (async () => {
 				}
 			</div>
 
-			<h3
-				class="mt-1 text-base font-semibold text-[var(--color-fg)] leading-snug"
-			>
+			<h3 class="mt-1 text-base font-semibold text-[var(--color-fg)] leading-snug">
 				{post.title}
 			</h3>
-			<p
-				class="mt-1 text-sm text-[var(--color-dim)] leading-relaxed line-clamp-2"
-			>
+			<p class="mt-1 text-sm text-[var(--color-dim)] leading-relaxed line-clamp-2">
 				{post.description}
 			</p>
 
@@ -110,10 +112,8 @@ const rowMeta = await (async () => {
 			}
 		</div>
 
-		<div
-			class="hidden lg:flex items-center gap-2 pl-4 text-[var(--color-dim)] font-mono text-xs"
-		>
-			<span class="uppercase tracking-widest">{rowMeta.label}</span>
+		<div class="hidden lg:flex items-center gap-2 pl-4 text-[var(--color-dim)] font-mono text-xs">
+			<span class="uppercase tracking-widest">{rowMeta.kindLabel}</span>
 			<span class="ui-prompt-arrow">{">"}</span>
 		</div>
 	</div>
