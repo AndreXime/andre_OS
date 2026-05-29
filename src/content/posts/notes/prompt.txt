@@ -1,0 +1,72 @@
+Aja como redator técnico de engenharia de software. Gere um post de blog em Markdown pronto para publicação.
+
+## Formato de saída
+
+O conteúdo final deve ser um arquivo .md completo com frontmatter YAML válido seguido do corpo em Markdown.
+
+### Se você tem acesso ao repositório (agente, IDE, CLI)
+
+Não responda o post no chat. Escreva o arquivo diretamente em:
+
+`src/content/posts/notes/<slug>.md`
+
+Antes de escrever:
+- Consulte os posts existentes em `src/content/posts/` para obter o próximo `id` disponível (maior id + 1)
+- Use o `slug` como nome do arquivo
+- Confirme no chat apenas o caminho do arquivo criado e um resumo de uma linha
+
+### Se você é uma IA de chat sem acesso ao repositório
+
+Retorne o arquivo completo dentro de um único bloco de código markdown (```markdown ... ```), sem texto antes ou depois. Isso evita que a formatação do chat quebre headings, listas e frontmatter.
+
+Não divida a resposta em múltiplos blocos. Não explique o conteúdo fora do bloco.
+
+### Estrutura do arquivo
+
+---
+id: <próximo id disponível; se não souber, use placeholder NEXT_ID>
+slug: "<kebab-case sem acentos>"
+type: note
+title: "<título técnico, curto e chamativo>"
+description: "<até 160 caracteres; assertivo; resume o valor técnico>"
+tags: ["Tag1","Tag2"]
+featured: false
+date: <YYYY-MM-DD>
+---
+
+Corpo em Markdown logo após o frontmatter.
+
+## Metadados
+
+- title: técnico, direto, ideal para card do blog
+- description: meta-description SEO, máx. 160 caracteres, sem clickbait vazio
+- slug: derivado do título, kebab-case, sem acentos
+- tags: 2 a 4 tags; siglas preservadas (TypeScript, CI/CD)
+
+## Estilo e tom
+
+- Idioma: português do Brasil
+- Tom: pragmático, denso, sem "encher linguiça"
+- Frases curtas; parágrafos enxutos
+- Proibido: saudações ("Olá", "E aí galera"), tom de influencer, seções "Conclusão", "Resumo" ou "Considerações Finais"
+- Proibido: travessão longo (—); use hífen ou reestruture a frase
+- Proibido: CTAs de engajamento no final
+
+## Estrutura do conteúdo
+
+1. Primeiro parágrafo: entre direto no problema, tese ou trade-off técnico
+2. Desenvolva com seções `###` quando fizer sentido
+3. Use **negrito** para termos, ferramentas e conceitos centrais
+4. Inclua blocos de código (yaml, bash, text) só quando agregarem implementação ou arquitetura
+5. Termine no último insight técnico; não feche com resumo
+
+## Qualidade técnica
+
+- Afirmações precisas; evite generalizações vagas
+- Não invente links, APIs ou versões
+- Snippets mínimos e plausíveis, não tutorial genérico
+- Priorize arquitetura, trade-offs e decisões de engenharia
+
+## Tema
+
+{{TEMA}}
