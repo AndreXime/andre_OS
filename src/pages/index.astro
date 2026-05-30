@@ -1,10 +1,9 @@
 ---
+import CardIntro from "@/components/ui/CardIntro.astro";
 import Layout from "../components/layout/BaseLayout.astro";
 import Header from "../components/layout/Header.astro";
-import PreviewCard from "@/components/ui/PreviewCard.astro";
 import WorkbenchRow from "@/components/ui/WorkbenchRow.astro";
 import { getCollection } from "astro:content";
-import { sortPosts } from "@/lib/posts";
 
 export const prerender = false;
 
@@ -13,7 +12,12 @@ const categoryParam = searchParams.get("category") || "all";
 const searchParam = searchParams.get("q") || "";
 
 const entries = (await getCollection("posts")).map((entry) => entry.data);
-const posts = sortPosts(entries);
+
+const posts = entries.sort((a, b) => {
+	if (a.type === "intro") return -1;
+	if (b.type === "intro") return 1;
+	return b.date.getTime() - a.date.getTime();
+});
 
 const filteredPosts = posts.filter((post) => {
 	if (categoryParam !== "all" && post.type !== categoryParam) return false;
@@ -73,7 +77,7 @@ const showEmpty = filteredPosts.length === 0;
 									<div
 										class={`block group h-full relative ${item.featured ? "lg:col-span-2" : "col-span-1"}`}
 									>
-										<PreviewCard post={item} />
+										<CardIntro post={item} />
 									</div>
 								))}
 							</div>
