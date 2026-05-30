@@ -9,17 +9,17 @@ import ImageTools from "../../tools/ImageTools/ImageTools";
 import CookingBook from "../../tools/CookingBook/CookingBook";
 import "../../tools/theme.css";
 
-const ToolNames = [
-	"WebCodeEditor",
-	"EveryDayUtils",
-	"CVBuilder",
-	"WeekPlanner",
-	"FinancePlanner",
-	"ImageTools",
-	"CookingBook",
-] as const;
-
 export function getStaticPaths() {
+	const ToolNames = [
+		"WebCodeEditor",
+		"EveryDayUtils",
+		"CVBuilder",
+		"WeekPlanner",
+		"FinancePlanner",
+		"ImageTools",
+		"CookingBook",
+	] as const;
+
 	return ToolNames.map((tool) => ({
 		params: { name: tool },
 	}));
