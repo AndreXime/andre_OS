@@ -10,6 +10,9 @@ import vercel from "@astrojs/vercel";
 export default defineConfig({
 	site: "https://andreximenes.xyz",
 	output: "static",
+	image: {
+		remotePatterns: [{ protocol: "https" }],
+	},
 	build: {
 		inlineStylesheets: "always",
 	},

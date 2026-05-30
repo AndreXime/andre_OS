@@ -3,6 +3,7 @@ import { getLinkInfo } from "@/lib/getLinkInfo";
 import { formatDate } from "@/lib/utils";
 import { Code2, ExternalLink, FileText } from "lucide-react";
 import type { Post } from "@/content.config";
+import { Image } from "astro:assets";
 
 interface Props {
 	post: Post;
@@ -57,12 +58,16 @@ const rowMeta = await (async () => {
 
 <article class="group ui-card ui-focus-ring px-4 py-3">
 	<div class="flex items-start gap-3">
-		<div class={`workbench-row-icon workbench-row-icon--${rowMeta.kind} pt-0.5`}>
+		<div
+			class={`workbench-row-icon workbench-row-icon--${rowMeta.kind} pt-0.5`}
+		>
 			{
 				rowMeta.linkFavicon ? (
-					<img
+					<Image
 						src={rowMeta.linkFavicon}
 						alt=""
+						width={20}
+						height={20}
 						class="size-5 rounded-sm object-contain"
 						loading="lazy"
 						decoding="async"
@@ -75,14 +80,19 @@ const rowMeta = await (async () => {
 
 		<div class="min-w-0 flex-1">
 			<div class="flex flex-wrap items-center gap-x-2 gap-y-1">
-				<span class={`workbench-row-kind workbench-row-kind--${rowMeta.kind}`}>
+				<span
+					class={`workbench-row-kind workbench-row-kind--${rowMeta.kind}`}
+				>
 					{rowMeta.kindLabel}
 				</span>
 
 				<span class="font-mono text-xs text-[var(--color-dim)]">
-					<span class="text-[var(--color-accent)]">{rowMeta.verb}</span>
+					<span class="text-[var(--color-accent)]"
+						>{rowMeta.verb}</span
+					>
 					{" "}
-					<span class="text-[var(--color-muted)]">{rowMeta.path}</span>
+					<span class="text-[var(--color-muted)]">{rowMeta.path}</span
+					>
 				</span>
 
 				{
@@ -94,10 +104,14 @@ const rowMeta = await (async () => {
 				}
 			</div>
 
-			<h3 class="mt-1 text-base font-semibold text-[var(--color-fg)] leading-snug">
+			<h3
+				class="mt-1 text-base font-semibold text-[var(--color-fg)] leading-snug"
+			>
 				{post.title}
 			</h3>
-			<p class="mt-1 text-sm text-[var(--color-dim)] leading-relaxed line-clamp-2">
+			<p
+				class="mt-1 text-sm text-[var(--color-dim)] leading-relaxed line-clamp-2"
+			>
 				{post.description}
 			</p>
 
@@ -112,7 +126,9 @@ const rowMeta = await (async () => {
 			}
 		</div>
 
-		<div class="hidden lg:flex items-center gap-2 pl-4 text-[var(--color-dim)] font-mono text-xs">
+		<div
+			class="hidden lg:flex items-center gap-2 pl-4 text-[var(--color-dim)] font-mono text-xs"
+		>
 			<span class="uppercase tracking-widest">{rowMeta.kindLabel}</span>
 			<span class="ui-prompt-arrow">{">"}</span>
 		</div>

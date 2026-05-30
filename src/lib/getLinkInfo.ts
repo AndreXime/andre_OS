@@ -51,17 +51,32 @@ function parseBaseHref(html: string, documentUrl: string): string {
 	return normalizeUrl(match[1], documentUrl) ?? documentUrl;
 }
 
-function parseFavicon(html: string, baseUrl: string): string | null {
-	const patterns = [
-		/<link[^>]+rel=["'](?:[^"']*icon[^"']*)["'][^>]+href=["']([^"']+)["']/i,
-		/<link[^>]+href=["']([^"']+)["'][^>]+rel=["'](?:[^"']*icon[^"']*)["']/i,
-	];
-	for (const pattern of patterns) {
-		const match = html.match(pattern);
-		const url = normalizeUrl(match?.[1], baseUrl);
-		if (url) return url;
+function isIcoUrl(url: string): boolean {
+	try {
+		return new URL(url).pathname.toLowerCase().endsWith(".ico");
+	} catch {
+		return url.toLowerCase().includes(".ico");
 	}
-	return null;
+}
+
+function parseFavicon(html: string, baseUrl: string): string | null {
+	const iconUrls: string[] = [];
+
+	for (const linkTag of html.matchAll(/<link[^>]*>/gi)) {
+		const tag = linkTag[0];
+		const rel = tag.match(/rel=["']([^"']+)["']/i)?.[1]?.toLowerCase();
+		if (!rel?.includes("icon")) continue;
+
+		const href = tag.match(/href=["']([^"']+)["']/i)?.[1];
+		const url = normalizeUrl(href, baseUrl);
+		if (url && !iconUrls.includes(url)) iconUrls.push(url);
+	}
+
+	const preferred = iconUrls.find((url) => !isIcoUrl(url));
+	if (preferred) return preferred;
+
+	const ico = iconUrls.find(isIcoUrl);
+	return ico ?? null;
 }
 
 const getDomain = (url: string) => url.replace(/^(https?:\/\/)?(www\.)?/, "").split("/")[0];
