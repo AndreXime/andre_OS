@@ -86,7 +86,6 @@ function FieldLabel({ children, optional }: { readonly children: ReactNode; read
 export function CookingBookView() {
 	const { recipes } = useStore(cookingBook$);
 	const isWide = useMediaQuery("(min-width: 1024px)");
-	const [ready, setReady] = useState(false);
 	const [screen, setScreen] = useState<Screen>("list");
 	const [selectedId, setSelectedId] = useState<string | null>(null);
 	const [query, setQuery] = useState("");
@@ -103,10 +102,6 @@ export function CookingBookView() {
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const importInputRef = useRef<HTMLInputElement>(null);
 	const titleInputRef = useRef<HTMLInputElement>(null);
-
-	useEffect(() => {
-		setReady(true);
-	}, []);
 
 	useEffect(() => {
 		if (!toast) return;
@@ -608,14 +603,6 @@ export function CookingBookView() {
 				</button>
 			</div>
 		) : null;
-
-	if (!ready) {
-		return (
-			<div className="w-full min-h-dvh flex items-center justify-center p-8">
-				<p className="text-sm text-[color:var(--text)]">Carregando…</p>
-			</div>
-		);
-	}
 
 	return (
 		<div className="w-full min-h-dvh mx-auto flex flex-col">

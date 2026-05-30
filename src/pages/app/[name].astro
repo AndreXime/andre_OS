@@ -46,16 +46,7 @@ const { name } = Astro.params;
 					case "ImageTools":
 						return <ImageTools client:load />;
 					case "CookingBook":
-						return (
-							<CookingBook client:only="react">
-								<p
-									slot="fallback"
-									class="p-8 text-sm text-[var(--color-muted)]"
-								>
-									Carregando livro de receitas…
-								</p>
-							</CookingBook>
-						);
+						return <CookingBook client:load />;
 					default:
 						return <div>Ferramenta não encontrada.</div>;
 				}
