@@ -2,21 +2,6 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 
 const distDir = new URL("./.vercel/output/static", import.meta.url).pathname;
-const astroDir = path.join(distDir, "_astro");
-
-async function mapJsSizes() {
-	const jsFiles = await fs.readdir(astroDir);
-
-	const entries = await Promise.all(
-		jsFiles.map(async (f) => {
-			const full = path.join(astroDir, f);
-			const stat = await fs.stat(full);
-			return { file: f, size: stat.size };
-		}),
-	);
-
-	return new Map(entries.map(({ file, size }) => [file, size]));
-}
 
 async function collectHtmlFiles(dir, baseDir) {
 	const entries = await fs.readdir(dir, { withFileTypes: true });
@@ -36,75 +21,191 @@ async function collectHtmlFiles(dir, baseDir) {
 }
 
 function extractScriptSrcs(html) {
-	const scriptRegex =
-		/<script[^>]+type=["']module["'][^>]+src=["']([^"']+\.js)["'][^>]*>/g;
-	const islandRegex =
-		/<astro-island[^>]+(?:component-url|renderer-url)=["']([^"']+\.js)["'][^>]*>/g;
-	const srcs = [];
+	const srcs = new Set();
 
-	for (const match of html.matchAll(scriptRegex)) {
-		srcs.push(match[1]);
+	for (const match of html.matchAll(
+		/<script[^>]+type=["']module["'][^>]+src=["']([^"']+\.js)["'][^>]*>/g,
+	)) {
+		srcs.add(match[1]);
 	}
 
-	for (const match of html.matchAll(islandRegex)) {
-		srcs.push(match[1]);
+	for (const match of html.matchAll(/<astro-island[^>]*>/g)) {
+		const tag = match[0];
+
+		for (const attr of ["component-url", "renderer-url"]) {
+			const urlMatch = tag.match(new RegExp(`${attr}=["']([^"']+)["']`));
+			if (urlMatch) srcs.add(urlMatch[1]);
+		}
 	}
 
-	return srcs;
+	return [...srcs];
+}
+
+function resolveAstroFile(src) {
+	const normalized = src.startsWith("/") ? src.slice(1) : src;
+	if (!normalized.startsWith("_astro/")) return null;
+	return path.join(distDir, normalized);
+}
+
+function extractChunkRefs(content) {
+	const staticRefs = [
+		...content.matchAll(/from["'](\.\/[^"']+\.js)["']/g),
+	].map((match) => match[1]);
+	const dynamicRefs = [
+		...content.matchAll(/import\s*\([^)]*["'](\.\/[^"']+\.js)["']/g),
+	].map((match) => match[1]);
+	const absoluteRefs = [
+		...content.matchAll(/["'](\/_astro\/[^"']+\.js)["']/g),
+	].map((match) => match[1].slice(1));
+
+	return { staticRefs, dynamicRefs, absoluteRefs };
+}
+
+async function collectChunkGraph(entryFiles) {
+	const initial = new Map();
+	const lazy = new Map();
+	const staticQueue = [...entryFiles];
+	const staticSeen = new Set();
+
+	while (staticQueue.length > 0) {
+		const file = staticQueue.shift();
+		if (staticSeen.has(file)) continue;
+		staticSeen.add(file);
+
+		let content;
+		try {
+			content = await fs.readFile(file, "utf8");
+		} catch {
+			continue;
+		}
+
+		const stat = await fs.stat(file);
+		initial.set(file, stat.size);
+
+		const { staticRefs, absoluteRefs } = extractChunkRefs(content);
+		const dir = path.dirname(file);
+
+		for (const ref of staticRefs) {
+			staticQueue.push(path.resolve(dir, ref));
+		}
+
+		for (const ref of absoluteRefs) {
+			staticQueue.push(path.join(distDir, ref));
+		}
+	}
+
+	const lazyQueue = [];
+	const lazySeen = new Set();
+
+	for (const file of staticSeen) {
+		let content;
+		try {
+			content = await fs.readFile(file, "utf8");
+		} catch {
+			continue;
+		}
+
+		const { dynamicRefs } = extractChunkRefs(content);
+		const dir = path.dirname(file);
+
+		for (const ref of dynamicRefs) {
+			lazyQueue.push(path.resolve(dir, ref));
+		}
+	}
+
+	while (lazyQueue.length > 0) {
+		const file = lazyQueue.shift();
+		if (staticSeen.has(file) || lazySeen.has(file)) continue;
+		lazySeen.add(file);
+
+		let content;
+		try {
+			content = await fs.readFile(file, "utf8");
+		} catch {
+			continue;
+		}
+
+		const stat = await fs.stat(file);
+		lazy.set(file, stat.size);
+
+		const { staticRefs, dynamicRefs, absoluteRefs } = extractChunkRefs(content);
+		const dir = path.dirname(file);
+
+		for (const ref of staticRefs) {
+			lazyQueue.push(path.resolve(dir, ref));
+		}
+
+		for (const ref of dynamicRefs) {
+			lazyQueue.push(path.resolve(dir, ref));
+		}
+
+		for (const ref of absoluteRefs) {
+			lazyQueue.push(path.join(distDir, ref));
+		}
+	}
+
+	return { initial, lazy };
 }
 
 function humanKb(bytes) {
 	return (bytes / 1024).toFixed(1);
 }
 
-const jsSizes = await mapJsSizes();
-const htmlFiles = await collectHtmlFiles(distDir, distDir);
+function formatChunkList(chunks) {
+	return [...chunks.entries()]
+		.sort((a, b) => b[1] - a[1])
+		.map(([file, size]) => ({
+			src: `/_astro/${path.basename(file)}`,
+			size,
+		}));
+}
 
+const htmlFiles = await collectHtmlFiles(distDir, distDir);
 const reports = [];
 
 for (const relHtml of htmlFiles) {
 	const fullHtmlPath = path.join(distDir, relHtml);
 	const html = await fs.readFile(fullHtmlPath, "utf8");
 	const srcs = extractScriptSrcs(html);
+	const entryFiles = srcs
+		.map(resolveAstroFile)
+		.filter((file) => file != null);
 
-	let total = 0;
-	const files = [];
+	const { initial, lazy } = await collectChunkGraph(entryFiles);
+	const initialFiles = formatChunkList(initial);
+	const lazyFiles = formatChunkList(lazy);
+	const initialTotal = initialFiles.reduce((sum, file) => sum + file.size, 0);
+	const lazyTotal = lazyFiles.reduce((sum, file) => sum + file.size, 0);
 
-	for (const src of srcs) {
-		const normalized = src.startsWith("/") ? src.slice(1) : src;
-
-		// Esperamos algo como "_astro/XYZ.js"
-		if (!normalized.startsWith("_astro/")) continue;
-
-		const fileName = path.basename(normalized);
-		let size = jsSizes.get(fileName);
-
-		if (size == null) {
-			// fallback direto pelo caminho completo, caso o nome-base não bata
-			const candidate = path.join(distDir, normalized);
-			try {
-				const stat = await fs.stat(candidate);
-				size = stat.size;
-			} catch {
-				continue;
-			}
-		}
-
-		total += size;
-		files.push({ src, size });
-	}
-
-	reports.push({ html: relHtml, total, files });
+	reports.push({
+		html: relHtml,
+		initialTotal,
+		lazyTotal,
+		initialFiles,
+		lazyFiles,
+	});
 }
 
-// Ordena por total de JS decrescente
-reports.sort((a, b) => b.total - a.total);
+reports.sort((a, b) => b.initialTotal + b.lazyTotal - (a.initialTotal + a.lazyTotal));
 
-for (const { html, total, files } of reports) {
+for (const { html, initialTotal, lazyTotal, initialFiles, lazyFiles } of reports) {
+	if (initialTotal + lazyTotal === 0) continue;
 	console.log(`\n${html}`);
-	console.log(`  Total JS: ${humanKb(total)} KB`);
+	console.log(`  Initial JS: ${humanKb(initialTotal)} KB`);
 
-	for (const { src, size } of files) {
+	for (const { src, size } of initialFiles) {
 		console.log(`    ${src} -> ${humanKb(size)} KB`);
+	}
+
+	if (lazyFiles.length > 0) {
+		console.log(`  Lazy JS: ${humanKb(lazyTotal)} KB`);
+
+		for (const { src, size } of lazyFiles) {
+			console.log(`    ${src} -> ${humanKb(size)} KB`);
+		}
+
+		console.log(
+			`  Total (initial + lazy): ${humanKb(initialTotal + lazyTotal)} KB`,
+		);
 	}
 }
