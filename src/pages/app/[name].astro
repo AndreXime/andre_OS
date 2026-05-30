@@ -7,8 +7,17 @@ import WeekPlanner from "../../tools/WeekPlanner/WeekPlanner";
 import FinancePlanner from "../../tools/FinancePlanner/FinancePlanner";
 import ImageTools from "../../tools/ImageTools/ImageTools";
 import CookingBook from "../../tools/CookingBook/CookingBook";
-import { ToolNames } from "../../tools";
 import "../../tools/theme.css";
+
+const ToolNames = [
+	"WebCodeEditor",
+	"EveryDayUtils",
+	"CVBuilder",
+	"WeekPlanner",
+	"FinancePlanner",
+	"ImageTools",
+	"CookingBook",
+] as const;
 
 export function getStaticPaths() {
 	return ToolNames.map((tool) => ({
