@@ -9,13 +9,10 @@ import {
 } from "lucide-react";
 
 interface Props {
-	searchParam: string;
-	filterParam: string;
+	activeCategory: string;
 }
 
-const { searchParam, filterParam } = Astro.props;
-
-const categoryValue = filterParam !== "all" ? filterParam : "";
+const { activeCategory } = Astro.props;
 
 const navInactive =
 	"border-transparent hover:border-[var(--color-border)] hover:bg-[color-mix(in_oklch,var(--color-surface-1)_85%,transparent_15%)]";
@@ -40,9 +37,7 @@ const navLinkBase =
 				andre_OS
 			</a>
 
-			<form
-				action="/"
-				method="GET"
+			<div
 				class="flex items-center group relative min-w-0 flex-1 max-w-md"
 			>
 				<Search
@@ -50,42 +45,38 @@ const navLinkBase =
 					className="absolute left-3 top-2.5 text-[var(--color-dim)] group-focus-within:text-[var(--color-accent)] transition-colors"
 				/>
 				<input
+					id="search"
 					type="text"
-					name="q"
-					value={searchParam}
 					placeholder="Pesquisar notas, ferramentas..."
 					class="w-full bg-[color-mix(in_oklch,var(--color-surface-1)_85%,transparent_15%)] border border-[var(--color-border)] text-sm py-2 pl-9 pr-4 rounded-md text-[var(--color-muted)] placeholder-[var(--color-dim)] focus:outline-none focus:border-[color-mix(in_oklch,var(--color-accent)_30%,var(--color-border)_70%)] focus:ring-1 focus:ring-[color-mix(in_oklch,var(--color-focus-ring)_35%,transparent_65%)] transition-all font-mono"
 				/>
-				<input type="hidden" name="category" value={categoryValue} />
-			</form>
+			</div>
 		</div>
 
 		<nav
 			class="flex w-full gap-2 font-mono text-xs text-[var(--color-muted)]"
 		>
 			<a
-				href={searchParam
-					? `/?q=${encodeURIComponent(searchParam)}`
-					: "/"}
-				class={`${navLinkBase} ${filterParam === "all" ? navActive : navInactive}`}
+				href={"/"}
+				class={`${navLinkBase} ${activeCategory === "all" ? navActive : navInactive}`}
 			>
 				<Command size={14} className="inline -mt-0.5 shrink-0" /> ~/root
 			</a>
 			<a
-				href={`/?category=tool${searchParam ? `&q=${encodeURIComponent(searchParam)}` : ""}`}
-				class={`${navLinkBase} ${filterParam === "tool" ? navActive : navInactive}`}
+				href={`/app`}
+				class={`${navLinkBase} ${activeCategory === "tool" ? navActive : navInactive}`}
 			>
 				<Terminal size={14} className="inline -mt-0.5 shrink-0" /> ~/bin
 			</a>
 			<a
-				href={`/?category=note${searchParam ? `&q=${encodeURIComponent(searchParam)}` : ""}`}
-				class={`${navLinkBase} ${filterParam === "note" ? navActive : navInactive}`}
+				href={`/post`}
+				class={`${navLinkBase} ${activeCategory === "note" ? navActive : navInactive}`}
 			>
 				<FileText size={14} className="inline -mt-0.5 shrink-0" /> ~/notas
 			</a>
 			<a
-				href={`/?category=link${searchParam ? `&q=${encodeURIComponent(searchParam)}` : ""}`}
-				class={`${navLinkBase} ${filterParam === "link" ? navActive : navInactive}`}
+				href={`/link`}
+				class={`${navLinkBase} ${activeCategory === "link" ? navActive : navInactive}`}
 			>
 				<ExternalLink size={14} className="inline -mt-0.5 shrink-0" /> ~/links
 			</a>

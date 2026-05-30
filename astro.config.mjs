@@ -10,12 +10,6 @@ import vercel from "@astrojs/vercel";
 export default defineConfig({
 	site: "https://andreximenes.xyz",
 	output: "static",
-	redirects: {
-		"/app": {
-			status: 302,
-			destination: "/?category=tool",
-		},
-	},
 	build: {
 		inlineStylesheets: "always",
 	},

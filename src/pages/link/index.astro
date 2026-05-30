@@ -1,0 +1,24 @@
+---
+import { getCollection } from "astro:content";
+import PostsLayout from "@/components/layout/PostsLayout.astro";
+import BaseLayout from "@/components/layout/BaseLayout.astro";
+
+const entries = (await getCollection("posts")).map((entry) => entry.data);
+
+const appPosts = entries
+    .filter((p) => p.type == "link")
+    .sort((a, b) => {
+        return b.date.getTime() - a.date.getTime();
+    });
+
+const introPost = undefined;
+const categoryParam = "link";
+---
+
+<BaseLayout title="andre_OS">
+    <PostsLayout
+        introPost={introPost}
+        recentPosts={appPosts}
+        activeCategory={categoryParam}
+    />
+</BaseLayout>
