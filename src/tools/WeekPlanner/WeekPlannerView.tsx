@@ -1,4 +1,5 @@
-import { useMemo, useState, type CSSProperties } from "react";
+import { useMemo, useState, type ReactNode } from "react";
+import { ToolShell } from "../ToolShell";
 import {
 	ArrowRight,
 	CalendarDays,
@@ -108,7 +109,10 @@ function SavedBlockBody({
 					)}
 					{hs && he && (
 						<>
-							<time dateTime={`${block.start}/${block.end}`} className="font-medium tabular-nums text-[var(--headline)]">
+							<time
+								dateTime={`${block.start}/${block.end}`}
+								className="font-medium tabular-nums text-[var(--headline)]"
+							>
 								{block.start}
 							</time>
 							<ArrowRight className="size-3.5 text-[var(--text)]/80 shrink-0 self-center" aria-hidden />
@@ -176,7 +180,9 @@ function DraftBlockBody({
 		<div className="flex flex-col gap-3 w-full">
 			<div className="flex items-center justify-between gap-2">
 				<div className="flex items-center gap-2 flex-wrap">
-					<span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--primary)]/80">A definir</span>
+					<span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--primary)]/80">
+						A definir
+					</span>
 					{block.groupId && (
 						<span className="text-[10px] font-semibold tracking-wide uppercase rounded-md border border-[var(--primary)]/25 bg-[color-mix(in_srgb,var(--primary)_10%,transparent)] px-1.5 py-0.5 text-[var(--primary)]/95">
 							Toda a semana
@@ -259,72 +265,21 @@ function DraftBlockBody({
 	);
 }
 
-const gridStyle: CSSProperties = {
-	backgroundImage: [
-		"linear-gradient(to bottom, transparent, transparent)",
-		"linear-gradient(90deg, color-mix(in srgb, var(--card-border) 25%, transparent) 0.5px, transparent 0.5px)",
-		"linear-gradient(180deg, color-mix(in srgb, var(--card-border) 25%, transparent) 0.5px, transparent 0.5px)",
-	].join(", "),
-	backgroundSize: "12px 12px",
-	WebkitMaskImage: "radial-gradient(ellipse 80% 50% at 50% 20%, #000, transparent 75%)",
-	maskImage: "radial-gradient(ellipse 80% 50% at 50% 20%, #000, transparent 75%)",
-};
-
-function Background() {
+function WeekStatCard({
+	label,
+	value,
+	title,
+}: {
+	readonly label: string;
+	readonly value: ReactNode;
+	readonly title?: string;
+}) {
 	return (
-		<div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden" aria-hidden>
-			<div className="absolute -top-40 left-1/2 h-[480px] w-[min(1200px,100%)] -translate-x-1/2 rounded-full bg-[color-mix(in_srgb,var(--primary)_6%,transparent)] blur-3xl" />
-			<div className="absolute top-[20%] -right-32 h-72 w-72 rounded-full bg-[color-mix(in_srgb,var(--card-border)_20%,transparent)] blur-3xl" />
-			<div className="absolute top-[40%] -left-24 h-64 w-64 rounded-full bg-[color-mix(in_srgb,var(--card-bg)_25%,var(--background))] blur-3xl" />
-			<div className="absolute inset-0" style={gridStyle} />
-		</div>
-	);
-}
-
-function Header({ totalBlocks, hoursLabel }: { readonly totalBlocks: number; readonly hoursLabel: string }) {
-	return (
-		<div className="w-full max-w-[1680px] mx-auto px-4 pt-6 pb-3 md:px-8 md:pt-8 md:pb-4">
-			<header className="flex flex-col gap-5 lg:gap-6">
-				<div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-					<div className="flex flex-col gap-2 max-w-xl">
-						<h1
-							className="text-3xl sm:text-4xl font-bold text-[var(--headline)] tracking-tight [text-shadow:0_0_40px_color-mix(in_srgb,var(--primary)_10%,transparent)]"
-						>
-							Planejador de semana
-						</h1>
-						<p className="text-sm sm:text-[15px] text-[var(--text)] leading-relaxed">
-							Adicione um bloco uma vez: o mesmo rascunho aparece em todos os dias. Editar ou guardar noutro dia mantém
-							tudo alinhado. Dados só no seu dispositivo.
-						</p>
-						<button
-							type="button"
-							onClick={() => addWeekBlockToAllDays()}
-							className="w-full sm:w-auto mt-1 flex items-center justify-center gap-2 rounded-xl border border-[var(--card-border)]/90 bg-[color-mix(in_srgb,var(--card-bg)_50%,var(--background))] px-3.5 py-2 text-sm font-medium text-[var(--card-text)] hover:border-[var(--primary)]/45 hover:bg-[color-mix(in_srgb,var(--primary)_10%,var(--background))] hover:text-[var(--headline)] transition-[border,background,color] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]"
-						>
-							<CalendarDays className="size-4 text-[var(--primary)]/85" strokeWidth={2.25} />
-							Adicionar bloco à semana
-						</button>
-					</div>
-					<div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
-						<div className="flex-1 min-w-0 sm:flex-initial sm:min-w-[8.5rem] flex flex-col justify-center rounded-2xl border border-[var(--card-border)]/80 bg-[color-mix(in_srgb,var(--card-bg)_40%,var(--background))] px-4 py-3 shadow-inner shadow-[color-mix(in_srgb,var(--background)_50%,#000)]/20">
-							<div className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--text)]">Blocos</div>
-							<div className="text-2xl font-bold tabular-nums text-[var(--headline)] flex items-baseline gap-1">
-								{totalBlocks}
-								<span className="text-sm font-medium text-[var(--text)]/80">/ semana</span>
-							</div>
-						</div>
-						<div className="flex-1 min-w-0 sm:flex-initial sm:min-w-[8.5rem] flex flex-col justify-center rounded-2xl border border-[var(--card-border)]/80 bg-[color-mix(in_srgb,var(--card-bg)_40%,var(--background))] px-4 py-3 shadow-inner shadow-[color-mix(in_srgb,var(--background)_50%,#000)]/20">
-							<div className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--text)]">Carga</div>
-							<div
-								className="text-2xl font-bold tabular-nums text-[var(--headline)]"
-								title="Soma da duração de blocos em que a hora de fim é depois do início"
-							>
-								{totalBlocks === 0 ? "—" : hoursLabel}
-							</div>
-						</div>
-					</div>
-				</div>
-			</header>
+		<div className="flex-1 min-w-0 sm:flex-initial sm:min-w-[8.5rem] flex flex-col justify-center rounded-2xl border border-[var(--card-border)]/80 bg-[color-mix(in_srgb,var(--card-bg)_40%,var(--background))] px-4 py-3 shadow-inner shadow-[color-mix(in_srgb,var(--background)_50%,#000)]/20">
+			<div className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--text)]">{label}</div>
+			<div className="text-2xl font-bold tabular-nums text-[var(--headline)]" title={title}>
+				{value}
+			</div>
 		</div>
 	);
 }
@@ -346,7 +301,11 @@ function DaySection({
 	);
 
 	return (
-		<section id={`week-day-${day}`} aria-labelledby={`week-day-heading-${day}`} className="scroll-mt-28">
+		<section
+			id={`week-day-${day}`}
+			aria-labelledby={`week-day-heading-${day}`}
+			className="scroll-mt-28 min-w-100 flex-[1_1_18rem] max-w-full"
+		>
 			<article
 				className={[
 					"group/day relative overflow-hidden rounded-2xl border backdrop-blur-sm transition-[box-shadow,transform] duration-300",
@@ -364,7 +323,10 @@ function DaySection({
 					<div className="px-3 pt-3 pb-2">
 						<div className="flex flex-col gap-0.5 min-w-0">
 							<div className="flex items-center gap-2 flex-wrap">
-								<h2 id={`week-day-heading-${day}`} className="text-base font-semibold text-[var(--headline)] tracking-tight">
+								<h2
+									id={`week-day-heading-${day}`}
+									className="text-base font-semibold text-[var(--headline)] tracking-tight"
+								>
 									{WEEK_DAY_LABEL[day]}
 								</h2>
 								{hasBlocks && (
@@ -500,17 +462,42 @@ export function WeekPlannerView({
 	hoursLabel: string;
 }) {
 	return (
-		<div className="w-full min-h-dvh max-w-[1680px] mx-auto flex flex-col">
-			<Background />
-			<Header totalBlocks={totalBlocks} hoursLabel={hoursLabel} />
-			<main className="w-full max-w-[1680px] mx-auto px-4 pb-12 md:px-8 flex flex-col gap-4">
-				<div className="h-px w-full max-w-2xl bg-gradient-to-r from-transparent via-[var(--card-border)]/50 to-transparent mb-1" />
-				<div className="grid grid-cols-1 lg:grid-cols-2 gap-4 xl:grid-cols-3 2xl:grid-cols-3 min-[1920px]:grid-cols-4">
-					{WEEK_DAY_ORDER.map((day) => (
-						<DaySection key={day} day={day} blocks={plan[day]} theme={DAY_THEME[day]} />
-					))}
+		<ToolShell
+			title="Planejador de semana"
+			description="Adicione um bloco uma vez: o mesmo rascunho aparece em todos os dias. Editar ou guardar noutro dia mantém tudo alinhado. Dados só no seu dispositivo."
+			icon={<CalendarRange className="size-6" strokeWidth={2} />}
+		>
+			<div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+				<button
+					type="button"
+					onClick={() => addWeekBlockToAllDays()}
+					className="w-full lg:w-auto flex items-center justify-center gap-2 rounded-xl border border-[var(--card-border)]/90 bg-[color-mix(in_srgb,var(--card-bg)_50%,var(--background))] px-3.5 py-2 text-sm font-medium text-[var(--card-text)] hover:border-[var(--primary)]/45 hover:bg-[color-mix(in_srgb,var(--primary)_10%,var(--background))] hover:text-[var(--headline)] transition-[border,background,color] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] shrink-0"
+				>
+					<CalendarDays className="size-4 text-[var(--primary)]/85" strokeWidth={2.25} />
+					Adicionar bloco à semana
+				</button>
+				<div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full lg:w-auto">
+					<WeekStatCard
+						label="Blocos"
+						value={
+							<span className="flex items-baseline gap-1">
+								{totalBlocks}
+								<span className="text-sm font-medium text-[var(--text)]/80">/ semana</span>
+							</span>
+						}
+					/>
+					<WeekStatCard
+						label="Carga"
+						value={totalBlocks === 0 ? "—" : hoursLabel}
+						title="Soma da duração de blocos em que a hora de fim é depois do início"
+					/>
 				</div>
-			</main>
-		</div>
+			</div>
+			<div className="flex flex-wrap gap-4">
+				{WEEK_DAY_ORDER.map((day) => (
+					<DaySection key={day} day={day} blocks={plan[day]} theme={DAY_THEME[day]} />
+				))}
+			</div>
+		</ToolShell>
 	);
 }

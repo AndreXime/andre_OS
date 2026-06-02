@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useStore } from "@nanostores/react";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, Wallet } from "lucide-react";
+import { ToolShell } from "../ToolShell";
 import { computeTotals, formatBrlFromCents, parseBrlToCents } from "./domain";
 import { addSubscriptionItem, clearAllSubscriptionItems, financePlanner$, removeSubscriptionItem } from "./store";
 
@@ -33,23 +34,12 @@ export function FinancePlannerView() {
 	const canAdd = name.trim() !== "" && parsedMonthlyCents !== null;
 
 	return (
-		<div className="w-full min-h-dvh mx-auto flex flex-col">
-			<header className="container mx-auto px-4 pt-6 pb-3 md:px-8 md:pt-8 md:pb-4">
-				<div className="flex flex-col gap-3">
-					<div className="flex flex-col gap-2 max-w-2xl">
-						<h1 className="text-3xl sm:text-4xl font-bold text-[color:var(--headline)] tracking-tight">
-							Planejador de assinaturas
-						</h1>
-						<p className="text-sm sm:text-[15px] text-[color:var(--text)] leading-relaxed">
-							Cadastre assinaturas mensais (ex.: Coursera, streaming, SaaS). O total diário é uma média no ano (365
-							dias). Dados ficam só no seu dispositivo.
-						</p>
-					</div>
-				</div>
-			</header>
-
-			<main className="container mx-auto px-4 pb-12 md:px-8 flex flex-col gap-4">
-				<div className="flex flex-col lg:flex-row gap-2 sm:gap-3 w-full">
+		<ToolShell
+			title="Planejador de assinaturas"
+			description="Cadastre assinaturas mensais (ex.: Coursera, streaming, SaaS). O total diário é uma média no ano (365 dias). Dados ficam só no seu dispositivo."
+			icon={<Wallet className="size-6" strokeWidth={2} />}
+		>
+			<div className="flex flex-col lg:flex-row gap-2 sm:gap-3 w-full">
 					<TotalsCard label="Diário" value={formatBrlFromCents(totals.dailyCents)} hint="média (365 dias)" />
 					<TotalsCard label="Mensal" value={formatBrlFromCents(totals.monthlyCents)} hint="soma das assinaturas" />
 					<TotalsCard label="Anual" value={formatBrlFromCents(totals.annualCents)} hint="mensal × 12" />
@@ -167,7 +157,6 @@ export function FinancePlannerView() {
 						</div>
 					)}
 				</section>
-			</main>
-		</div>
+		</ToolShell>
 	);
 }

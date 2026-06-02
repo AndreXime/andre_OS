@@ -3,6 +3,7 @@ import { Printer, FileText, Briefcase, User, Database, Eye, BookOpen, FileSearch
 import { useState } from "react";
 import type React from "react";
 
+import { ToolShell } from "../ToolShell";
 import { printResume } from "./lib/store";
 import { EditorTab } from "./tabs/EditorTab";
 import { ContextTab } from "./tabs/ContextTab";
@@ -27,63 +28,64 @@ export default function CVBuilderApp() {
 
 	return (
 		<>
-			<div className="flex justify-center bg-slate-200/50 flex-1 min-h-screen w-full overflow-x-hidden print:hidden">
-				<div className="flex flex-col items-center w-full lg:container">
-					<main className="w-full bg-white overflow-hidden flex flex-col min-h-screen print:contents">
-						<div className="bg-blue-600 text-white px-4 pt-4 pb-0 lg:px-8 lg:pt-5">
-							<header className="flex items-center gap-4">
-								<h2 className="font-bold text-lg flex items-center gap-2">
-									<FileText size={20} />
-									<span>Gerador de CV</span>
-								</h2>
-								<button
-									onClick={printResume}
-									className="ml-auto inline-flex items-center gap-2 px-3 py-2 rounded-full bg-white text-blue-700 text-xs font-semibold uppercase tracking-wide shadow-sm hover:bg-slate-100 hover:shadow-md transition-colors"
-									title="Imprimir / Salvar PDF"
-								>
-									<Printer size={16} />
-									<span>Imprimir</span>
-								</button>
-							</header>
-
-							<nav className="mt-3 flex space-x-1 overflow-x-auto">
-								{TABS.map((tab) => (
+			<div className="print:hidden overflow-x-hidden">
+				<ToolShell
+					title="Gerador de CV"
+					description="Monte currículos em Markdown, gere prompts para IA e exporte em PDF."
+					icon={<FileText className="size-6" strokeWidth={2} />}
+					actions={
+						<button
+							type="button"
+							onClick={printResume}
+							className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold bg-[color:var(--primary)] text-[color:var(--primary-text)] hover:opacity-90 shadow-sm shadow-black/20 active:scale-[0.99] transition-[opacity,transform] focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--background)] shrink-0"
+							title="Imprimir / Salvar PDF"
+						>
+							<Printer size={16} />
+							<span>Imprimir</span>
+						</button>
+					}
+				>
+					<div className="flex flex-col flex-1 min-h-0 -mt-1">
+						<nav className="flex gap-1 overflow-x-auto pb-px" aria-label="Abas do gerador">
+							{TABS.map((tab) => {
+								const isActive = activeTab === tab.id;
+								return (
 									<button
 										key={tab.id}
+										type="button"
 										onClick={() => setActiveTab(tab.id)}
-										className={`flex-1 flex items-center justify-center gap-2 px-3 py-3 text-xs font-bold uppercase tracking-wider transition-all rounded-t-md ${
-											activeTab === tab.id
-												? "bg-white text-blue-700"
-												: "bg-blue-500/30 text-blue-100 hover:bg-blue-500/50 hover:text-white"
-										}`}
+										className={[
+											"flex shrink-0 items-center justify-center gap-2 px-3 py-2.5 text-xs font-semibold uppercase tracking-wider transition-all rounded-t-xl border border-b-0",
+											isActive
+												? "bg-white border-slate-200 text-slate-800"
+												: "bg-[color:var(--card-bg)] border-[color:var(--card-border)] text-[color:var(--text)] hover:text-[color:var(--headline)] hover:border-[color:var(--primary)]/35",
+										].join(" ")}
 									>
-										{tab.icon} <span className="truncate hidden sm:inline">{tab.label}</span>
+										{tab.icon}
+										<span className="truncate hidden sm:inline">{tab.label}</span>
 									</button>
-								))}
-							</nav>
-						</div>
-
-						<section className="flex-1 flex flex-col mt-4 px-4 pb-4 lg:px-8 lg:pb-8">
-							{activeTab === 6 ? (
-								<div className="flex-1 w-full overflow-x-auto">
-									<div className="flex justify-center">
-										<div className="origin-top scale-[0.45] sm:scale-75 lg:scale-100 transition-transform duration-300 shadow-2xl bg-white inline-block print:contents">
-											<ResumeContent />
-										</div>
+								);
+							})}
+						</nav>
+						{activeTab === 6 ? (
+							<div className="flex-1 w-full overflow-x-auto pt-4">
+								<div className="flex justify-center">
+									<div className="origin-top scale-[0.45] sm:scale-75 lg:scale-100 transition-transform duration-300 shadow-2xl bg-white inline-block print:contents">
+										<ResumeContent />
 									</div>
 								</div>
-							) : (
-								<div className="flex-1 flex flex-col bg-slate-50 relative overflow-hidden pointer-events-auto rounded-lg border border-slate-200 min-h-[400px]">
-									{activeTab === 1 && <ContextTab />}
-									{activeTab === 2 && <JobTab />}
-									{activeTab === 3 && <PromptTab />}
-									{activeTab === 4 && <EditorTab />}
-									{activeTab === 5 && <SavedResumesTab />}
-								</div>
-							)}
-						</section>
-					</main>
-				</div>
+							</div>
+						) : (
+							<div className="flex-1 flex flex-col bg-slate-50 relative overflow-hidden pointer-events-auto rounded-b-2xl rounded-tr-2xl border border-slate-200 min-h-[400px] -mt-px">
+								{activeTab === 1 && <ContextTab />}
+								{activeTab === 2 && <JobTab />}
+								{activeTab === 3 && <PromptTab />}
+								{activeTab === 4 && <EditorTab />}
+								{activeTab === 5 && <SavedResumesTab />}
+							</div>
+						)}
+					</div>
+				</ToolShell>
 			</div>
 			<div className="not-print:hidden w-full">
 				<ResumeContent />

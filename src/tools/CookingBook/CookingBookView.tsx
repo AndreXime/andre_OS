@@ -15,6 +15,7 @@ import {
 	X,
 	Files,
 } from "lucide-react";
+import { ToolShell } from "../ToolShell";
 import { compressImageFile } from "./imageUtils";
 import {
 	cookingBook$,
@@ -122,12 +123,13 @@ export function CookingBookView() {
 
 	const filtered = useMemo(() => {
 		const q = query.trim().toLowerCase();
-		const base = q === ""
-			? recipes
-			: recipes.filter((r) => {
-					const label = displayTitle(r).toLowerCase();
-					return label.includes(q) || r.body.toLowerCase().includes(q) || r.title.toLowerCase().includes(q);
-				});
+		const base =
+			q === ""
+				? recipes
+				: recipes.filter((r) => {
+						const label = displayTitle(r).toLowerCase();
+						return label.includes(q) || r.body.toLowerCase().includes(q) || r.title.toLowerCase().includes(q);
+					});
 		return sortRecipes(base, sortMode);
 	}, [recipes, query, sortMode]);
 
@@ -262,9 +264,7 @@ export function CookingBookView() {
 		if (!file) return;
 		try {
 			const raw: unknown = JSON.parse(await file.text());
-			const replace = globalThis.confirm(
-				"OK = substituir todas as receitas.\nCancelar = mesclar com as existentes.",
-			);
+			const replace = globalThis.confirm("OK = substituir todas as receitas.\nCancelar = mesclar com as existentes.");
 			const result = importRecipesBundle(raw, replace ? "replace" : "merge");
 			if (result.error) {
 				notify(result.error);
@@ -521,7 +521,9 @@ export function CookingBookView() {
 								markDirty();
 							}}
 							rows={12}
-							placeholder={"Ingredientes, modo de preparo, temperos, tempo no forno…\nEscreva como quiser, sem formato fixo."}
+							placeholder={
+								"Ingredientes, modo de preparo, temperos, tempo no forno…\nEscreva como quiser, sem formato fixo."
+							}
 							className="w-full min-h-[10rem] rounded-lg border border-[color:var(--card-border)] bg-[color:var(--background)] px-3 py-2.5 text-sm text-[color:var(--headline)] placeholder:text-[color:var(--text)]/70 focus:outline-none focus:ring-2 focus:ring-[color:var(--primary)] resize-y leading-relaxed"
 						/>
 					</div>
@@ -605,7 +607,7 @@ export function CookingBookView() {
 		) : null;
 
 	return (
-		<div className="w-full min-h-dvh mx-auto flex flex-col">
+		<>
 			{toast && (
 				<output
 					aria-live="polite"
@@ -615,22 +617,12 @@ export function CookingBookView() {
 				</output>
 			)}
 
-			<header className="container mx-auto px-4 pt-6 pb-4 md:px-8 md:pt-8 max-w-6xl">
-				<div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-					<div className="flex items-start gap-3 min-w-0">
-						<div className="shrink-0 rounded-xl border border-[color:var(--card-border)] bg-[color:var(--card-bg)] p-2.5 text-[color:var(--primary)] shadow-inner shadow-black/20">
-							<ChefHat className="size-6" strokeWidth={2} />
-						</div>
-						<div className="flex flex-col gap-1 min-w-0">
-							<h1 className="text-2xl sm:text-3xl font-bold text-[color:var(--headline)] tracking-tight">
-								Livro de receitas
-							</h1>
-							<p className="text-sm text-[color:var(--text)] leading-relaxed max-w-md">
-								Caderno pessoal no navegador. Texto livre, foto opcional, backup em JSON.
-							</p>
-						</div>
-					</div>
-					<div className="flex flex-wrap items-center gap-2 shrink-0">
+			<ToolShell
+				title="Livro de receitas"
+				description="Caderno pessoal no navegador. Texto livre, foto opcional, backup em JSON."
+				icon={<ChefHat className="size-6" strokeWidth={2} />}
+				actions={
+					<>
 						<input
 							ref={importInputRef}
 							type="file"
@@ -667,23 +659,19 @@ export function CookingBookView() {
 								Nova
 							</button>
 						)}
-					</div>
-				</div>
-			</header>
-
-			<main className="container mx-auto px-4 pb-12 md:px-8 max-w-6xl w-full flex-1">
+					</>
+				}
+			>
 				<div className="flex flex-col lg:flex-row lg:gap-8 lg:items-start">
 					{showListPanel && (
 						<aside className="w-full lg:w-[min(100%,22rem)] lg:shrink-0 lg:sticky lg:top-6">{listPanel}</aside>
 					)}
 
 					{showMainPanel && (
-						<section className="flex-1 min-w-0 mt-4 lg:mt-0">
-							{detailPanel ?? formPanel ?? emptyMainPanel}
-						</section>
+						<section className="flex-1 min-w-0 mt-4 lg:mt-0">{detailPanel ?? formPanel ?? emptyMainPanel}</section>
 					)}
 				</div>
-			</main>
+			</ToolShell>
 
 			{!isWide && recipes.length > 0 && screen === "list" && (
 				<button
@@ -696,6 +684,6 @@ export function CookingBookView() {
 					Nova
 				</button>
 			)}
-		</div>
+		</>
 	);
 }
