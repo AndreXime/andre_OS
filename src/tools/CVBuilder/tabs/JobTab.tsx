@@ -8,7 +8,7 @@ export function JobTab() {
 	return (
 		<div className="flex-1 flex flex-col p-5 animate-in fade-in slide-in-from-left-4 duration-200 h-full">
 			<div className="flex justify-between items-center mb-2">
-				<div className="inline-flex items-center gap-3 text-base font-semibold text-blue-800 uppercase tracking-wide">
+				<div className="inline-flex items-center gap-3 text-sm font-semibold text-slate-800 uppercase tracking-[0.12em]">
 					Vaga <CloudBackup />
 				</div>
 			</div>
@@ -17,7 +17,7 @@ export function JobTab() {
 				com seu contexto.
 			</p>
 			<textarea
-				className="flex-1 w-full p-4 border border-slate-300 rounded-md text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none leading-relaxed bg-white"
+				className="flex-1 w-full p-4 border border-slate-300 rounded-md text-sm font-mono focus:ring-2 focus:ring-orange-400/40 focus:border-orange-400 focus:outline-none resize-none leading-relaxed bg-white"
 				placeholder="Cole aqui o texto da vaga..."
 				value={jobDescription}
 				onInput={(e) => updateJobDescription(e.currentTarget.value)}

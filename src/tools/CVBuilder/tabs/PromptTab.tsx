@@ -27,11 +27,12 @@ export function PromptTab() {
 	return (
 		<div className="flex-1 flex flex-col p-5 animate-in fade-in slide-in-from-left-4 duration-200 h-full">
 			<div className="flex justify-between items-center mb-2">
-				<div className="text-base font-semibold text-blue-800 uppercase tracking-wide">Prompt Pronto</div>
+				<div className="text-sm font-semibold text-slate-800 uppercase tracking-[0.12em]">Prompt Pronto</div>
 				<button
+					type="button"
 					onClick={handleCopyPrompt}
-					className={`flex items-center gap-2 px-3 py-1.5 rounded text-sm font-bold transition-all ${
-						copied ? "bg-green-500 text-white" : "bg-blue-600 text-white hover:bg-blue-700"
+					className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-semibold transition-all ${
+						copied ? "bg-emerald-600 text-white" : "bg-slate-800 text-white hover:bg-slate-900"
 					}`}
 				>
 					{copied ? (

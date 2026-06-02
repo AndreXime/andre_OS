@@ -19,13 +19,14 @@ export function EditorTab() {
 			<div className="flex justify-between items-center mb-2 flex-wrap gap-3">
 				<label
 					htmlFor="cv-content"
-					className="inline-flex items-center gap-3 text-base font-semibold text-blue-800 uppercase tracking-wide truncate"
+					className="inline-flex items-center gap-3 text-sm font-semibold text-slate-800 uppercase tracking-[0.12em] truncate"
 				>
 					{activeResume?.name} <CloudBackup />
 				</label>
 				<button
+					type="button"
 					onClick={resetActiveResume}
-					className="flex items-center gap-2 px-3 py-1.5 rounded text-xs font-bold transition-all bg-white border border-slate-300 text-slate-600 hover:bg-red-50 hover:text-red-600 hover:border-red-200 shadow-sm"
+					className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all bg-white border border-slate-300 text-slate-600 hover:bg-red-50 hover:text-red-600 hover:border-red-200 shadow-sm"
 				>
 					<RotateCcw size={14} />
 					Resetar
@@ -41,7 +42,7 @@ export function EditorTab() {
 				name="cv-content"
 				autoComplete="off"
 				key={activeResume?.id}
-				className="flex-1 w-full p-4 border border-slate-300 rounded-md text-sm font-mono focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none leading-relaxed"
+				className="flex-1 w-full p-4 border border-slate-300 rounded-md text-sm font-mono focus:ring-2 focus:ring-orange-400/40 focus:border-orange-400 focus:outline-none resize-none leading-relaxed bg-white"
 				placeholder="Siga o exemplo padrão"
 				defaultValue={activeResume?.data}
 				onInput={(e) => updateResumeContent(e.currentTarget.value)}

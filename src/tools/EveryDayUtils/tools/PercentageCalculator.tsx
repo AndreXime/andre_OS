@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { segmentTabClass, tabBarClass } from "../uiClasses";
 
 // --- Funções de Cálculo (Mantidas iguais) ---
 function calculatePercentageOfValue(x: number, y: number): number {
@@ -206,24 +207,18 @@ export default function PercentageCalculatorCard() {
 			<div className="bg-[color-mix(in_srgb,var(--card-bg)_88%,#0000)] p-5 rounded-xl border border-[var(--card-border)]/50 shadow-sm space-y-5">
 				<div className="flex items-center justify-between border-b border-[var(--card-border)]/50 pb-2">
 					<h4 className="text-lg font-semibold text-[var(--card-text)]">Cálculo de Desconto/Aumento</h4>
-					<div className="flex bg-[color-mix(in_srgb,var(--background)_60%,#0000)] p-1 rounded-lg">
+					<div className={tabBarClass}>
 						<button
+							type="button"
 							onClick={() => setIsDiscount(true)}
-							className={`px-3 py-1 text-sm font-bold rounded-md transition-all ${
-								isDiscount
-									? "bg-[var(--primary)] text-[var(--primary-text)] hover:brightness-105 shadow-lg"
-									: "text-[var(--text)]/90 hover:text-[var(--headline)]"
-							}`}
+							className={segmentTabClass(isDiscount)}
 						>
 							Desconto
 						</button>
 						<button
+							type="button"
 							onClick={() => setIsDiscount(false)}
-							className={`px-3 py-1 text-sm font-bold rounded-md transition-all ${
-								!isDiscount
-									? "bg-[var(--primary)] text-[var(--primary-text)] hover:brightness-105 shadow-lg"
-									: "text-[var(--text)]/90 hover:text-[var(--headline)]"
-							}`}
+							className={segmentTabClass(!isDiscount)}
 						>
 							Aumento
 						</button>

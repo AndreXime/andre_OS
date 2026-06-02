@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { fieldLabelClass, inputClass, segmentTabClass, tabBarClass } from "../uiClasses";
 
 // --- Utilitários de Lógica ---
 
@@ -142,31 +143,22 @@ export default function SecurityToolsCard() {
 	};
 
 	// Estilos comuns
-	const tabClass = (active: boolean) =>
-		`flex-1 py-2 text-sm font-bold rounded-md transition-all ${
-			active
-				? "bg-[var(--primary)] text-[var(--primary-text)] hover:brightness-105 shadow-lg"
-				: "text-[var(--text)]/90 hover:text-[var(--headline)] hover:bg-[color-mix(in_srgb,var(--card-bg)_90%,#0000)]"
-		}`;
-	const inputClass =
-		"w-full p-3 rounded-lg bg-[color-mix(in_srgb,var(--background)_50%,#0000)] border border-[var(--card-border)]/80 text-[var(--card-text)] focus:outline-none focus:outline-2 focus:outline-solid focus:outline-[var(--primary)] focus:outline-offset-2";
 	const checkboxClass =
 		"w-5 h-5 rounded bg-[var(--card-border)]/60 border border-[var(--card-border)] text-[var(--primary)] focus:ring-0";
 
 	return (
 		<div className="space-y-6">
-			{/* --- Seletor de Abas (Modo) --- */}
-			<div className="bg-[color-mix(in_srgb,var(--card-bg)_88%,#0000)] p-1 rounded-lg flex space-x-1 border border-[var(--card-border)]/50">
-				<button onClick={() => setMode("password")} className={tabClass(mode === "password")}>
+			<div className={tabBarClass}>
+				<button type="button" onClick={() => setMode("password")} className={segmentTabClass(mode === "password")}>
 					Senha
 				</button>
-				<button onClick={() => setMode("uuid")} className={tabClass(mode === "uuid")}>
+				<button type="button" onClick={() => setMode("uuid")} className={segmentTabClass(mode === "uuid")}>
 					UUID
 				</button>
-				<button onClick={() => setMode("hash")} className={tabClass(mode === "hash")}>
+				<button type="button" onClick={() => setMode("hash")} className={segmentTabClass(mode === "hash")}>
 					Hash
 				</button>
-				<button onClick={() => setMode("base64")} className={tabClass(mode === "base64")}>
+				<button type="button" onClick={() => setMode("base64")} className={segmentTabClass(mode === "base64")}>
 					Base64
 				</button>
 			</div>
@@ -177,7 +169,7 @@ export default function SecurityToolsCard() {
 				{mode === "password" && (
 					<div className="space-y-4 animate-in fade-in zoom-in-95 duration-300">
 						<div className="flex justify-between items-center px-1">
-							<span className="text-[var(--card-text)] font-medium">Tamanho: {pwLength}</span>
+							<span className={fieldLabelClass}>Tamanho: {pwLength}</span>
 							<input
 								type="range"
 								min="8"
@@ -210,8 +202,9 @@ export default function SecurityToolsCard() {
 							))}
 						</div>
 						<button
+							type="button"
 							onClick={executeAction}
-							className="w-full py-3 rounded-lg font-bold shadow-lg active:scale-[0.98] transition-transform bg-[var(--primary)] text-[var(--primary-text)] hover:brightness-105"
+							className="w-full py-3 rounded-xl font-semibold shadow-sm active:scale-[0.98] transition-transform bg-[color:var(--primary)] text-[color:var(--primary-text)] hover:opacity-90"
 						>
 							Gerar Nova Senha
 						</button>
@@ -225,8 +218,9 @@ export default function SecurityToolsCard() {
 							Gera um Identificador Único Universal (UUID v4) criptograficamente seguro.
 						</p>
 						<button
+							type="button"
 							onClick={executeAction}
-							className="w-full py-3 rounded-lg font-bold shadow-lg active:scale-[0.98] transition-transform bg-[var(--primary)] text-[var(--primary-text)] hover:brightness-105"
+							className="w-full py-3 rounded-xl font-semibold shadow-sm active:scale-[0.98] transition-transform bg-[color:var(--primary)] text-[color:var(--primary-text)] hover:opacity-90"
 						>
 							Gerar Novo UUID
 						</button>
@@ -242,16 +236,13 @@ export default function SecurityToolsCard() {
 							placeholder="Digite o texto para gerar o hash..."
 							className={`${inputClass} h-24 resize-none`}
 						/>
-						<div className="flex space-x-2">
+						<div className={tabBarClass}>
 							{(["SHA-256", "SHA-512", "SHA-1"] as const).map((algo) => (
 								<button
 									key={algo}
+									type="button"
 									onClick={() => setHashAlgo(algo)}
-									className={`flex-1 py-2 rounded border border-[var(--card-border)]/80 text-sm font-bold transition-colors ${
-										hashAlgo === algo
-											? "bg-[var(--primary)]/10 border-transparent text-[var(--primary)]"
-											: "text-[var(--text)]/90 bg-[color-mix(in_srgb,var(--card-bg)_90%,#0000)]"
-									}`}
+									className={segmentTabClass(hashAlgo === algo)}
 								>
 									{algo}
 								</button>
@@ -269,20 +260,18 @@ export default function SecurityToolsCard() {
 							placeholder={base64Mode === "encode" ? "Texto para codificar..." : "Cole o Base64 aqui..."}
 							className={`${inputClass} h-24 resize-none`}
 						/>
-						<div className="flex bg-[color-mix(in_srgb,var(--card-bg)_90%,#0000)] p-1 rounded-lg border border-[var(--card-border)]/50">
+						<div className={tabBarClass}>
 							<button
+								type="button"
 								onClick={() => setBase64Mode("encode")}
-								className={`flex-1 py-1.5 rounded text-sm font-bold transition-all ${
-									base64Mode === "encode" ? "bg-[var(--primary)]/15 text-[var(--headline)]" : "text-[var(--text)]/90"
-								}`}
+								className={segmentTabClass(base64Mode === "encode")}
 							>
 								Codificar (Encode)
 							</button>
 							<button
+								type="button"
 								onClick={() => setBase64Mode("decode")}
-								className={`flex-1 py-1.5 rounded text-sm font-bold transition-all ${
-									base64Mode === "decode" ? "bg-[var(--primary)]/15 text-[var(--headline)]" : "text-[var(--text)]/90"
-								}`}
+								className={segmentTabClass(base64Mode === "decode")}
 							>
 								Decodificar (Decode)
 							</button>

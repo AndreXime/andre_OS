@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { fieldLabelClass, inputClass } from "../uiClasses";
 
 function calcularCustoCombustivel(distancia: number, kml: number, preco: number, freq: number) {
 	// Retorna tudo zerado se faltar dados
@@ -60,8 +61,7 @@ export default function FuelCostCard() {
 		);
 	}, [inputs]);
 
-	const inputClasses =
-		"w-full p-3 rounded-lg bg-[color-mix(in_srgb,var(--card-bg)_90%,#0000)] border border-[var(--card-border)]/80 text-[var(--card-text)] focus:outline-none focus:outline-2 focus:outline-solid focus:outline-[var(--primary)] focus:outline-offset-2";
+	const inputClasses = inputClass;
 
 	return (
 		<div className="space-y-6">
@@ -136,8 +136,8 @@ interface InputGroupProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 const InputGroup: React.FC<InputGroupProps> = ({ label, name, value, classes, ...props }) => (
-	<div>
-		<label htmlFor={name} className="block text-sm font-medium text-[var(--text)] mb-1">
+	<div className="flex flex-col gap-1.5">
+		<label htmlFor={name} className={fieldLabelClass}>
 			{label}
 		</label>
 		<input

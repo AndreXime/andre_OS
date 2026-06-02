@@ -1,4 +1,5 @@
 import { useEffect, useState, useMemo } from "react";
+import { fieldLabelClass, inputClass } from "../uiClasses";
 
 interface TaxaApiItem {
 	nome: string;
@@ -67,8 +68,7 @@ export default function InvestmentCard() {
 		};
 	}, [metaRenda, percCDI, dadosMercado]);
 
-	const inputClass =
-		"w-full p-3 rounded-lg bg-[color-mix(in_srgb,var(--card-bg)_90%,#0000)] border border-[var(--card-border)]/80 text-[var(--card-text)] focus:outline-none focus:outline-2 focus:outline-solid focus:outline-[var(--primary)] focus:outline-offset-2";
+	const inputClassName = inputClass;
 	const cardClass = `p-5 rounded-lg border-l-4 bg-[color-mix(in_srgb,var(--card-bg)_88%,#0000)] border-[var(--card-border)]/50 shadow-sm`;
 
 	// Componente interno para os cards de indicadores
@@ -92,7 +92,7 @@ export default function InvestmentCard() {
 			<div className="space-y-4">
 				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 					<div>
-						<label htmlFor="rendamensal" className="block mb-2 font-bold text-[var(--card-text)] text-sm">
+						<label htmlFor="rendamensal" className={fieldLabelClass}>
 							Meta de Renda Mensal
 						</label>
 						<input
@@ -100,12 +100,12 @@ export default function InvestmentCard() {
 							type="number"
 							value={metaRenda}
 							onInput={(e) => setMetaRenda(Number(e.currentTarget.value))}
-							className={inputClass}
+							className={inputClassName}
 							placeholder="Ex: 5000"
 						/>
 					</div>
 					<div>
-						<label htmlFor="rentabilidade" className="block mb-2 font-bold text-[var(--card-text)] text-sm">
+						<label htmlFor="rentabilidade" className={fieldLabelClass}>
 							Rentabilidade (% do CDI)
 						</label>
 						<div className="relative">
@@ -114,7 +114,7 @@ export default function InvestmentCard() {
 								type="number"
 								value={percCDI}
 								onInput={(e) => setPercCDI(Number(e.currentTarget.value))}
-								className={inputClass}
+								className={inputClassName}
 								placeholder="100"
 							/>
 							<span className="absolute right-4 top-3 text-[var(--text)]/80 font-bold text-sm">%</span>
