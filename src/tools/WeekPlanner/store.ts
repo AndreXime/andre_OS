@@ -1,4 +1,5 @@
-import { persistentAtom } from "@nanostores/persistent";
+import { createJsonPersistentAtom } from "@/lib/toolStorage/persistentAtom";
+import type { ToolStorageEntry } from "@/lib/toolStorage/types";
 import { canSaveBlockFields } from "./plannerDomain";
 
 export const WEEK_DAY_ORDER = [
@@ -77,19 +78,20 @@ function normalizePlan(raw: unknown): WeekPlan {
 	return base;
 }
 
+const WEEK_PLANNER_STORAGE_KEY = "week_planner_v1";
 const defaultPlan = emptyPlan();
 
-export const weekPlan$ = persistentAtom<WeekPlan>("week_planner_v1", defaultPlan, {
-	encode: JSON.stringify,
-	decode(value: string | null) {
-		if (!value) return defaultPlan;
-		try {
-			return normalizePlan(JSON.parse(value) as unknown);
-		} catch {
-			return defaultPlan;
-		}
-	},
+export const weekPlan$ = createJsonPersistentAtom<WeekPlan>({
+	storageKey: WEEK_PLANNER_STORAGE_KEY,
+	defaultValue: defaultPlan,
+	normalize: normalizePlan,
 });
+
+export const weekPlannerStorage: ToolStorageEntry = {
+	toolId: "week_planner",
+	keys: [WEEK_PLANNER_STORAGE_KEY],
+	atoms: { [WEEK_PLANNER_STORAGE_KEY]: weekPlan$ },
+};
 
 function replaceDay(plan: WeekPlan, day: WeekDayId, blocks: readonly WeekTimeBlock[]): WeekPlan {
 	return { ...plan, [day]: [...blocks] as WeekTimeBlock[] };

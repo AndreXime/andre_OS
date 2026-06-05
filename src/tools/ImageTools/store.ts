@@ -1,5 +1,4 @@
 import { atom, computed } from "nanostores";
-import { persistentAtom } from "@nanostores/persistent";
 import { loadImageFromFile, releaseLoadedImage } from "./imageLoader";
 import {
 	type OperationType,
@@ -8,9 +7,6 @@ import {
 	type ModelPreloadStatus,
 	validateImageFile,
 	validateDimensions,
-	isOutputFormat,
-	isCompressMaxWidth,
-	clampQuality,
 } from "./domain";
 
 export const $sourceFile = atom<File | null>(null);
@@ -28,23 +24,9 @@ export const $progress = atom(0);
 export const $progressLabel = atom("");
 export const $error = atom<string | null>(null);
 
-export const $outputFormat = persistentAtom<OutputFormat>("image_tools_format_v1", "png", {
-	encode: String,
-	decode: (value) => (isOutputFormat(value) ? value : "png"),
-});
-
-export const $quality = persistentAtom<number>("image_tools_quality_v1", 80, {
-	encode: String,
-	decode: (value) => clampQuality(Number(value)),
-});
-
-export const $compressMaxWidth = persistentAtom<number>("image_tools_max_width_v1", 0, {
-	encode: String,
-	decode: (value) => {
-		const parsed = Number(value);
-		return isCompressMaxWidth(parsed) ? parsed : 0;
-	},
-});
+export const $outputFormat = atom<OutputFormat>("png");
+export const $quality = atom(80);
+export const $compressMaxWidth = atom(0);
 
 export const $supportedFormats = atom<Record<OutputFormat, boolean> | null>(null);
 

@@ -5,13 +5,11 @@ import {
 	BookOpen,
 	ChefHat,
 	Copy,
-	Download,
 	ImagePlus,
 	Pencil,
 	Plus,
 	Search,
 	Trash2,
-	Upload,
 	X,
 	Files,
 } from "lucide-react";
@@ -19,10 +17,9 @@ import { ToolShell } from "../ToolShell";
 import { compressImageFile } from "./imageUtils";
 import {
 	cookingBook$,
+	cookingBookStorage,
 	displayTitle,
 	duplicateRecipe,
-	exportRecipesBundle,
-	importRecipesBundle,
 	removeRecipe,
 	saveRecipe,
 	type Recipe,
@@ -101,7 +98,6 @@ export function CookingBookView() {
 	const [formDirty, setFormDirty] = useState(false);
 
 	const fileInputRef = useRef<HTMLInputElement>(null);
-	const importInputRef = useRef<HTMLInputElement>(null);
 	const titleInputRef = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
@@ -246,37 +242,6 @@ export function CookingBookView() {
 		} catch {
 			notify("Não foi possível copiar");
 		}
-	}
-
-	function handleExport() {
-		const bundle = exportRecipesBundle();
-		const blob = new Blob([JSON.stringify(bundle, null, 2)], { type: "application/json" });
-		const url = URL.createObjectURL(blob);
-		const a = document.createElement("a");
-		a.href = url;
-		a.download = `receitas-${new Date().toISOString().slice(0, 10)}.json`;
-		a.click();
-		URL.revokeObjectURL(url);
-		notify("Backup exportado");
-	}
-
-	async function handleImportFile(file: File | undefined) {
-		if (!file) return;
-		try {
-			const raw: unknown = JSON.parse(await file.text());
-			const replace = globalThis.confirm("OK = substituir todas as receitas.\nCancelar = mesclar com as existentes.");
-			const result = importRecipesBundle(raw, replace ? "replace" : "merge");
-			if (result.error) {
-				notify(result.error);
-				return;
-			}
-			notify(`${result.imported} receita(s) importada(s)`);
-			setScreen("list");
-			setSelectedId(null);
-		} catch {
-			notify("Arquivo JSON inválido");
-		}
-		if (importInputRef.current) importInputRef.current.value = "";
 	}
 
 	const listPanel = (
@@ -619,47 +584,20 @@ export function CookingBookView() {
 
 			<ToolShell
 				title="Livro de receitas"
-				description="Caderno pessoal no navegador. Texto livre, foto opcional, backup em JSON."
+				description="Caderno pessoal no navegador. Texto livre, foto opcional, compartilhe por link."
 				icon={<ChefHat className="size-6" strokeWidth={2} />}
+				storage={cookingBookStorage}
 				actions={
-					<>
-						<input
-							ref={importInputRef}
-							type="file"
-							accept="application/json,.json"
-							className="sr-only"
-							onChange={(e) => {
-								void handleImportFile(e.target.files?.[0]);
-							}}
-						/>
+					isWide ? (
 						<button
 							type="button"
-							onClick={() => importInputRef.current?.click()}
-							className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium border border-[color:var(--card-border)] text-[color:var(--text)] hover:text-[color:var(--headline)] hover:border-[color:var(--primary)]/40"
+							onClick={openNew}
+							className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold bg-[color:var(--primary)] text-[color:var(--primary-text)] hover:opacity-90"
 						>
-							<Upload className="size-3.5" />
-							Importar
+							<Plus className="size-3.5" />
+							Nova
 						</button>
-						<button
-							type="button"
-							onClick={handleExport}
-							disabled={recipes.length === 0}
-							className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium border border-[color:var(--card-border)] text-[color:var(--text)] hover:text-[color:var(--headline)] hover:border-[color:var(--primary)]/40 disabled:opacity-40 disabled:cursor-not-allowed"
-						>
-							<Download className="size-3.5" />
-							Exportar
-						</button>
-						{isWide && (
-							<button
-								type="button"
-								onClick={openNew}
-								className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold bg-[color:var(--primary)] text-[color:var(--primary-text)] hover:opacity-90"
-							>
-								<Plus className="size-3.5" />
-								Nova
-							</button>
-						)}
-					</>
+					) : undefined
 				}
 			>
 				<div className="flex flex-col lg:flex-row lg:gap-8 lg:items-start">

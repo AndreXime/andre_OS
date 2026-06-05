@@ -1,3 +1,5 @@
+import { createJsonPersistentAtom } from "@/lib/toolStorage/persistentAtom";
+import type { ToolStorageEntry } from "@/lib/toolStorage/types";
 import { map } from "nanostores";
 
 export interface FileNode {
@@ -17,39 +19,34 @@ export interface CemeteryState {
 	menu: { x: number; y: number; parentId: string | null } | null;
 }
 
-const STORAGE_KEY = "webeditor:files";
+const WEB_EDITOR_FILES_KEY = "webeditor:files";
 
-const loadInitialFiles = (): FileNode[] => {
-	if (typeof window === "undefined") return [];
+function normalizeFiles(raw: unknown): FileNode[] {
+	if (!Array.isArray(raw)) return [];
+	return raw as FileNode[];
+}
 
-	const saved = localStorage.getItem(STORAGE_KEY);
-	if (saved) {
-		try {
-			return JSON.parse(saved);
-		} catch (e) {
-			console.error("Erro ao carregar arquivos do localStorage", e);
-			return [];
-		}
-	}
-	return [];
+export const webEditorFiles$ = createJsonPersistentAtom<FileNode[]>({
+	storageKey: WEB_EDITOR_FILES_KEY,
+	defaultValue: [],
+	normalize: normalizeFiles,
+});
+
+export const webEditorStorage: ToolStorageEntry = {
+	toolId: "web_editor",
+	keys: [WEB_EDITOR_FILES_KEY],
+	atoms: { [WEB_EDITOR_FILES_KEY]: webEditorFiles$ },
 };
 
 export const $editor = map<CemeteryState>({
-	files: loadInitialFiles(),
+	files: webEditorFiles$.get(),
 	selectedFile: null,
 	addingType: null,
 	menu: null,
 });
 
-// Armazenamos a referência anterior para evitar escritas desnecessárias
-// quando apenas o 'menu' ou 'selectedFile' mudar.
-let previousFiles = $editor.get().files;
-
-$editor.subscribe((state) => {
-	if (state.files !== previousFiles) {
-		localStorage.setItem(STORAGE_KEY, JSON.stringify(state.files));
-		previousFiles = state.files;
-	}
+webEditorFiles$.subscribe((files) => {
+	$editor.setKey("files", [...files]);
 });
 
 export const setSelectedFile = (file: FileNode | null) => {
@@ -73,7 +70,6 @@ export const createNode = (name: string) => {
 		return;
 	}
 
-	// Validação de duplicados
 	const fileExists = files.some((f) => f.name.toLowerCase() === trimmedName.toLowerCase());
 
 	if (fileExists) {
@@ -81,7 +77,6 @@ export const createNode = (name: string) => {
 		return;
 	}
 
-	// Extração dinâmica de extensão
 	const extension = trimmedName.split(".").pop()?.toLowerCase() || "";
 
 	const languageMap: Record<string, string> = {
@@ -106,10 +101,10 @@ export const createNode = (name: string) => {
 		content: addingType.type === "folder" ? "" : "// O codigo vai aqui\n",
 	};
 
-	// Atualiza múltiplos valores do estado
+	const nextFiles = [...files, newNode];
+	webEditorFiles$.set(nextFiles);
 	$editor.set({
 		...$editor.get(),
-		files: [...files, newNode],
 		addingType: null,
 		selectedFile: newNode.isFolder ? selectedFile : newNode,
 	});
@@ -120,17 +115,13 @@ export const updateFileContent = (id: string, content: string) => {
 
 	if (!selectedFile) return;
 
-	$editor.setKey(
-		"files",
-		files.map((f) => (f.id === id ? { ...f, content } : f)),
-	);
+	webEditorFiles$.set(files.map((f) => (f.id === id ? { ...f, content } : f)));
 };
 
 export const deleteNode = (id: string) => {
 	const currentState = $editor.get();
 	const { files, selectedFile } = currentState;
 
-	// Função auxiliar para encontrar descendentes
 	const getAllDescendantIds = (parentId: string, allFiles: FileNode[]): string[] => {
 		const children = allFiles.filter((f) => f.parentId === parentId);
 		const childIds = children.map((c) => c.id);
@@ -139,16 +130,12 @@ export const deleteNode = (id: string) => {
 	};
 
 	const idsToDelete = [id, ...getAllDescendantIds(id, files)];
-
-	// Filtra os arquivos
 	const newFiles = files.filter((f) => !idsToDelete.includes(f.id));
-
-	// Verifica se o arquivo selecionado foi deletado
 	const newSelectedFile = selectedFile && idsToDelete.includes(selectedFile.id) ? null : selectedFile;
 
+	webEditorFiles$.set(newFiles);
 	$editor.set({
 		...currentState,
-		files: newFiles,
 		selectedFile: newSelectedFile,
 	});
 };

@@ -1,5 +1,6 @@
+import { createJsonPersistentAtom } from "@/lib/toolStorage/persistentAtom";
+import type { ToolStorageEntry } from "@/lib/toolStorage/types";
 import { computed } from "nanostores";
-import { persistentAtom } from "@nanostores/persistent";
 import { parseResumeMarkdown } from "./parserMd";
 import defaultCV from "../markdown/cvExample.md?raw";
 
@@ -10,6 +11,10 @@ export interface Resume {
 	selected: boolean;
 }
 
+const CV_BUILDER_RESUMES_KEY = "resume_list";
+const CV_BUILDER_PROFILE_KEY = "resume_profile";
+const CV_BUILDER_JOB_KEY = "resume_job_description";
+
 const defaultState: Resume[] = [
 	{
 		id: "default",
@@ -19,37 +24,50 @@ const defaultState: Resume[] = [
 	},
 ];
 
-export const resumes$ = persistentAtom<Resume[]>("resume_list", defaultState, {
-	encode: JSON.stringify,
-	decode(value: string | null) {
-		if (!value) return defaultState;
-		try {
-			let parsed: Resume[] = JSON.parse(value);
+function normalizeResumes(raw: unknown): Resume[] {
+	if (!Array.isArray(raw)) return defaultState;
 
-			if (parsed.length === 0) return defaultState;
+	let parsed = raw as Resume[];
+	if (parsed.length === 0) return defaultState;
 
-			// Se não tiver nenhum selecionado ou mais de um selecionado
-			let selectedIndex = parsed.findIndex((r) => r.selected);
-			if (selectedIndex === -1) selectedIndex = 0;
+	let selectedIndex = parsed.findIndex((r) => r.selected);
+	if (selectedIndex === -1) selectedIndex = 0;
 
-			parsed = parsed.map((r, index) => ({ ...r, selected: index === selectedIndex }));
+	parsed = parsed.map((r, index) => ({ ...r, selected: index === selectedIndex }));
+	return parsed;
+}
 
-			return parsed;
-		} catch {
-			return defaultState;
-		}
+function normalizeStoredString(raw: unknown): string {
+	return typeof raw === "string" ? raw : "";
+}
+
+export const resumes$ = createJsonPersistentAtom<Resume[]>({
+	storageKey: CV_BUILDER_RESUMES_KEY,
+	defaultValue: defaultState,
+	normalize: normalizeResumes,
+});
+
+export const masterProfile$ = createJsonPersistentAtom<string>({
+	storageKey: CV_BUILDER_PROFILE_KEY,
+	defaultValue: "",
+	normalize: normalizeStoredString,
+});
+
+export const jobDescription$ = createJsonPersistentAtom<string>({
+	storageKey: CV_BUILDER_JOB_KEY,
+	defaultValue: "",
+	normalize: normalizeStoredString,
+});
+
+export const cvBuilderStorage: ToolStorageEntry = {
+	toolId: "cv_builder",
+	keys: [CV_BUILDER_RESUMES_KEY, CV_BUILDER_PROFILE_KEY, CV_BUILDER_JOB_KEY],
+	atoms: {
+		[CV_BUILDER_RESUMES_KEY]: resumes$,
+		[CV_BUILDER_PROFILE_KEY]: masterProfile$,
+		[CV_BUILDER_JOB_KEY]: jobDescription$,
 	},
-});
-
-export const masterProfile$ = persistentAtom<string>("resume_profile", "", {
-	encode: JSON.stringify,
-	decode: (value: string | null) => (value ? JSON.parse(value) : ""),
-});
-
-export const jobDescription$ = persistentAtom<string>("resume_job_description", "", {
-	encode: JSON.stringify,
-	decode: (value: string | null) => (value ? JSON.parse(value) : ""),
-});
+};
 
 // --- Computed Values ---
 

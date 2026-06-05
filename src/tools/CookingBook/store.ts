@@ -1,4 +1,5 @@
-import { persistentAtom } from "@nanostores/persistent";
+import { createJsonPersistentAtom } from "@/lib/toolStorage/persistentAtom";
+import type { ToolStorageEntry } from "@/lib/toolStorage/types";
 
 export interface Recipe {
 	readonly id: string;
@@ -13,7 +14,7 @@ export interface CookingBookState {
 	readonly recipes: readonly Recipe[];
 }
 
-const STORAGE_KEY = "cooking_book_v1";
+const COOKING_BOOK_STORAGE_KEY = "cooking_book_v1";
 const defaultState: CookingBookState = { recipes: [] };
 
 function newId(): string {
@@ -48,17 +49,17 @@ function normalizeState(raw: unknown): CookingBookState {
 	return { recipes };
 }
 
-export const cookingBook$ = persistentAtom<CookingBookState>(STORAGE_KEY, defaultState, {
-	encode: JSON.stringify,
-	decode(value: string | null) {
-		if (!value) return defaultState;
-		try {
-			return normalizeState(JSON.parse(value) as unknown);
-		} catch {
-			return defaultState;
-		}
-	},
+export const cookingBook$ = createJsonPersistentAtom<CookingBookState>({
+	storageKey: COOKING_BOOK_STORAGE_KEY,
+	defaultValue: defaultState,
+	normalize: normalizeState,
 });
+
+export const cookingBookStorage: ToolStorageEntry = {
+	toolId: "cooking_book",
+	keys: [COOKING_BOOK_STORAGE_KEY],
+	atoms: { [COOKING_BOOK_STORAGE_KEY]: cookingBook$ },
+};
 
 export function displayTitle(recipe: Recipe): string {
 	const t = recipe.title.trim();
@@ -137,54 +138,4 @@ export function duplicateRecipe(id: string): string {
 	};
 	cookingBook$.set({ recipes: [next, ...state.recipes] });
 	return next.id;
-}
-
-export interface RecipeExportBundle {
-	readonly version: 1;
-	readonly exportedAt: string;
-	readonly recipes: readonly Recipe[];
-}
-
-export function exportRecipesBundle(): RecipeExportBundle {
-	return {
-		version: 1,
-		exportedAt: new Date().toISOString(),
-		recipes: cookingBook$.get().recipes,
-	};
-}
-
-export function importRecipesBundle(raw: unknown, mode: "merge" | "replace"): { imported: number; error?: string } {
-	if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
-		return { imported: 0, error: "Arquivo inválido." };
-	}
-	const o = raw as Record<string, unknown>;
-	const list = Array.isArray(o.recipes) ? o.recipes : Array.isArray(raw) ? (raw as unknown[]) : null;
-	if (!list) return { imported: 0, error: "Nenhuma receita encontrada no arquivo." };
-
-	const parsed: Recipe[] = [];
-	for (const item of list) {
-		const recipe = normalizeRecipe(item);
-		if (recipe) parsed.push(recipe);
-	}
-	if (parsed.length === 0) return { imported: 0, error: "Nenhuma receita válida no arquivo." };
-
-	if (mode === "replace") {
-		cookingBook$.set({ recipes: parsed.sort((a, b) => b.updatedAt - a.updatedAt) });
-		return { imported: parsed.length };
-	}
-
-	const existing = cookingBook$.get().recipes;
-	const ids = new Set(existing.map((r) => r.id));
-	const merged = [...existing];
-	for (const recipe of parsed) {
-		if (ids.has(recipe.id)) {
-			merged.push({ ...recipe, id: newId(), updatedAt: Date.now() });
-		} else {
-			merged.push(recipe);
-			ids.add(recipe.id);
-		}
-	}
-	merged.sort((a, b) => b.updatedAt - a.updatedAt);
-	cookingBook$.set({ recipes: merged });
-	return { imported: parsed.length };
 }

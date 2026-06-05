@@ -1,15 +1,40 @@
 import type { ReactNode } from "react";
+import { CopyLinkButton } from "@/lib/toolStorage/CopyLinkButton";
+import { useImportStateFromUrl } from "@/lib/toolStorage/useImportStateFromUrl";
+import type { ToolStorageEntry } from "@/lib/toolStorage/types";
 
 export interface ToolShellProps {
-	readonly title: string;
-	readonly description?: string;
-	readonly icon?: ReactNode;
-	readonly actions?: ReactNode;
-	readonly children: ReactNode;
-	readonly variant?: "default" | "compact";
+	title: string;
+	description?: string;
+	icon?: ReactNode;
+	storage?: ToolStorageEntry;
+	actions?: ReactNode;
+	children: ReactNode;
+	variant?: "default" | "compact";
 }
 
-export function ToolShell({ title, description, icon, actions, children, variant = "default" }: ToolShellProps) {
+function HeaderActions({ storage, actions }: { storage?: ToolStorageEntry; actions?: ReactNode }) {
+	if (!storage && !actions) return null;
+
+	return (
+		<div className="flex flex-wrap items-center gap-2 shrink-0">
+			{storage && <CopyLinkButton storage={storage} />}
+			{actions}
+		</div>
+	);
+}
+
+export function ToolShell({
+	title,
+	description,
+	icon,
+	storage,
+	actions,
+	children,
+	variant = "default",
+}: ToolShellProps) {
+	useImportStateFromUrl(storage);
+
 	if (variant === "compact") {
 		return (
 			<div className="flex flex-col min-h-dvh w-full bg-[color:var(--background)]">
@@ -23,7 +48,7 @@ export function ToolShell({ title, description, icon, actions, children, variant
 						<h1 className="text-base font-bold text-[color:var(--headline)] tracking-tight">{title}</h1>
 						{description && <p className="text-xs text-[color:var(--text)] truncate hidden sm:block">{description}</p>}
 					</div>
-					{actions && <div className="flex flex-wrap items-center gap-2 shrink-0">{actions}</div>}
+					<HeaderActions {...(storage ? { storage } : {})} {...(actions ? { actions } : {})} />
 				</header>
 				<main className="flex flex-1 min-h-0 flex-col">{children}</main>
 			</div>
@@ -47,7 +72,7 @@ export function ToolShell({ title, description, icon, actions, children, variant
 							)}
 						</div>
 					</div>
-					{actions && <div className="flex flex-wrap items-center gap-2 shrink-0">{actions}</div>}
+					<HeaderActions {...(storage ? { storage } : {})} {...(actions ? { actions } : {})} />
 				</div>
 			</header>
 			<main className="container mx-auto w-full max-w-6xl px-4 pb-12 md:px-8 flex flex-col gap-4 flex-1">

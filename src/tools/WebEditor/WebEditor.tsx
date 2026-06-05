@@ -5,7 +5,7 @@ import { ToolShell } from "../ToolShell";
 import FileTreeItem from "./FileTree";
 import ContextMenu from "./ContentMenu";
 import { useStore } from "@nanostores/react";
-import { $editor, createNode, setAddingType, setMenu, updateFileContent } from "./store";
+import { $editor, createNode, setAddingType, setMenu, updateFileContent, webEditorStorage } from "./store";
 
 export default function WebEditor() {
 	const { files, selectedFile, addingType } = useStore($editor);
@@ -22,6 +22,7 @@ export default function WebEditor() {
 			title="Editor Web"
 			description="Arquivos e pastas locais no navegador, com preview em tempo real."
 			icon={<Code2 className="size-5" strokeWidth={2} />}
+			storage={webEditorStorage}
 		>
 			<div
 				className="flex flex-1 w-full min-h-0 min-w-[600px] text-[color:var(--headline)] font-sans"

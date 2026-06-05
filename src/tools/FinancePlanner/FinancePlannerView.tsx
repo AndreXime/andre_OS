@@ -3,7 +3,13 @@ import { useStore } from "@nanostores/react";
 import { Plus, Trash2, Wallet } from "lucide-react";
 import { ToolShell } from "../ToolShell";
 import { computeTotals, formatBrlFromCents, parseBrlToCents } from "./domain";
-import { addSubscriptionItem, clearAllSubscriptionItems, financePlanner$, removeSubscriptionItem } from "./store";
+import {
+	addSubscriptionItem,
+	clearAllSubscriptionItems,
+	financePlanner$,
+	financePlannerStorage,
+	removeSubscriptionItem,
+} from "./store";
 
 function TotalsCard({
 	label,
@@ -38,6 +44,7 @@ export function FinancePlannerView() {
 			title="Planejador de assinaturas"
 			description="Cadastre assinaturas mensais (ex.: Coursera, streaming, SaaS). O total diário é uma média no ano (365 dias). Dados ficam só no seu dispositivo."
 			icon={<Wallet className="size-6" strokeWidth={2} />}
+			storage={financePlannerStorage}
 		>
 			<div className="flex flex-col lg:flex-row gap-2 sm:gap-3 w-full">
 				<TotalsCard label="Diário" value={formatBrlFromCents(totals.dailyCents)} hint="média (365 dias)" />

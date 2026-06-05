@@ -24,6 +24,7 @@ import {
 	type WeekDayId,
 	type WeekPlan,
 	type WeekTimeBlock,
+	weekPlannerStorage,
 } from "./store";
 import {
 	type DayTheme,
@@ -466,6 +467,7 @@ export function WeekPlannerView({
 			title="Planejador de semana"
 			description="Adicione um bloco uma vez: o mesmo rascunho aparece em todos os dias. Editar ou guardar noutro dia mantém tudo alinhado. Dados só no seu dispositivo."
 			icon={<CalendarRange className="size-6" strokeWidth={2} />}
+			storage={weekPlannerStorage}
 		>
 			<div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
 				<button

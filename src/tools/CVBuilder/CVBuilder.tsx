@@ -4,7 +4,7 @@ import { useState } from "react";
 import type React from "react";
 
 import { ToolShell } from "../ToolShell";
-import { printResume } from "./lib/store";
+import { cvBuilderStorage, printResume } from "./lib/store";
 import { EditorTab } from "./tabs/EditorTab";
 import { ContextTab } from "./tabs/ContextTab";
 import { PromptTab } from "./tabs/PromptTab";
@@ -33,6 +33,7 @@ export default function CVBuilderApp() {
 					title="Gerador de CV"
 					description="Monte currículos em Markdown, gere prompts para IA e exporte em PDF."
 					icon={<FileText className="size-6" strokeWidth={2} />}
+					storage={cvBuilderStorage}
 					actions={
 						<button
 							type="button"

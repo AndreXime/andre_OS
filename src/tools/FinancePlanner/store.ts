@@ -1,10 +1,12 @@
-import { persistentAtom } from "@nanostores/persistent";
+import { createJsonPersistentAtom } from "@/lib/toolStorage/persistentAtom";
+import type { ToolStorageEntry } from "@/lib/toolStorage/types";
 import { normalizeName, type SubscriptionItem } from "./domain";
 
 export interface FinancePlannerState {
 	readonly items: readonly SubscriptionItem[];
 }
 
+const FINANCE_PLANNER_STORAGE_KEY = "finance_planner_v1";
 const defaultState: FinancePlannerState = { items: [] };
 
 function normalizeState(raw: unknown): FinancePlannerState {
@@ -27,17 +29,17 @@ function normalizeState(raw: unknown): FinancePlannerState {
 	return { items };
 }
 
-export const financePlanner$ = persistentAtom<FinancePlannerState>("finance_planner_v1", defaultState, {
-	encode: JSON.stringify,
-	decode(value: string | null) {
-		if (!value) return defaultState;
-		try {
-			return normalizeState(JSON.parse(value) as unknown);
-		} catch {
-			return defaultState;
-		}
-	},
+export const financePlanner$ = createJsonPersistentAtom<FinancePlannerState>({
+	storageKey: FINANCE_PLANNER_STORAGE_KEY,
+	defaultValue: defaultState,
+	normalize: normalizeState,
 });
+
+export const financePlannerStorage: ToolStorageEntry = {
+	toolId: "finance_planner",
+	keys: [FINANCE_PLANNER_STORAGE_KEY],
+	atoms: { [FINANCE_PLANNER_STORAGE_KEY]: financePlanner$ },
+};
 
 function newId(prefix: string): string {
 	return globalThis.crypto?.randomUUID?.() ?? `${prefix}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
