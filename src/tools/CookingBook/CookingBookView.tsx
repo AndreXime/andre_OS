@@ -5,7 +5,6 @@ import {
 	BookOpen,
 	ChefHat,
 	Copy,
-	ImagePlus,
 	Pencil,
 	Plus,
 	Search,
@@ -14,7 +13,6 @@ import {
 	Files,
 } from "lucide-react";
 import { ToolShell } from "../ToolShell";
-import { compressImageFile } from "./imageUtils";
 import {
 	cookingBook$,
 	cookingBookStorage,
@@ -92,12 +90,8 @@ export function CookingBookView() {
 
 	const [title, setTitle] = useState("");
 	const [recipeContent, setRecipeContent] = useState("");
-	const [photoDataUrl, setPhotoDataUrl] = useState<string | undefined>(undefined);
-	const [photoError, setPhotoError] = useState<string | null>(null);
-	const [saving, setSaving] = useState(false);
 	const [formDirty, setFormDirty] = useState(false);
 
-	const fileInputRef = useRef<HTMLInputElement>(null);
 	const titleInputRef = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
@@ -143,8 +137,6 @@ export function CookingBookView() {
 		setSelectedId(null);
 		setTitle("");
 		setRecipeContent("");
-		setPhotoDataUrl(undefined);
-		setPhotoError(null);
 		setFormDirty(false);
 		setScreen("form");
 	}
@@ -153,8 +145,6 @@ export function CookingBookView() {
 		setSelectedId(recipe.id);
 		setTitle(recipe.title);
 		setRecipeContent(recipe.body);
-		setPhotoDataUrl(recipe.photoDataUrl);
-		setPhotoError(null);
 		setFormDirty(false);
 		setScreen("form");
 	}
@@ -183,28 +173,12 @@ export function CookingBookView() {
 		setScreen(target);
 	}
 
-	async function onPhotoPick(file: File | undefined) {
-		if (!file) return;
-		setPhotoError(null);
-		setSaving(true);
-		try {
-			const dataUrl = await compressImageFile(file);
-			setPhotoDataUrl(dataUrl);
-			markDirty();
-		} catch (err) {
-			setPhotoError(err instanceof Error ? err.message : "Erro ao carregar a foto.");
-		} finally {
-			setSaving(false);
-		}
-	}
-
 	function handleSave() {
 		if (!canSave) return;
 		const id = saveRecipe({
 			...(selectedId ? { id: selectedId } : {}),
 			title,
 			body: recipeContent,
-			...(photoDataUrl ? { photoDataUrl } : {}),
 		});
 		if (id === "") return;
 		setSelectedId(id);
@@ -325,17 +299,9 @@ export function CookingBookView() {
 									].join(" ")}
 								>
 									<div className="flex gap-0 min-h-[4.25rem]">
-										{recipe.photoDataUrl ? (
-											<img
-												src={recipe.photoDataUrl}
-												alt=""
-												className="w-20 sm:w-24 shrink-0 object-cover bg-[color:var(--background)]"
-											/>
-										) : (
-											<div className="w-20 sm:w-24 shrink-0 flex items-center justify-center bg-[color-mix(in_srgb,var(--cb-warm-dim)_80%,var(--background))] text-[color:var(--primary)]/50">
-												<ChefHat className="size-6" />
-											</div>
-										)}
+										<div className="w-20 sm:w-24 shrink-0 flex items-center justify-center bg-[color-mix(in_srgb,var(--cb-warm-dim)_80%,var(--background))] text-[color:var(--primary)]/50">
+											<ChefHat className="size-6" />
+										</div>
 										<div className="flex flex-col justify-center gap-0.5 min-w-0 flex-1 p-3">
 											<span className="text-sm font-semibold text-[color:var(--headline)] truncate">
 												{displayTitle(recipe)}
@@ -404,16 +370,6 @@ export function CookingBookView() {
 				</div>
 
 				<div className="rounded-2xl border border-[color:var(--card-border)] bg-[color:var(--card-bg)] overflow-hidden shadow-lg shadow-black/15">
-					{selected.photoDataUrl ? (
-						<div className="cooking-book-hero relative">
-							<img
-								src={selected.photoDataUrl}
-								alt=""
-								className="w-full max-h-80 object-cover bg-[color:var(--background)]"
-							/>
-							<div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[color:var(--card-bg)] to-transparent pointer-events-none" />
-						</div>
-					) : null}
 					<div className="p-4 sm:p-6 flex flex-col gap-3">
 						<h2 className="text-2xl sm:text-3xl font-bold text-[color:var(--headline)] tracking-tight leading-tight">
 							{displayTitle(selected)}
@@ -493,54 +449,12 @@ export function CookingBookView() {
 						/>
 					</div>
 
-					<div className="flex flex-col gap-2">
-						<FieldLabel optional>Foto</FieldLabel>
-						<input
-							ref={fileInputRef}
-							type="file"
-							accept="image/*"
-							className="sr-only"
-							onChange={(e) => {
-								const file = e.target.files?.[0];
-								void onPhotoPick(file);
-								e.target.value = "";
-							}}
-						/>
-						{photoDataUrl ? (
-							<div className="relative rounded-xl overflow-hidden border border-[color:var(--card-border)]">
-								<img src={photoDataUrl} alt="" className="w-full max-h-52 object-cover" />
-								<button
-									type="button"
-									onClick={() => {
-										setPhotoDataUrl(undefined);
-										markDirty();
-									}}
-									className="absolute top-2 right-2 rounded-lg bg-black/60 p-1.5 text-white hover:bg-black/80"
-									aria-label="Remover foto"
-								>
-									<X className="size-4" />
-								</button>
-							</div>
-						) : (
-							<button
-								type="button"
-								disabled={saving}
-								onClick={() => fileInputRef.current?.click()}
-								className="inline-flex items-center justify-center gap-2 rounded-xl border border-dashed border-[color:var(--card-border)] px-4 py-6 text-sm text-[color:var(--text)] hover:border-[color:var(--primary)]/50 hover:text-[color:var(--headline)] transition-colors disabled:opacity-50 w-full"
-							>
-								<ImagePlus className="size-5" />
-								{saving ? "Processando foto…" : "Adicionar foto"}
-							</button>
-						)}
-						{photoError && <p className="text-xs text-red-300">{photoError}</p>}
-					</div>
-
 					<button
 						type="submit"
-						disabled={!canSave || saving}
+						disabled={!canSave}
 						className={[
 							"inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-[opacity,transform]",
-							canSave && !saving
+							canSave
 								? "bg-[color:var(--primary)] text-[color:var(--primary-text)] hover:opacity-90 active:scale-[0.99]"
 								: "bg-[color:var(--card-border)]/40 text-[color:var(--text)]/60 cursor-not-allowed",
 						].join(" ")}
@@ -584,7 +498,7 @@ export function CookingBookView() {
 
 			<ToolShell
 				title="Livro de receitas"
-				description="Caderno pessoal no navegador. Texto livre, foto opcional, compartilhe por link."
+				description="Caderno pessoal no navegador. Texto livre, compartilhe por link."
 				icon={<ChefHat className="size-6" strokeWidth={2} />}
 				storage={cookingBookStorage}
 				actions={

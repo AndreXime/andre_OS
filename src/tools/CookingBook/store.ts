@@ -5,7 +5,6 @@ export interface Recipe {
 	readonly id: string;
 	readonly title: string;
 	readonly body: string;
-	readonly photoDataUrl?: string;
 	readonly createdAt: number;
 	readonly updatedAt: number;
 }
@@ -30,10 +29,7 @@ function normalizeRecipe(raw: unknown): Recipe | null {
 	if (body.trim() === "" && title.trim() === "") return null;
 	const createdAt = typeof r.createdAt === "number" && Number.isFinite(r.createdAt) ? r.createdAt : Date.now();
 	const updatedAt = typeof r.updatedAt === "number" && Number.isFinite(r.updatedAt) ? r.updatedAt : createdAt;
-	const photo =
-		typeof r.photoDataUrl === "string" && r.photoDataUrl.startsWith("data:image/") ? r.photoDataUrl : undefined;
-	const base = { id: r.id, title, body, createdAt, updatedAt };
-	return photo ? { ...base, photoDataUrl: photo } : base;
+	return { id: r.id, title, body, createdAt, updatedAt };
 }
 
 function normalizeState(raw: unknown): CookingBookState {
@@ -73,7 +69,6 @@ export function saveRecipe(input: {
 	readonly id?: string;
 	readonly title: string;
 	readonly body: string;
-	readonly photoDataUrl?: string | undefined;
 }): string {
 	const body = input.body;
 	if (body.trim() === "" && input.title.trim() === "") return "";
@@ -90,7 +85,6 @@ export function saveRecipe(input: {
 			body,
 			createdAt: existing.createdAt,
 			updatedAt: now,
-			...(input.photoDataUrl ? { photoDataUrl: input.photoDataUrl } : {}),
 		};
 		const recipes = [nextRecipe, ...state.recipes.filter((r) => r.id !== input.id)].sort((a, b) => b.updatedAt - a.updatedAt);
 		cookingBook$.set({ recipes });
@@ -104,7 +98,6 @@ export function saveRecipe(input: {
 		body,
 		createdAt: now,
 		updatedAt: now,
-		...(input.photoDataUrl ? { photoDataUrl: input.photoDataUrl } : {}),
 	};
 	cookingBook$.set({ recipes: [nextRecipe, ...state.recipes] });
 	return id;
@@ -134,7 +127,6 @@ export function duplicateRecipe(id: string): string {
 		body: source.body,
 		createdAt: now,
 		updatedAt: now,
-		...(source.photoDataUrl ? { photoDataUrl: source.photoDataUrl } : {}),
 	};
 	cookingBook$.set({ recipes: [next, ...state.recipes] });
 	return next.id;

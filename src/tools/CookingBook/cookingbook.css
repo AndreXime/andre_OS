@@ -41,10 +41,6 @@
 	box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary) 25%, transparent);
 }
 
-.cooking-book-hero {
-	mask-image: linear-gradient(to bottom, #000 70%, transparent 100%);
-}
-
 @keyframes cb-fade-in {
 	from {
 		opacity: 0;
