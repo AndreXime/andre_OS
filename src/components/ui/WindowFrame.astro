@@ -1,10 +1,10 @@
 ---
-import type { PostMeta } from "@/lib/postMeta";
+import type { OsVisualKind } from "@/lib/osPaths";
 
 interface Props {
 	title: string;
 	titleFull?: string | undefined;
-	kind?: PostMeta["kind"] | undefined;
+	kind?: OsVisualKind | undefined;
 	typeLabel?: string | undefined;
 	external?: boolean | undefined;
 	padded?: boolean;

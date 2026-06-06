@@ -5,7 +5,7 @@ import type { LucideIcon } from "lucide-react";
 import { Code2, ExternalLink, FileText } from "lucide-react";
 
 export interface PostMeta {
-	kind: "tool" | "note" | "link" | "intro";
+	kind: "tool" | "note" | "link";
 	kindLabel: string;
 	typeLabel: string;
 	verb: string;
@@ -40,8 +40,6 @@ export function getPostUrl(post: Post): string {
 			return `/app/${post.tool_name ?? post.slug}`;
 		case "link":
 			return post.url ?? "#";
-		default:
-			return "#";
 	}
 }
 
@@ -72,8 +70,6 @@ export function getContextualPath(
 			return truncateDisplayPath(`./notas/${post.slug}.md`, `~/notas/${post.slug}.md`);
 		case "link":
 			return truncateDisplayPath(`./links/${post.slug}`, linkFull);
-		default:
-			return truncateDisplayPath("./README.md", "~/root/README.md");
 	}
 }
 
@@ -124,20 +120,6 @@ export async function getPostMeta(post: Post): Promise<PostMeta> {
 				linkFavicon: info.favicon,
 				linkDomain,
 				external: true,
-			};
-		}
-		default: {
-			return {
-				kind: "intro",
-				kindLabel: "root",
-				typeLabel: "Intro",
-				...truncateWindowTitle("~/root/README.md"),
-				verb: "view",
-				href,
-				Icon: FileText,
-				linkFavicon: null,
-				linkDomain: null,
-				external: false,
 			};
 		}
 	}

@@ -5,9 +5,7 @@ import DocumentLayout from "@/components/layout/DocumentLayout.astro";
 
 const entries = (await getCollection("posts")).map((entry) => entry.data);
 
-const recentPosts = entries
-	.filter((p) => p.type !== "intro")
-	.sort((a, b) => b.date.getTime() - a.date.getTime());
+const recentPosts = entries.sort((a, b) => b.date.getTime() - a.date.getTime());
 ---
 
 <DocumentLayout title="andre_OS">

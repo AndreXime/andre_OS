@@ -5,7 +5,7 @@ import { z } from "astro/zod";
 export interface Post {
 	id: number;
 	slug: string;
-	type: "intro" | "tool" | "note" | "link";
+	type: "tool" | "note" | "link";
 	title: string;
 	description: string;
 	tags: string[];
@@ -23,7 +23,7 @@ const posts = defineCollection({
 		title: z.string(),
 		slug: z.string(),
 		description: z.string(),
-		type: z.enum(["intro", "tool", "note", "link"]),
+		type: z.enum(["tool", "note", "link"]),
 		tags: z.array(z.string()),
 		date: z.coerce.date(),
 		featured: z.boolean().default(false),

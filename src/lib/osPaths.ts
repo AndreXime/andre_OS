@@ -1,6 +1,13 @@
 export const OS_VERSION = "0.0.1";
 
 export type OsCategory = "all" | "tool" | "note" | "link";
+export type OsVisualKind = "intro" | "tool" | "note" | "link";
+
+export const OS_HOME_INTRO = {
+	path: "~/root/README.md",
+	title: "Olá mundo",
+	text: "Bem vindo ao meu espaço na internet, ocasionalmente irei publicar ferramentas, notas e recomendações de outros sites.",
+} as const;
 
 export interface OsFolderDefinition {
 	category: OsCategory;
@@ -8,7 +15,7 @@ export interface OsFolderDefinition {
 	path: string;
 	title: string;
 	description: string;
-	kind: "intro" | "tool" | "note" | "link";
+	kind: OsVisualKind;
 }
 
 export const OS_FOLDERS: OsFolderDefinition[] = [
