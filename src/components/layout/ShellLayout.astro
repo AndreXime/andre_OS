@@ -1,5 +1,5 @@
 ---
-import Header from "./Header.astro";
+import Header from "../ui/Header.astro";
 import StatusBar from "../ui/StatusBar.astro";
 import { getCategoryPath, getStatusPath } from "@/lib/osPaths";
 
@@ -19,12 +19,16 @@ const showTerminal = !(backHref && backLabel);
 
 <div class="os-shell min-h-dvh flex flex-col">
 	<div class="os-desktop-bg flex flex-1 flex-col">
-		<Header promptPath={promptPath} backHref={backHref} backLabel={backLabel} />
+		<Header
+			promptPath={promptPath}
+			backHref={backHref}
+			backLabel={backLabel}
+		/>
 		<main class="os-main flex-1 w-full">
 			<slot />
 		</main>
 	</div>
 	<StatusBar path={resolvedPath} />
 	<script src="../../lib/osChromeClient.ts"></script>
-	{showTerminal ? <script src="../../lib/terminalShell.ts"></script> : null}
+	{showTerminal ? <script src="../../lib/terminalShell.ts" /> : null}
 </div>
