@@ -1,0 +1,72 @@
+---
+import type { LucideIcon } from "lucide-react";
+
+interface Props {
+	href: string;
+	path: string;
+	title: string;
+	description: string;
+	Icon: LucideIcon;
+	kind: "tool" | "note" | "link" | "intro";
+	active?: boolean;
+}
+
+const { href, path, title, description, Icon, kind, active = false } = Astro.props;
+
+const iconClass = {
+	intro: "text-[var(--color-fg)] border-[var(--color-border)]",
+	tool: "text-[var(--color-accent)] border-[color-mix(in_oklch,var(--color-accent)_35%,var(--color-border)_65%)]",
+	note: "text-[var(--color-muted)] border-[var(--color-border)]",
+	link: "text-[oklch(78%_0.14_65)] border-[color-mix(in_oklch,oklch(78%_0.14_65)_35%,var(--color-border)_65%)]",
+};
+
+const hoverBorderClass = {
+	intro: "group-hover:border-[color-mix(in_oklch,var(--color-accent)_22%,var(--color-border)_78%)]",
+	tool: "group-hover:border-[color-mix(in_oklch,var(--color-accent)_35%,var(--color-border)_65%)]",
+	note: "group-hover:border-[color-mix(in_oklch,var(--color-accent)_22%,var(--color-border)_78%)]",
+	link: "group-hover:border-[color-mix(in_oklch,oklch(78%_0.14_65)_35%,var(--color-border)_65%)]",
+};
+
+const activeBorderClass =
+	"border-[color-mix(in_oklch,var(--color-accent)_24%,var(--color-border)_76%)]";
+const idleTabClass = "border-[var(--color-border)]";
+const idleBodyClass =
+	"border-[var(--color-border)] bg-[color-mix(in_oklch,var(--color-surface-1)_90%,transparent_10%)]";
+---
+
+<a
+	href={href}
+	class="ui-focus-ring group flex min-h-[8.5rem] flex-col no-underline text-inherit"
+>
+	<div
+		class:list={[
+			"ml-2.5 h-2.5 w-[42%] max-w-28 rounded-t-[var(--radius-sm)] border border-b-0 bg-[color-mix(in_oklch,var(--color-surface-2)_88%,transparent_12%)]",
+			active ? activeBorderClass : idleTabClass,
+		]}
+		aria-hidden="true"
+	>
+	</div>
+	<div
+		class:list={[
+			"flex flex-1 flex-col gap-3.5 rounded-[0_var(--radius-md)_var(--radius-md)_var(--radius-md)] border p-4 pb-[1.15rem] shadow-[var(--shadow-card)] transition-[border-color,box-shadow] duration-[180ms] ease-out group-hover:shadow-[var(--shadow-card-hover)]",
+			hoverBorderClass[kind],
+			active
+				? `${activeBorderClass} bg-[color-mix(in_oklch,var(--color-surface-2)_88%,transparent_12%)]`
+				: idleBodyClass,
+		]}
+	>
+		<div
+			class:list={[
+				"flex size-12 items-center justify-center rounded-[var(--radius-md)] border bg-[color-mix(in_oklch,var(--color-surface-2)_85%,transparent_15%)]",
+				iconClass[kind],
+			]}
+		>
+			<Icon size={26} strokeWidth={1.75} />
+		</div>
+		<div class="flex min-w-0 flex-col gap-0.5">
+			<span class="font-mono text-[11px] text-[var(--color-accent-weak)]">{path}</span>
+			<span class="font-mono text-[0.95rem] font-bold text-[var(--color-fg)]">{title}</span>
+			<span class="text-[0.8rem] leading-[1.45] text-[var(--color-dim)]">{description}</span>
+		</div>
+	</div>
+</a>

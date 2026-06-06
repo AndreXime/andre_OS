@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content";
-import PostsLayout from "@/components/layout/PostsLayout.astro";
-import BaseLayout from "@/components/layout/BaseLayout.astro";
+import DirectoryLayout from "@/components/layout/DirectoryLayout.astro";
+import DocumentLayout from "@/components/layout/DocumentLayout.astro";
 
 const entries = (await getCollection("posts")).map((entry) => entry.data);
 
@@ -11,14 +11,12 @@ const appPosts = entries
         return b.date.getTime() - a.date.getTime();
     });
 
-const introPost = undefined;
 const categoryParam = "link";
 ---
 
-<BaseLayout title="andre_OS">
-    <PostsLayout
-        introPost={introPost}
+<DocumentLayout title="andre_OS">
+    <DirectoryLayout
         recentPosts={appPosts}
         activeCategory={categoryParam}
     />
-</BaseLayout>
+</DocumentLayout>

@@ -1,0 +1,20 @@
+---
+import type { Post } from "@/content.config";
+import type { PostMeta } from "@/lib/postMeta";
+import DesktopIcon from "./DesktopIcon.astro";
+
+interface Props {
+	items: { post: Post; meta: PostMeta }[];
+	activeCategory: string;
+}
+
+const { items, activeCategory } = Astro.props;
+---
+
+<div class="os-desktop-grid grid">
+	{
+		items.map(({ post, meta }) => (
+			<DesktopIcon post={post} meta={meta} activeCategory={activeCategory} />
+		))
+	}
+</div>

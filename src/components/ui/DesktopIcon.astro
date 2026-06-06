@@ -1,0 +1,49 @@
+---
+import { Image } from "astro:assets";
+import type { Post } from "@/content.config";
+import { getContextualPath, type PostMeta } from "@/lib/postMeta";
+
+interface Props {
+	post: Post;
+	meta: PostMeta;
+	activeCategory: string;
+}
+
+const { post, meta, activeCategory } = Astro.props;
+const displayPath = getContextualPath(post, activeCategory, meta.linkDomain);
+---
+
+<a
+	href={meta.href}
+	{...meta.external ? { target: "_blank", rel: "noopener noreferrer" } : {}}
+	class:list={[
+		"os-desktop-icon",
+		"ui-focus-ring",
+		"group",
+		`os-desktop-icon--${meta.kind}`,
+	]}
+	data-search-text={`${post.title} ${post.description} ${post.tags?.join(" ") ?? ""}`.toLowerCase()}
+>
+	<span class={`os-desktop-icon-kind os-desktop-icon-kind--${meta.kind}`}>
+		{meta.typeLabel}
+	</span>
+	<div class={`os-desktop-icon-glyph os-desktop-icon-glyph--${meta.kind}`}>
+		{
+			meta.linkFavicon ? (
+				<Image
+					src={meta.linkFavicon}
+					alt=""
+					width={28}
+					height={28}
+					class="size-7 rounded-sm object-contain"
+					loading="lazy"
+					decoding="async"
+				/>
+			) : (
+				<meta.Icon size={24} strokeWidth={1.75} />
+			)
+		}
+	</div>
+	<span class="os-desktop-icon-label">{post.title}</span>
+	<span class="os-desktop-icon-path" title={displayPath.pathFull}>{displayPath.path}</span>
+</a>

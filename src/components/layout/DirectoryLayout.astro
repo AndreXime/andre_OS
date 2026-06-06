@@ -1,0 +1,106 @@
+---
+import { Command, ExternalLink, FileText, Terminal } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import type { Post } from "@/content.config";
+import { getPostMeta } from "@/lib/postMeta";
+import { getListingTitle, OS_FOLDERS, type OsCategory } from "@/lib/osPaths";
+import DesktopGrid from "../ui/DesktopGrid.astro";
+import OsFolderCard from "../ui/OsFolderCard.astro";
+import ShellLayout from "./ShellLayout.astro";
+
+interface Props {
+    recentPosts: Post[];
+    activeCategory: string;
+}
+
+const { recentPosts, activeCategory } = Astro.props;
+
+const folderIcons: Record<OsCategory, LucideIcon> = {
+    all: Command,
+    tool: Terminal,
+    note: FileText,
+    link: ExternalLink,
+};
+
+const showEmpty = recentPosts.length === 0;
+const listingTitle = getListingTitle(activeCategory);
+const recentItems = await Promise.all(
+    recentPosts.map(async (post) => ({
+        post,
+        meta: await getPostMeta(post),
+    })),
+);
+---
+
+<ShellLayout activeCategory={activeCategory}>
+    <div class="mx-auto w-full max-w-5xl px-4 pt-8 pb-4 space-y-8">
+        <section class="space-y-3">
+            <div class="flex items-center justify-between">
+                <h2
+                    class="font-mono text-xs uppercase tracking-widest text-[var(--color-dim)]"
+                >
+                    ~/root
+                </h2>
+            </div>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                {
+                    OS_FOLDERS.map((folder) => (
+                        <OsFolderCard
+                            href={folder.href}
+                            path={folder.path}
+                            title={folder.title}
+                            description={folder.description}
+                            Icon={folderIcons[folder.category]}
+                            kind={folder.kind}
+                            active={activeCategory === folder.category}
+                        />
+                    ))
+                }
+            </div>
+        </section>
+
+        {
+            recentPosts.length ? (
+                <section class="space-y-6">
+                    <div class="flex items-center justify-between">
+                        <h2 class="font-mono text-xs uppercase tracking-widest text-[var(--color-dim)]">
+                            {listingTitle}
+                        </h2>
+                    </div>
+
+                    <DesktopGrid
+                        items={recentItems}
+                        activeCategory={activeCategory}
+                    />
+
+                    <div
+                        id="search-empty"
+                        class="hidden py-20 text-center border border-dashed border-[var(--color-border)] rounded-lg"
+                    >
+                        <p class="text-[var(--color-dim)] text-lg">
+                            Nenhum resultado encontrado para{" "}
+                            <span id="search-empty-term" />.
+                        </p>
+                        <button
+                            type="button"
+                            id="search-clear"
+                            class="mt-4 text-[var(--color-accent)] hover:underline"
+                        >
+                            Limpar filtros
+                        </button>
+                    </div>
+                </section>
+            ) : null
+        }
+
+        {
+            showEmpty ? (
+                <div class="py-20 text-center border border-dashed border-[var(--color-border)] rounded-lg">
+                    <p class="text-[var(--color-dim)] text-lg">
+                        Por enquanto não foi publicado nenhum post
+                    </p>
+                </div>
+            ) : null
+        }
+    </div>
+</ShellLayout>

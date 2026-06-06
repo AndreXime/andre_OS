@@ -1,0 +1,54 @@
+---
+import type { PostMeta } from "@/lib/postMeta";
+
+interface Props {
+	title: string;
+	titleFull?: string | undefined;
+	kind?: PostMeta["kind"] | undefined;
+	typeLabel?: string | undefined;
+	external?: boolean | undefined;
+	padded?: boolean;
+}
+
+const {
+	title,
+	titleFull,
+	kind,
+	typeLabel,
+	external = false,
+	padded = true,
+} = Astro.props;
+---
+
+<div class:list={["ui-window group/window", kind && `ui-window--${kind}`]}>
+	<div class="ui-window-titlebar">
+		<div class="ui-window-dots" aria-hidden="true">
+			<span class="ui-window-dot ui-window-dot--close"></span>
+			<span class="ui-window-dot ui-window-dot--min"></span>
+			<span class="ui-window-dot ui-window-dot--max"></span>
+		</div>
+		{
+			typeLabel && kind ? (
+				<span class={`ui-window-kind ui-window-kind--${kind}`}>
+					{typeLabel}
+				</span>
+			) : null
+		}
+		<span class="ui-window-title" title={titleFull ?? title}>{title}</span>
+		{
+			external ? (
+				<span class="ui-window-external" aria-label="Abre site externo">
+					↗
+				</span>
+			) : null
+		}
+		<div class="ui-window-controls" aria-hidden="true">
+			<span>−</span>
+			<span>□</span>
+			<span>×</span>
+		</div>
+	</div>
+	<div class:list={["ui-window-body", padded && "ui-window-body--padded"]}>
+		<slot />
+	</div>
+</div>

@@ -1,0 +1,30 @@
+---
+import Header from "./Header.astro";
+import StatusBar from "../ui/StatusBar.astro";
+import { getCategoryPath, getStatusPath } from "@/lib/osPaths";
+
+interface Props {
+	activeCategory: string;
+	statusPath?: string | undefined;
+	backHref?: string | undefined;
+	backLabel?: string | undefined;
+}
+
+const { activeCategory, statusPath, backHref, backLabel } = Astro.props;
+
+const resolvedPath = statusPath ?? getStatusPath(activeCategory);
+const promptPath = getCategoryPath(activeCategory);
+const showTerminal = !(backHref && backLabel);
+---
+
+<div class="os-shell min-h-dvh flex flex-col">
+	<div class="os-desktop-bg flex flex-1 flex-col">
+		<Header promptPath={promptPath} backHref={backHref} backLabel={backLabel} />
+		<main class="os-main flex-1 w-full">
+			<slot />
+		</main>
+	</div>
+	<StatusBar path={resolvedPath} />
+	<script src="../../lib/osChromeClient.ts"></script>
+	{showTerminal ? <script src="../../lib/terminalShell.ts"></script> : null}
+</div>

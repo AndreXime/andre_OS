@@ -5,6 +5,15 @@ export const formatDate = (date: Date) =>
 		year: "numeric",
 	}).format(date);
 
+export function truncateMiddle(value: string, maxLength = 40): string {
+	if (value.length <= maxLength) return value;
+
+	const budget = maxLength - 1;
+	const head = Math.ceil(budget / 2);
+	const tail = Math.floor(budget / 2);
+	return `${value.slice(0, head)}…${value.slice(-tail)}`;
+}
+
 export const getThemeClasses = (toolType: string) => {
 	switch (toolType) {
 		case "tool":

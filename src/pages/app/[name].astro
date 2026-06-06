@@ -1,5 +1,7 @@
 ---
-import Layout from "../../components/layout/BaseLayout.astro";
+import DocumentLayout from "../../components/layout/DocumentLayout.astro";
+import ShellLayout from "@/components/layout/ShellLayout.astro";
+import { getStatusPath } from "@/lib/osPaths";
 import WebCodeEditor from "../../tools/WebEditor/WebEditor";
 import EveryDayUtils from "../../tools/EveryDayUtils/UtilsApp";
 import CVBuilder from "../../tools/CVBuilder/CVBuilder";
@@ -26,31 +28,39 @@ export function getStaticPaths() {
 }
 
 const { name } = Astro.params;
+const toolName = name ?? "";
 ---
 
-<Layout title={name + " | andre_OS"}>
-	<div class="flex flex-col min-h-screen">
-		{
-			(() => {
-				switch (name) {
-					case "WebCodeEditor":
-						return <WebCodeEditor client:load />;
-					case "EveryDayUtils":
-						return <EveryDayUtils client:load />;
-					case "CVBuilder":
-						return <CVBuilder client:load />;
-					case "WeekPlanner":
-						return <WeekPlanner client:load />;
-					case "FinancePlanner":
-						return <FinancePlanner client:load />;
-					case "ImageTools":
-						return <ImageTools client:load />;
-					case "CookingBook":
-						return <CookingBook client:load />;
-					default:
-						return <div>Ferramenta não encontrada.</div>;
-				}
-			})()
-		}
-	</div>
-</Layout>
+<DocumentLayout title={toolName + " | andre_OS"}>
+	<ShellLayout
+		activeCategory="tool"
+		statusPath={getStatusPath("tool", toolName)}
+		backHref="/app"
+		backLabel="Voltar para ferramentas"
+	>
+		<div class="os-app-shell">
+			{
+				(() => {
+					switch (name) {
+						case "WebCodeEditor":
+							return <WebCodeEditor client:load />;
+						case "EveryDayUtils":
+							return <EveryDayUtils client:load />;
+						case "CVBuilder":
+							return <CVBuilder client:load />;
+						case "WeekPlanner":
+							return <WeekPlanner client:load />;
+						case "FinancePlanner":
+							return <FinancePlanner client:load />;
+						case "ImageTools":
+							return <ImageTools client:load />;
+						case "CookingBook":
+							return <CookingBook client:load />;
+						default:
+							return <div>Ferramenta não encontrada.</div>;
+					}
+				})()
+			}
+		</div>
+	</ShellLayout>
+</DocumentLayout>

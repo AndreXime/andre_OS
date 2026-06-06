@@ -1,21 +1,15 @@
 ---
 import { getCollection } from "astro:content";
-import PostsLayout from "@/components/layout/PostsLayout.astro";
-import BaseLayout from "@/components/layout/BaseLayout.astro";
+import DirectoryLayout from "@/components/layout/DirectoryLayout.astro";
+import DocumentLayout from "@/components/layout/DocumentLayout.astro";
 
 const entries = (await getCollection("posts")).map((entry) => entry.data);
 
 const recentPosts = entries
 	.filter((p) => p.type !== "intro")
 	.sort((a, b) => b.date.getTime() - a.date.getTime());
-
-const introPost = entries.find((p) => p.type === "intro");
 ---
 
-<BaseLayout title="andre_OS">
-	<PostsLayout
-		introPost={introPost}
-		recentPosts={recentPosts}
-		activeCategory="all"
-	/>
-</BaseLayout>
+<DocumentLayout title="andre_OS">
+	<DirectoryLayout recentPosts={recentPosts} activeCategory="all" />
+</DocumentLayout>
