@@ -28,13 +28,19 @@ const rssUrl = new URL("rss.xml", Astro.site);
             href={rssUrl}
         />
         <title>{title}</title>
-        <script is:inline>
-            if ("serviceWorker" in navigator) {
-                window.addEventListener("load", () => {
-                    navigator.serviceWorker.register("/sw.js").catch(() => {});
-                });
-            }
-        </script>
+        {
+            import.meta.env.PROD ? (
+                <script is:inline>
+                    if ("serviceWorker" in navigator) {
+                        window.addEventListener("load", () => {
+                            navigator.serviceWorker
+                                .register("/sw.js")
+                                .catch(() => {});
+                        });
+                    }
+                </script>
+            ) : null
+        }
     </head>
     <body
         class="selection:bg-[color-mix(in_oklch,var(--color-accent)_25%,transparent_75%)] selection:text-[var(--color-fg)]"

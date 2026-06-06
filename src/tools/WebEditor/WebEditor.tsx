@@ -25,11 +25,11 @@ export default function WebEditor() {
 			storage={webEditorStorage}
 		>
 			<div
-				className="flex flex-1 w-full min-h-0 min-w-[600px] text-[color:var(--headline)] font-sans"
+				className="flex flex-1 min-h-0 min-w-0 w-full text-[color:var(--headline)] font-sans"
 				onClick={() => setMenu(null)}
 			>
 				<aside
-					className="w-64 border-r border-[color:var(--card-border)] bg-[color:var(--card-bg)] flex flex-col shrink-0"
+					className="flex w-64 shrink-0 flex-col min-h-0 border-r border-[color:var(--card-border)] bg-[color:var(--card-bg)]"
 					onContextMenu={(e) => handleContextMenu(e, null)}
 				>
 					<header className="p-3 border-b border-[color:var(--card-border)]/70 flex items-center justify-between">
@@ -83,19 +83,21 @@ export default function WebEditor() {
 					</nav>
 				</aside>
 
-				<main className="flex-1 min-w-0">
+				<main className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
 					{selectedFile ? (
-						<Editor
-							height="100%"
-							theme="vs-dark"
-							key={selectedFile.id}
-							language={selectedFile.language}
-							defaultValue={selectedFile.content}
-							onChange={(val) => updateFileContent(selectedFile.id, val ?? "")}
-							options={{ minimap: { enabled: false }, fontSize: 14, automaticLayout: true }}
-						/>
+						<div className="min-h-0 flex-1">
+							<Editor
+								height="100%"
+								theme="vs-dark"
+								key={selectedFile.id}
+								language={selectedFile.language}
+								defaultValue={selectedFile.content}
+								onChange={(val) => updateFileContent(selectedFile.id, val ?? "")}
+								options={{ minimap: { enabled: false }, fontSize: 14, automaticLayout: true }}
+							/>
+						</div>
 					) : (
-						<div className="h-full flex flex-col items-center justify-center text-[color:var(--text)]/80 italic opacity-50">
+						<div className="flex min-h-0 flex-1 flex-col items-center justify-center text-[color:var(--text)]/80 italic opacity-50">
 							<Ghost size={60} strokeWidth={2} className="mb-2 text-[color:var(--primary)]" />
 							<p className="font-mono text-lg tracking-tighter">Crie um arquivo para ler o código</p>
 						</div>

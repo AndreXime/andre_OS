@@ -18,13 +18,13 @@ const showTerminal = !(backHref && backLabel);
 ---
 
 <div class="os-shell min-h-dvh flex flex-col">
-	<div class="os-desktop-bg flex flex-1 flex-col">
+	<div class="os-desktop-bg flex flex-1 flex-col min-h-0">
 		<Header
 			promptPath={promptPath}
 			backHref={backHref}
 			backLabel={backLabel}
 		/>
-		<main class="os-main flex-1 w-full">
+		<main class="os-main flex flex-1 flex-col min-h-0 w-full">
 			<slot />
 		</main>
 	</div>

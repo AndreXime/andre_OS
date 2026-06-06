@@ -235,15 +235,24 @@
 	}
 
 	.os-main {
+		display: flex;
+		flex-direction: column;
+		min-height: 0;
 		padding-bottom: var(--os-chrome-bottom);
 	}
 
 	.os-app-shell {
-		min-height: calc(100dvh - var(--os-chrome-bottom));
+		flex: 1 1 auto;
+		display: flex;
+		flex-direction: column;
+		min-height: 0;
+		min-width: 0;
 	}
 
 	.os-app-shell > * {
-		min-height: inherit;
+		flex: 1 1 auto;
+		min-height: 0;
+		min-width: 0;
 	}
 
 	.os-status-bar {
