@@ -3,9 +3,6 @@ id: 18
 slug: "pipeline-hibrido-biome-e-eslint-para-seguranca-e-performance"
 type: note
 title: "Pipeline Híbrido: Biome e ESLint para Segurança e Performance"
-description: "Arquitetura de linting por gatilho: use Biome localmente para velocidade e restrinja o ESLint no CI para SAST e type-checking profundo sem travar o dev."
-tags: ["Biome","ESLint","CI/CD","TypeScript"]
-featured: false
 date: 2026-05-29
 ---
 Separar linters por branch gera inconsistência e quebra pipelines em merges críticos. A arquitetura mais eficiente é a **Abordagem Híbrida por Gatilho (Trigger)**. Em vez de separar por branch, a divisão ocorre pelo momento do pipeline. O ESLint, focado estritamente em segurança e tipagem, roda antes do código entrar na branch `dev`, mas nunca a cada commit local.

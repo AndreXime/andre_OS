@@ -3,9 +3,6 @@ id: 6
 slug: "go-vs-typescript-otimizando-a-runtime-da-api"
 type: note
 title: "Go vs TypeScript: Otimizando a Runtime da API"
-description: "Comparativo técnico em performance. Saiba quando a interpretação do Node.js vira gargalo e quando migrar para a compilação nativa do Go."
-tags: ["Go","Typescript","API"]
-featured: false
 date: 2026-02-04
 ---
 ### Trade-offs de Execução

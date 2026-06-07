@@ -7,13 +7,9 @@ export interface Post {
 	slug: string;
 	type: "tool" | "note" | "link";
 	title: string;
-	description: string;
-	tags: string[];
-	featured?: boolean | undefined;
 	date: Date;
 	content?: string | undefined;
-	url?: string | undefined;
-	tool_name?: string | undefined;
+	target?: string | undefined;
 }
 
 const posts = defineCollection({
@@ -22,13 +18,9 @@ const posts = defineCollection({
 		id: z.number(),
 		title: z.string(),
 		slug: z.string(),
-		description: z.string(),
 		type: z.enum(["tool", "note", "link"]),
-		tags: z.array(z.string()),
 		date: z.coerce.date(),
-		featured: z.boolean().default(false),
-		url: z.string().optional(),
-		tool_name: z.string().optional(),
+		target: z.string().optional(),
 	}),
 });
 

@@ -3,9 +3,6 @@ id: 9
 slug: "a-falacia-da-api-fullstack-use-hono-e-nestjs"
 type: note
 title: "A Falácia da API Fullstack: Use Hono e NestJS"
-description: "Next.js não foi feito para construir APIs escaláveis. Entenda o acoplamento e por que Hono e NestJS cobrem 100% dos cenários de backend em TypeScript."
-tags: ["Arquitetura","Next.js"]
-featured: false
 date: 2026-03-01
 ---
 O desenvolvimento de APIs em frameworks fullstack como Next.js gera dívida técnica imediata. Route Handlers e Server Actions acoplam regras de negócio à camada de apresentação. Quando o projeto cresce e a mesma API precisa alimentar um aplicativo mobile ou outro microsserviço, o retrabalho é inevitável. A equipe é forçada a extrair a lógica, lidar com dependências emaranhadas e reescrever o backend em um ambiente isolado.

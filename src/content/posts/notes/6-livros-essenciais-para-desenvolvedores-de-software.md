@@ -3,9 +3,6 @@ id: 20
 slug: "6-livros-essenciais-para-desenvolvedores-de-software"
 type: note
 title: "6 Livros Essenciais para Desenvolvedores de Software"
-description: "Seis livros que cobrem algoritmos, design, arquitetura, UI e validacao de produto. Leitura curada para base solida sem acumular shelfware."
-tags: ["Livros","Carreira","Arquitetura","Software Design"]
-featured: false
 date: 2026-06-02
 ---
 

@@ -2,7 +2,7 @@
 import DocumentLayout from "../../components/layout/DocumentLayout.astro";
 import ShellLayout from "@/components/layout/ShellLayout.astro";
 import WindowFrame from "@/components/ui/WindowFrame.astro";
-import { getThemeClasses, formatDate, truncateMiddle } from "@/lib/utils";
+import { formatDate, truncateMiddle } from "@/lib/utils";
 import { getCollection } from "astro:content";
 import { ChevronLeft } from "lucide-react";
 import { marked, type Tokens } from "marked";
@@ -20,7 +20,6 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { badgeClass } = getThemeClasses(post.type);
 
 const renderer = {
 	link({ href, title, text }: Tokens.Link): string {
@@ -64,13 +63,6 @@ const windowTitle = truncateMiddle(windowTitleFull, 44);
 				<div
 					class="p-6 md:p-8 border-b border-[var(--color-border)] bg-[color-mix(in_oklch,var(--color-surface-2)_85%,transparent_15%)]"
 				>
-					<div class="flex gap-2 mb-4">
-						{
-							post.tags?.map((tag: string) => (
-								<span class={badgeClass}>#{tag}</span>
-							))
-						}
-					</div>
 					<h1
 						class="text-3xl md:text-4xl font-bold text-[var(--color-fg)]"
 					>

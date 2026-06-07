@@ -37,9 +37,9 @@ export function getPostUrl(post: Post): string {
 		case "note":
 			return `/post/${post.slug}`;
 		case "tool":
-			return `/app/${post.tool_name ?? post.slug}`;
+			return `/app/${post.target ?? post.slug}`;
 		case "link":
-			return post.url ?? "#";
+			return post.target ?? "#";
 	}
 }
 
@@ -48,8 +48,8 @@ export function getContextualPath(
 	activeCategory: string,
 	linkDomain?: string | null,
 ): { path: string; pathFull: string } {
-	const toolName = post.tool_name ?? post.slug;
-	const linkFull = post.url ?? linkDomain ?? `~/links/${post.slug}`;
+	const toolName = post.target ?? post.slug;
+	const linkFull = post.target ?? linkDomain ?? `~/links/${post.slug}`;
 
 	if (activeCategory === "tool" && post.type === "tool") {
 		return truncateDisplayPath(`./${toolName}`, `~/bin/${toolName}`);
@@ -78,7 +78,7 @@ export async function getPostMeta(post: Post): Promise<PostMeta> {
 
 	switch (post.type) {
 		case "tool": {
-			const toolName = post.tool_name ?? post.slug;
+			const toolName = post.target ?? post.slug;
 			return {
 				kind: "tool",
 				kindLabel: "bin",
@@ -107,7 +107,7 @@ export async function getPostMeta(post: Post): Promise<PostMeta> {
 			};
 		}
 		case "link": {
-			const info = await getLinkInfo(post.url || "");
+			const info = await getLinkInfo(post.target || "");
 			const linkDomain = info.domain ?? post.slug;
 			return {
 				kind: "link",

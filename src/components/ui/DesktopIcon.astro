@@ -15,6 +15,7 @@ const displayPath = getContextualPath(post, activeCategory, meta.linkDomain);
 
 <a
 	href={meta.href}
+	title={post.title}
 	{...meta.external ? { target: "_blank", rel: "noopener noreferrer" } : {}}
 	class:list={[
 		"os-desktop-icon",
@@ -22,7 +23,7 @@ const displayPath = getContextualPath(post, activeCategory, meta.linkDomain);
 		"group",
 		`os-desktop-icon--${meta.kind}`,
 	]}
-	data-search-text={`${post.title} ${post.description} ${post.tags?.join(" ") ?? ""}`.toLowerCase()}
+	data-search-text={post.title.toLowerCase()}
 >
 	<span class={`os-desktop-icon-kind os-desktop-icon-kind--${meta.kind}`}>
 		{meta.typeLabel}

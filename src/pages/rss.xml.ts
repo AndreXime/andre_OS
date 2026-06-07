@@ -3,12 +3,12 @@ import { getCollection } from "astro:content";
 import type { APIContext } from "astro";
 import type { Post } from "@/content.config";
 
-function getPostLink(post: Pick<Post, "type" | "slug" | "tool_name">): string | undefined {
+function getPostLink(post: Pick<Post, "type" | "slug" | "target">): string | undefined {
 	switch (post.type) {
 		case "note":
 			return `/post/${post.slug}`;
 		case "tool":
-			return post.tool_name ? `/app/${post.tool_name}` : undefined;
+			return post.target ? `/app/${post.target}` : undefined;
 		default:
 			return undefined;
 	}
@@ -31,7 +31,6 @@ export async function GET(context: APIContext) {
 
 			return {
 				title: entry.data.title,
-				description: entry.data.description,
 				pubDate: entry.data.date,
 				link,
 			};

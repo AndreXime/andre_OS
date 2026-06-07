@@ -3,9 +3,6 @@ id: 21
 slug: "sincronizar-estado-web-app-com-hash-na-url"
 type: note
 title: "Sincronizar estado entre dispositivos sem backend: hash na URL"
-description: "localStorage não cruza dispositivos. Comprimir JSON no fragmento da URL (#state=) transfere snapshot de estado sem servidor, sem query string e sem exportar arquivo."
-tags: ["Desenvolvimento Web","localStorage","TypeScript"]
-featured: false
 date: 2026-06-05
 ---
 
