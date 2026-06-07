@@ -15,6 +15,9 @@ const TOOL_ROUTES: Record<string, string> = {
 	imagem: "ImageTools",
 	cookingbook: "CookingBook",
 	receitas: "CookingBook",
+	rssreader: "RssReader",
+	rss: "RssReader",
+	feeds: "RssReader",
 };
 
 const CD_ROUTES: Record<string, string> = {

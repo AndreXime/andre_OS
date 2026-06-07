@@ -1,0 +1,59 @@
+.rss-reader {
+	--rss-accent: #6eb5ff;
+	--rss-accent-dim: color-mix(in srgb, var(--rss-accent) 30%, var(--background));
+}
+
+.rss-reader-feed {
+	border-color: var(--card-border);
+	transition:
+		border-color 0.2s ease,
+		background-color 0.2s ease,
+		transform 0.15s ease;
+}
+
+.rss-reader-feed:hover {
+	border-color: color-mix(in srgb, var(--rss-accent) 40%, var(--card-border));
+}
+
+.rss-reader-feed--active {
+	border-color: color-mix(in srgb, var(--primary) 55%, var(--card-border));
+	background: color-mix(in srgb, var(--primary) 8%, var(--card-bg));
+}
+
+.rss-reader-article {
+	border-color: var(--card-border);
+	transition:
+		border-color 0.2s ease,
+		box-shadow 0.2s ease,
+		transform 0.15s ease;
+}
+
+.rss-reader-article:hover {
+	border-color: color-mix(in srgb, var(--rss-accent) 35%, var(--card-border));
+	box-shadow: 0 6px 20px color-mix(in srgb, #000 30%, transparent);
+}
+
+@keyframes rss-fade-in {
+	from {
+		opacity: 0;
+		transform: translateY(6px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.rss-reader-panel {
+	animation: rss-fade-in 0.25s ease-out;
+}
+
+@media (max-width: 1023px) {
+	.rss-reader-layout[data-screen="articles"] .rss-reader-sidebar {
+		display: none;
+	}
+
+	.rss-reader-layout[data-screen="feeds"] .rss-reader-main {
+		display: none;
+	}
+}

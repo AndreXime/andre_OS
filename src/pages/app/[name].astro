@@ -9,6 +9,7 @@ import WeekPlanner from "../../tools/WeekPlanner/WeekPlanner";
 import FinancePlanner from "../../tools/FinancePlanner/FinancePlanner";
 import ImageTools from "../../tools/ImageTools/ImageTools";
 import CookingBook from "../../tools/CookingBook/CookingBook";
+import RssReader from "../../tools/RssReader/RssReader";
 import "../../tools/theme.css";
 
 export function getStaticPaths() {
@@ -20,6 +21,7 @@ export function getStaticPaths() {
 		"FinancePlanner",
 		"ImageTools",
 		"CookingBook",
+		"RssReader",
 	] as const;
 
 	return ToolNames.map((tool) => ({
@@ -56,6 +58,8 @@ const toolName = name ?? "";
 							return <ImageTools client:load />;
 						case "CookingBook":
 							return <CookingBook client:load />;
+						case "RssReader":
+							return <RssReader client:load />;
 						default:
 							return <div>Ferramenta não encontrada.</div>;
 					}
