@@ -1,6 +1,8 @@
 import { createJsonPersistentAtom } from "@/lib/toolStorage/persistentAtom";
 import type { ToolStorageEntry } from "@/lib/toolStorage/types";
 
+export type Screen = "list" | "detail" | "form";
+
 export interface Recipe {
 	readonly id: string;
 	readonly title: string;
@@ -60,16 +62,15 @@ export const cookingBookStorage: ToolStorageEntry = {
 export function displayTitle(recipe: Recipe): string {
 	const t = recipe.title.trim();
 	if (t !== "") return t;
-	const firstLine = recipe.body.split("\n").find((line) => line.trim() !== "")?.trim();
+	const firstLine = recipe.body
+		.split("\n")
+		.find((line) => line.trim() !== "")
+		?.trim();
 	if (firstLine) return firstLine.length > 80 ? `${firstLine.slice(0, 80)}…` : firstLine;
 	return "Sem título";
 }
 
-export function saveRecipe(input: {
-	readonly id?: string;
-	readonly title: string;
-	readonly body: string;
-}): string {
+export function saveRecipe(input: { readonly id?: string; readonly title: string; readonly body: string }): string {
 	const body = input.body;
 	if (body.trim() === "" && input.title.trim() === "") return "";
 
@@ -86,7 +87,9 @@ export function saveRecipe(input: {
 			createdAt: existing.createdAt,
 			updatedAt: now,
 		};
-		const recipes = [nextRecipe, ...state.recipes.filter((r) => r.id !== input.id)].sort((a, b) => b.updatedAt - a.updatedAt);
+		const recipes = [nextRecipe, ...state.recipes.filter((r) => r.id !== input.id)].sort(
+			(a, b) => b.updatedAt - a.updatedAt,
+		);
 		cookingBook$.set({ recipes });
 		return input.id;
 	}

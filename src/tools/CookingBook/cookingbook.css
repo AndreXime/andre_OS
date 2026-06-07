@@ -36,3 +36,14 @@
 .cooking-book-panel {
 	animation: cb-fade-in 0.25s ease-out;
 }
+
+@media (max-width: 1023px) {
+	.cooking-book-layout[data-screen="detail"] .cooking-book-list,
+	.cooking-book-layout[data-screen="form"] .cooking-book-list {
+		display: none;
+	}
+
+	.cooking-book-layout[data-screen="list"] .cooking-book-main {
+		display: none;
+	}
+}
