@@ -1,72 +1,99 @@
 Aja como redator técnico de engenharia de software. Gere um post de blog em Markdown pronto para publicação.
 
+## Entrada
+
+- Tema: {{TEMA}}
+
+Público-alvo fixo: desenvolvedores em geral.
+
+Defina você o ângulo do post a partir do tema. Use `date` com a data de hoje (YYYY-MM-DD).
+
 ## Formato de saída
 
 O conteúdo final deve ser um arquivo .md completo com frontmatter YAML válido seguido do corpo em Markdown.
-
-### Se você tem acesso ao repositório (agente, IDE, CLI)
 
 Não responda o post no chat. Escreva o arquivo diretamente em:
 
 `src/content/posts/notes/<slug>.md`
 
 Antes de escrever:
-- Consulte os posts existentes em `src/content/posts/` para obter o próximo `id` disponível (maior id + 1)
+- Obtenha o próximo `id` com: `grep -rh '^id:' src/content/posts/ | sort -t: -k2 -n | tail -1`
+- Use maior id + 1. Nunca reutilize id existente.
 - Use o `slug` como nome do arquivo
 - Confirme no chat apenas o caminho do arquivo criado e um resumo de uma linha
-
-### Se você é uma IA de chat sem acesso ao repositório
-
-Retorne o arquivo completo dentro de um único bloco de código markdown (```markdown ... ```), sem texto antes ou depois. Isso evita que a formatação do chat quebre headings, listas e frontmatter.
-
-Não divida a resposta em múltiplos blocos. Não explique o conteúdo fora do bloco.
 
 ### Estrutura do arquivo
 
 ---
-id: <próximo id disponível; se não souber, use placeholder NEXT_ID>
+id: <próximo id disponível>
 slug: "<kebab-case sem acentos>"
 type: note
 title: "<título técnico, curto e chamativo>"
-description: "<até 160 caracteres; assertivo; resume o valor técnico>"
-tags: ["Tag1","Tag2"]
-featured: false
 date: <YYYY-MM-DD>
 ---
 
-Corpo em Markdown logo após o frontmatter.
+<linha em branco>
+
+Corpo em Markdown.
+
+O frontmatter segue o schema do projeto: apenas `id`, `slug`, `type`, `title` e `date`. Não adicione campos extras.
 
 ## Metadados
 
-- title: técnico, direto, ideal para card do blog
-- description: meta-description SEO, máx. 160 caracteres, sem clickbait vazio
-- slug: derivado do título, kebab-case, sem acentos
-- tags: 2 a 4 tags; siglas preservadas (TypeScript, CI/CD)
+- title: sentence case com siglas preservadas (ex.: "Wayland, X11 e Qt: mapa das camadas do desktop Linux"). Técnico, direto, ideal para card do blog. Evite Title Case estilo marketing.
+- slug: derivado do título, kebab-case, sem acentos, descritivo mas não excessivamente longo
+- date: data de hoje, ISO 8601 (YYYY-MM-DD)
+
+## Referência de estilo
+
+Leia um ou dois posts recentes em `src/content/posts/notes/` antes de escrever. Copie tom e densidade, não o esqueleto seção por seção.
 
 ## Estilo e tom
 
 - Idioma: português do Brasil
-- Tom: pragmático, denso, sem "encher linguiça"
-- Frases curtas; parágrafos enxutos
+- Termos técnicos consagrados em inglês permanecem em inglês quando naturais (**Wayland**, **display server**)
+- Tom: opinião de quem já quebou a cara com a ferramenta, não resumo de documentação
+- Varie tamanho de parágrafo e de seção; evite simetria (três blocos iguais, listas sempre com três itens)
+- **Negrito** só no termo-chave da frase, no máximo um ou dois por parágrafo
 - Proibido: saudações ("Olá", "E aí galera"), tom de influencer, seções "Conclusão", "Resumo" ou "Considerações Finais"
 - Proibido: travessão longo (—); use hífen ou reestruture a frase
 - Proibido: CTAs de engajamento no final
 
+## Evitar voz de IA
+
+- Não abra com definição de dicionário ("X é...") nem com "Neste post vamos..."
+- Evite frases-molde: "na prática", "vale destacar", "é importante ressaltar", "em resumo", "no fim das contas", "cabe mencionar", "dito isso"
+- Evite padrão "Isso não é A, é B" repetido ou fechamentos tipo "O ganho não é X, é Y"
+- Não empilhe "trade-off", "paradigma", "ecossistema", "robusto", "solução ideal" no mesmo texto
+- Prefira exemplo concreto (comando, erro real, decisão de projeto) a abstração genérica
+- Uma opinião clara vale mais que balancear todos os lados por educação
+- Se usar tabela ou código, fine; se o tema não pedir, não force só para "completar" o formato
+
 ## Estrutura do conteúdo
 
-1. Primeiro parágrafo: entre direto no problema, tese ou trade-off técnico
-2. Desenvolva com seções `###` quando fizer sentido
-3. Use **negrito** para termos, ferramentas e conceitos centrais
-4. Inclua blocos de código (yaml, bash, text) só quando agregarem implementação ou arquitetura
-5. Termine no último insight técnico; não feche com resumo
+- Alvo: 500–900 palavras; corte se estiver repetindo
+- Um argumento central; recorte amplo em vez de enciclopédia
+- Sem H2 (`##`); use `###` só quando a seção realmente muda de assunto
+- Linha em branco entre frontmatter e corpo
+- Abra com parágrafo corrido (não com heading)
+- Tabelas e blocos de código só quando compararem opções ou mostrarem pipeline/comando real
+- Termine no último insight técnico; não feche com resumo nem moral da história
 
 ## Qualidade técnica
 
 - Afirmações precisas; evite generalizações vagas
-- Não invente links, APIs ou versões
+- Links externos: só se tiver certeza da URL; prefira mencionar ferramenta ou doc pelo nome, sem link
+- Versões: cite só se souber (ex.: "Qt 6", "GNOME 40+"); senão fale em termos genéricos ("versões recentes")
+- Comandos e snippets: plausíveis no ambiente atual; teste mentalmente antes de incluir
 - Snippets mínimos e plausíveis, não tutorial genérico
-- Priorize arquitetura, trade-offs e decisões de engenharia
+- Priorize decisão de engenharia e contexto real, não lista de features
 
-## Tema
+## Checklist antes de confirmar
 
-{{TEMA}}
+- [ ] `id` único e numérico
+- [ ] `slug` kebab-case, sem acentos, alinhado ao título
+- [ ] Frontmatter YAML válido, sem campos extras
+- [ ] Nenhum travessão longo (—)
+- [ ] Sem "Conclusão", "Resumo" ou CTA final
+- [ ] Primeiro bloco do corpo é parágrafo, não heading
+- [ ] Texto não parece template (negrito excessivo, frases-molde, seções simétricas demais)

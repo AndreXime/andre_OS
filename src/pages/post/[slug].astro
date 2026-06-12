@@ -21,13 +21,21 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 
+function escapeHtml(text: string): string {
+	return text
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;")
+		.replace(/"/g, "&quot;");
+}
+
 const renderer = {
 	link({ href, title, text }: Tokens.Link): string {
 		return `<a href="${href}" title="${title ?? ""}" target="_blank" rel="noopener noreferrer">${text}</a>`;
 	},
 	code({ text, lang }: Tokens.Code): string {
 		const languageClass = lang ? `language-${lang}` : "language-text";
-		return `<pre><code class="${languageClass}">${text}</code></pre>`;
+		return `<pre><code class="${languageClass}">${escapeHtml(text)}</code></pre>`;
 	},
 };
 

@@ -2,19 +2,48 @@
 id: 9
 slug: "a-falacia-da-api-fullstack-use-hono-e-nestjs"
 type: note
-title: "A Falácia da API Fullstack: Use Hono e NestJS"
+title: "A falácia da API fullstack: use Hono e NestJS"
 date: 2026-03-01
 ---
-O desenvolvimento de APIs em frameworks fullstack como Next.js gera dívida técnica imediata. Route Handlers e Server Actions acoplam regras de negócio à camada de apresentação. Quando o projeto cresce e a mesma API precisa alimentar um aplicativo mobile ou outro microsserviço, o retrabalho é inevitável. A equipe é forçada a extrair a lógica, lidar com dependências emaranhadas e reescrever o backend em um ambiente isolado.
 
-Frameworks focados em SSR carecem de primitivas essenciais para o desenvolvimento de APIs densas. Injeção de dependência nativa, validação padronizada de DTOs e pipelines de interceptação são rudimentares ou inexistentes. Além disso, a arquitetura fica frequentemente refém de cold starts em ambientes serverless e vendor lock-in de plataformas de hospedagem focadas em frontend.
+Route Handler no Next.js parece backend de verdade até você precisar da mesma regra de negócio no app Flutter. Aí descobre que validação de pedido vive ao lado de layout JSX, teste de integração mocka `next/headers` e deploy de API amarra na mesma pipeline de preview do front. Extrair depois custa sprint inteiro: mover DTO, desfazer import circular com componente de UI, recriar auth que dependia de cookie do domínio do site.
 
-O desenvolvimento de backend em TypeScript exige apenas duas ferramentas para cobrir qualquer cenário: Hono para performance na borda e NestJS para arquiteturas complexas.
+Server Actions pioram o acoplamento. Função callable do client vira superfície de API implícita, difícil de versionar e documentar para consumidor externo. Mobile, parceiro B2B ou worker em fila não chamam Server Action; precisam de HTTP estável com contrato explícito.
 
-**Hono: Borda e Microsserviços Enxutos**
-O Hono opera sobre Web Standard APIs e possui zero dependências. O roteamento via RegExp Router entrega performance máxima. É a ferramenta exata para BFFs (Backend for Frontend), gateways ou microsserviços focados em alta concorrência e baixa latência. Por não depender da API nativa do Node.js, ele roda de forma nativa e otimizada em Cloudflare Workers, Bun e Deno. O código é focado puramente em requests e responses rápidos.
+### Por que fullstack falha como API
 
-**NestJS: Domínios Complexos e Escala**
-Quando o domínio exige regras de negócio pesadas, o Hono perde eficácia devido à falta de convenções estruturais fortes. O NestJS resolve a desordem arquitetural implementando Injeção de Dependência, princípios SOLID e modularização estrita. Ele obriga a separação clara entre Controllers, Services, Guards e Pipes. Para monólitos corporativos ou sistemas orientados a eventos (com suporte nativo a gRPC, RabbitMQ e Kafka), o NestJS garante que o código escale de forma previsível, permitindo que múltiplos times trabalhem no mesmo repositório sem atrito.
+Framework de SSR nasceu para HTML. DI nativa, pipe de validação global, guard por role, módulo de fila: tudo existe como lib solta ou não existe. Time reinventa estrutura a cada projeto. Cold start em serverless pesa quando rota de API compartilha bundle com render de página. Hospedar na plataforma de front traz lock-in que backend puro evitaria.
 
-Manter a API isolada do frontend em um repositório dedicado com Hono ou NestJS garante que o ecossistema backend utilize as ferramentas corretas para rede, banco de dados e arquitetura, sem herdar as limitações de um framework focado em renderização de UI.
+Separar API do repo de UI não é purismo. É permitir deploy, escala e contrato independentes.
+
+### Hono: borda e microsserviços enxutos
+
+Hono usa Web Standard APIs (`Request`, `Response`, `fetch`). Roda em Cloudflare Workers, Bun, Deno e Node sem reescrever handler. RegExp Router evita árvore de middleware pesada; latência importa em BFF na borda e gateway na frente de serviço lento.
+
+```typescript
+import { Hono } from "hono";
+
+const app = new Hono();
+
+app.get("/health", (c) => c.json({ ok: true }));
+
+app.get("/users/:id", async (c) => {
+  const id = c.req.param("id");
+  const user = await fetchUser(id);
+  return c.json(user);
+});
+
+export default app;
+```
+
+Caso típico: front Next consome BFF Hono no Worker que agrega três APIs internas, cacheia resposta 30 s e esconde token de serviço. Binário pequeno, boot rápido, sem grafo de módulo Nest. Quando domínio cabe em dezenas de rotas e regra cabe na cabeça de uma pessoa, Hono segura.
+
+### NestJS: domínios complexos
+
+Regra de pedido com desconto por segmento, estoque reservado, antifraude e fila de email não vive bem em arquivo `route.ts` de 400 linhas. NestJS impõe módulo, service, controller, guard, pipe. DI resolve grafo no bootstrap; teste troca repository por mock via `@Module`, não refactor em cascata.
+
+Monólito com cinco squads, fila RabbitMQ, cron de reconciliação e gRPC para serviço legado: convenção Nest evita cada time inventar pasta `utils/` com lógica de negócio. `@nestjs/microservices` e `@nestjs/schedule` entram no mesmo padrão de handler HTTP.
+
+Hono e NestJS não competem no mesmo slot. Borda enxuta e BFF: Hono. Core de negócio que cresce por anos: NestJS. Repositório dedicado, OpenAPI publicado, CI só de backend. Front consome HTTP como qualquer outro client, sem importar tipo de `app/actions/`.
+
+Manter API dentro do Next só fecha enquanto único consumidor é o site na mesma base de código. Segundo consumidor aparece; dívida cobra juros.

@@ -2,35 +2,37 @@
 id: 18
 slug: "pipeline-hibrido-biome-e-eslint-para-seguranca-e-performance"
 type: note
-title: "Pipeline Híbrido: Biome e ESLint para Segurança e Performance"
+title: "Pipeline híbrido: Biome e ESLint para segurança e performance"
 date: 2026-05-29
 ---
-Separar linters por branch gera inconsistência e quebra pipelines em merges críticos. A arquitetura mais eficiente é a **Abordagem Híbrida por Gatilho (Trigger)**. Em vez de separar por branch, a divisão ocorre pelo momento do pipeline. O ESLint, focado estritamente em segurança e tipagem, roda antes do código entrar na branch `dev`, mas nunca a cada commit local.
 
-O fluxo de trabalho funciona assim:
+Time rodava ESLint completo no pre-commit. Commit de três linhas esperava 25 segundos. Dev desligava hook com `--no-verify`; regra de segurança virou sugestão. Rodar só Biome local e ESLint pesado no CI quebra o outro extremo: PR verde com `any` escapando porque subset do CI não espelhava o que importava.
+
+Divisão que funcionou: ferramenta rápida no caminho quente (save, commit), análise type-aware e SAST no PR. Não por branch, por gatilho do pipeline.
 
 ```text
-[Desenvolvedor] ──(Pre-commit / IDE)──> Biome (Lint Rápido + Formatação)
-       │
-   (Push PR para 'dev')
-       ▼
-[CI/CD da Feature] ───> 1. Biome (Garante estilo/regras locais)
-                        2. ESLint Security (Apenas regras Type-Aware/SAST)
-
+[Dev] -> Biome (IDE + pre-commit)
+          |
+     (push PR)
+          v
+[CI] -> Biome ci -> ESLint (types + security)
 ```
 
-### Configuração Prática
+### Local: Biome no hook
 
-**Localmente (IDE + Git Hooks):** Utilize Husky ou Lefthook para executar exclusivamente o Biome. O desenvolvedor obtém feedback em milissegundos ao salvar o arquivo e antes do `git commit`.
+Biome formata e lint em milissegundos. Husky ou Lefthook chamam `biome check --write` ou `biome ci` antes do commit. Regra de estilo, import order, `noUnusedVariables` básico: feedback instantâneo. Dev não aprende a ignorar hook.
 
-**No CI (Pull Requests):** Execute o Biome para garantir que as regras locais não foram ignoradas e, em seguida, o ESLint configurado com um subset estrito. O ESLint deve validar apenas as regras que o Biome não cobre: Type-Aware e Security.
+ESLint completo com `parserOptions.project` no pre-commit punir quem commita often. Guarda ESLint para CI; local fica utilizável.
 
-Se o ESLint demorar 40 segundos, o fluxo não é impactado. O desenvolvedor já abriu o PR e não fica travado no terminal. Se houver falha de segurança, o pipeline quebra no PR da feature, protegendo a `dev` e a `main`.
+### CI: Biome + subset ESLint
 
-Para mitigar o tempo de execução do ESLint no CI, o uso de cache é obrigatório. Exemplo de configuração no GitHub Actions:
+PR roda `biome ci` primeiro. Se alguém desabilitou hook, estilo inconsistente quebra cedo. Depois ESLint com config separada (`eslint.ci.config.js` ou `--config`) carregando só plugins que Biome não substitui: type-aware TypeScript e segurança.
+
+40 segundos no CI não travam fluxo: quem pushou já seguiu em frente. Falha de `no-floating-promises` ou `detect-object-injection` bloqueia merge antes de `main`, que é onde barreira deve estar.
+
+Cache é obrigatório em repo grande:
 
 ```yaml
-# Exemplo de CI no GitHub Actions para Pull Requests
 - name: Cache ESLint
   uses: actions/cache@v4
   with:
@@ -40,35 +42,26 @@ Para mitigar o tempo de execução do ESLint no CI, o uso de cache é obrigatór
 - name: Run Fast Lint (Biome)
   run: npx @biomejs/biome ci .
 
-- name: Run Deep Lint (ESLint - Security/Types)
-  run: npx eslint . --cache --cache-location .eslintcache
-
+- name: Run Deep Lint (ESLint)
+  run: npx eslint . --cache --cache-location .eslintcache -c eslint.ci.config.js
 ```
 
-### Setup de Elite para o ESLint no CI
+Segundo job sem cache em monorepo TypeScript vira gargalo de fila no GitHub Actions.
 
-Para que o ESLint cumpra seu papel como barreira de segurança e arquitetura, a configuração deve carregar plugins específicos.
+### Plugins que valem no subset do CI
 
-#### 1. Core Técnico (Type-Aware)
+Biome cobre formatação e parte do lint estilo. ESLint no CI foca o que precisa de grafo de tipos ou heurística de segurança.
 
-A base do linter em projetos TypeScript exige análise de tipos.
+`@typescript-eslint` com `project: true` pega Promise flutuando (`no-floating-promises`), `await` em valor não thenable e propagação de `any` silenciosa. Bug que só estoura em produção sob carga.
 
-* **`@typescript-eslint/eslint-plugin`:** O valor real está nas regras atreladas ao `parserOptions.project`. Ele impede vazamento de Promises em background (`no-floating-promises`), bloqueia o uso de `await` sem efeito prático (`await-thenable`) e proíbe atribuições inseguras derivadas de `any`.
+`eslint-plugin-security` flagra `require(variable)`, regex catastrophic backtracking e `eval`. `eslint-plugin-no-unsanitized` exige sanitização antes de `innerHTML` em código isomórfico que roda no server e no client.
 
-#### 2. Segurança e Auditoria (SAST)
+`eslint-plugin-import-x` com `import/no-cycle` evita ciclo A→B→A que vira `undefined` em runtime no Node. `no-unused-modules` acha export morto antes de virar dívida. `eslint-plugin-sonarjs` aponta função com complexidade cognitiva 40+ que ninguém revisa mais.
 
-Foco em blindagem contra vulnerabilidades.
+`eslint-plugin-unicorn` é opcional no CI se Biome já cobre modern syntax; útil para `replaceAll`, preferência por `Array#at` e padrões que Biome ainda não espelha.
 
-* **`eslint-plugin-security`:** Mapeia falhas comuns no Node.js. Bloqueia variáveis dinâmicas em `require()` (prevenindo injeção de código), sinaliza regex vulneráveis a travamento de CPU (ReDoS) e barra o uso de `eval()`.
-* **`eslint-plugin-no-unsanitized`:** Essencial em projetos que manipulam DOM ou geram HTML dinâmico. Força a sanitização de inputs de usuários antes de injeções em funções como `innerHTML`, bloqueando ataques de XSS.
+### Manutenção
 
-#### 3. Arquitetura e Grafo de Dependências
+Duas configs exigem disciplina: mudança de regra documentada em qual camada vive. Reunião de onboarding explica "Biome no commit, ESLint no PR". Sem isso, dev roda ESLint local achando que CI repete e perde tempo debugando diferença.
 
-Evita bugs silenciosos de runtime.
-
-* **`eslint-plugin-import-x`:** Fork otimizado do antigo `eslint-plugin-import`. A regra `import/no-cycle` é crítica para impedir dependências circulares que resolvem como `undefined` em runtime no Node. Ele também detecta arquivos e exports mortos (`no-unused-modules`).
-* **`eslint-plugin-sonarjs`:** Analisa complexidade estrutural. Detecta blocos de código duplicados em condicionais isoladas e alerta sobre funções com complexidade cognitiva excessiva.
-
-#### 4. Otimização de Código
-
-* **`eslint-plugin-unicorn`:** Aplica padrões rigorosos de JavaScript moderno. Força a substituição de regex globais por `replaceall`, corrige o uso ineficiente de métodos de Array e elimina redundâncias de sintaxe.
+Híbrido não é duplicar tudo duas vezes. É Biome como padrão de estilo no caminho quente e ESLint como auditor lento no portão de merge. Hook rápido vira hábito; hook lento vira `--no-verify`.

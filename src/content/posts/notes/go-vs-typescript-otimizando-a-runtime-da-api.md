@@ -2,21 +2,43 @@
 id: 6
 slug: "go-vs-typescript-otimizando-a-runtime-da-api"
 type: note
-title: "Go vs TypeScript: Otimizando a Runtime da API"
+title: "Go vs TypeScript: otimizando a runtime da API"
 date: 2026-02-04
 ---
-### Trade-offs de Execução
 
-A decisão entre TypeScript e Go reside no modelo de execução: o *Event Loop* single-threaded do Node.js versus o paralelismo nativo do Go. Enquanto o TypeScript depende da engine V8 e interpretação JIT, o Go compila para binários estáticos, eliminando a máquina virtual. Isso torna o Go inerentemente mais eficiente no uso de hardware, enquanto o Node.js prioriza a facilidade de I/O assíncrono.
+Migrei serviço de thumbnail de Node para Go no mesmo hardware. CPU caiu de 80% para 25% sob carga igual. Não era código ruim em TypeScript: decode PNG, resize, encode WebP bloqueia event loop. Uma requisição pesada atrasa todas as outras no processo single-threaded. Go distribuiu trabalho em goroutines e usou núcleos que Node deixava ociosos.
 
-### TypeScript: Agilidade e I/O Bound
+Escolher linguagem da API é escolher modelo de execução. V8 com event loop e JIT versus binário estático com scheduler nativo. Métrica manda mais que preferência de sintaxe.
 
-O TypeScript é a escolha lógica quando o gargalo é externo (rede ou banco de dados). Em arquiteturas de microsserviços que atuam como orquestradores, a latência de execução do JS é irrelevante comparada ao tempo de resposta de I/O. A capacidade de compartilhar tipagem com o front-end e a manipulação nativa de JSON aceleram drasticamente o desenvolvimento de produtos e lógicas de negócio complexas que mudam com frequência.
+### Modelo de execução
 
-### Go: Processamento Bruto e Concorrência
+Node brilha quando thread espera rede ou disco. Go brilha quando thread calcula. TypeScript compila para JS interpretado/JIT; Go compila para binário sem VM no caminho quente. Memória por conexão WebSocket aberta costuma ser menor em Go; milhares de sockets no mesmo pod viram problema de custo em Node antes de virar problema de código.
 
-Go se torna obrigatório quando a aplicação é CPU Bound ou exige alta densidade de conexões. Tarefas como criptografia, compressão e stream de dados bloqueiam o *Event Loop* do Node, mas são distribuídas eficientemente em múltiplos núcleos pelas *Goroutines* do Go. Além disso, o Go consome uma fração da memória para manter milhares de conexões WebSocket abertas e oferece "cold starts" quase instantâneos em ambientes Serverless.
+Isso não torna Go "melhor". Torna Go adequado quando CPU ou concorrência densa é o gargalo medido, não chute.
 
-### O Momento da Decisão
+### TypeScript: I/O bound e entrega rápida
 
-Monitore suas métricas: se o consumo de CPU é alto apenas para serialização de dados ou gerenciamento de conexões, você atingiu o limite do Node.js. Use TypeScript para entregar funcionalidades rápidas e CRUDs; migre para Go serviços de infraestrutura, proxies e workers que exigem latência estável (P99) e eficiência de custo em escala.
+API que consulta Postgres, chama Stripe e monta JSON raramente morre na runtime. Latência P99 segue query lenta ou API externa. Tipos compartilhados com front (`zod` ou `tRPC` no monorepo) aceleram feature que muda toda semana. CRUD, webhook handler, orquestrador de fila leve: Node entrega rápido, contrata dev com stack conhecida, debug com ferramentas maduras.
+
+Microsserviço que só encadeia HTTP e publica evento não precisa de Go por reputação. Precisa de observabilidade e query indexada.
+
+### Go: CPU bound e muitas conexões
+
+Proxy WebSocket com 20k clientes, worker de compressão, parser de log em stream, serviço de auth com bcrypt por requisição: event loop sofre. Goroutine barata permite um processo servir conexão longa sem thread OS por client. Cold start de binário pequeno ajuda em Lambda e Cloud Run quando função acorda frequente.
+
+Criptografia, serialização pesada, transformação de mídia: perfil clássico de extração para serviço Go enquanto resto do produto fica em TypeScript.
+
+### Sinais para migrar (ou não)
+
+Olhe métricas antes de reescrever. CPU alta com I/O idle aponta compute no Node. Latência P99 subindo com throughput de conexões simultâneas aponta pressão no event loop. Memória linear com contagem de socket idem.
+
+| Sintoma | Provável gargalo | Caminho |
+|---------|------------------|---------|
+| CPU 70%+ com DB wait baixo | Compute JS | Extrair hot path para Go |
+| P99 domina query externa | I/O | Otimizar SQL/contrato, ficar em TS |
+| RAM sobe com WebSockets | Conexões | Go ou separar hub de conexão |
+| Time só TS, CRUD estável | Organizacional | Migrar só se métrica exigir |
+
+Reescrever tudo em Go por moda troca velocidade de produto por eficiência que talvez nunca use. Extrair um serviço quando flamegraph ou APM mostrar função quente: abordagem que já pagou em produção.
+
+TypeScript para entregar e iterar. Go para trecho que medidor apontou como limite de runtime.
