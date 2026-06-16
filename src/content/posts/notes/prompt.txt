@@ -17,15 +17,12 @@ Não responda o post no chat. Escreva o arquivo diretamente em:
 `src/content/posts/notes/<slug>.md`
 
 Antes de escrever:
-- Obtenha o próximo `id` com: `grep -rh '^id:' src/content/posts/ | sort -t: -k2 -n | tail -1`
-- Use maior id + 1. Nunca reutilize id existente.
 - Use o `slug` como nome do arquivo
 - Confirme no chat apenas o caminho do arquivo criado e um resumo de uma linha
 
 ### Estrutura do arquivo
 
 ---
-id: <próximo id disponível>
 slug: "<kebab-case sem acentos>"
 type: note
 title: "<título técnico, curto e chamativo>"
@@ -36,7 +33,7 @@ date: <YYYY-MM-DD>
 
 Corpo em Markdown.
 
-O frontmatter segue o schema do projeto: apenas `id`, `slug`, `type`, `title` e `date`. Não adicione campos extras.
+O frontmatter segue o schema do projeto: apenas `slug`, `type`, `title` e `date`. Não adicione campos extras.
 
 ## Metadados
 
@@ -90,7 +87,6 @@ Leia um ou dois posts recentes em `src/content/posts/notes/` antes de escrever. 
 
 ## Checklist antes de confirmar
 
-- [ ] `id` único e numérico
 - [ ] `slug` kebab-case, sem acentos, alinhado ao título
 - [ ] Frontmatter YAML válido, sem campos extras
 - [ ] Nenhum travessão longo (—)

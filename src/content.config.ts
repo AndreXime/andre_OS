@@ -3,7 +3,6 @@ import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 
 export interface Post {
-	id: number;
 	slug: string;
 	type: "tool" | "note" | "link";
 	title: string;
@@ -15,7 +14,6 @@ export interface Post {
 const posts = defineCollection({
 	loader: glob({ pattern: "**/*.md", base: "./src/content/posts" }),
 	schema: z.object({
-		id: z.number(),
 		title: z.string(),
 		slug: z.string(),
 		type: z.enum(["tool", "note", "link"]),

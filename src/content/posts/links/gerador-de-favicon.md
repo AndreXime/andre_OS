@@ -1,5 +1,4 @@
 ---
-id: 10
 slug: "gerador-de-favicon"
 type: link
 title: "Gerador de favicon"

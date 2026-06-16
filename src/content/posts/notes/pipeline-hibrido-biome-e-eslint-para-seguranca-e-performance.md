@@ -1,5 +1,4 @@
 ---
-id: 18
 slug: "pipeline-hibrido-biome-e-eslint-para-seguranca-e-performance"
 type: note
 title: "Pipeline híbrido: Biome e ESLint para segurança e performance"

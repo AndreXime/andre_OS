@@ -1,5 +1,4 @@
 ---
-id: 7
 slug: "criador-de-curriculos"
 type: tool
 title: "Criador de curriculos"

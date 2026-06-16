@@ -1,5 +1,4 @@
 ---
-id: 3
 slug: "imagem-para-svg"
 type: link
 title: "Imagem para SVG"

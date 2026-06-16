@@ -1,5 +1,4 @@
 ---
-id: 2
 slug: "editor-de-codigo-web"
 type: tool
 title: "Editor de código web"

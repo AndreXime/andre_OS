@@ -1,5 +1,4 @@
 ---
-id: 24
 slug: "ssr-completo-ou-skeleton-decida-pelo-dado"
 type: note
 title: "SSR completo ou skeleton na tela: decida pelo dado, não pelo framework"

@@ -1,5 +1,4 @@
 ---
-id: 8
 slug: "astro-vs-nextjs-o-custo-da-preguica-no-vibe-coding"
 type: note
 title: "Astro vs Next.js: o custo da preguiça no vibe coding"

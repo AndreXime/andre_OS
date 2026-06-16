@@ -1,5 +1,4 @@
 ---
-id: 12
 slug: "design-prompts"
 type: link
 title: "Design Prompts"

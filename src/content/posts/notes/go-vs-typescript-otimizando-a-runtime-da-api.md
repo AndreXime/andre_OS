@@ -1,5 +1,4 @@
 ---
-id: 6
 slug: "go-vs-typescript-otimizando-a-runtime-da-api"
 type: note
 title: "Go vs TypeScript: otimizando a runtime da API"

@@ -1,5 +1,4 @@
 ---
-id: 17
 slug: "livro-de-receitas"
 type: tool
 title: "Livro de receitas"

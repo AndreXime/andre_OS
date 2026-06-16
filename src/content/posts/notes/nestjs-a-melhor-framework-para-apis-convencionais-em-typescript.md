@@ -1,5 +1,4 @@
 ---
-id: 19
 slug: "nestjs-a-melhor-framework-para-apis-convencionais-em-typescript"
 type: note
 title: "NestJS: o melhor framework para APIs convencionais em TypeScript"

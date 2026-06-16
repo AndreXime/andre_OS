@@ -1,5 +1,4 @@
 ---
-id: 23
 slug: "wayland-x11-gtk-qt-mapas-do-desktop-linux"
 type: note
 title: "Wayland, X11, GTK e Qt: mapa das camadas do desktop Linux"

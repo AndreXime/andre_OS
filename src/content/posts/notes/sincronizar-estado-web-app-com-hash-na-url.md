@@ -1,5 +1,4 @@
 ---
-id: 21
 slug: "sincronizar-estado-web-app-com-hash-na-url"
 type: note
 title: "Sincronizar estado entre dispositivos sem backend: hash na URL"

@@ -1,5 +1,4 @@
 ---
-id: 9
 slug: "a-falacia-da-api-fullstack-use-hono-e-nestjs"
 type: note
 title: "A falácia da API fullstack: use Hono e NestJS"

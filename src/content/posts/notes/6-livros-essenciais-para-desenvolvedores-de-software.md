@@ -1,5 +1,4 @@
 ---
-id: 20
 slug: "6-livros-essenciais-para-desenvolvedores-de-software"
 type: note
 title: "6 livros essenciais para desenvolvedores de software"
