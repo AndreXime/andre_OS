@@ -6,6 +6,7 @@ import { formatDate, truncateMiddle } from "@/lib/utils";
 import { getCollection } from "astro:content";
 import { ChevronLeft } from "lucide-react";
 import { marked, type Tokens } from "marked";
+import "@/styles/post-typography.css";
 
 export async function getStaticPaths() {
 	const entries = await getCollection(
@@ -85,18 +86,14 @@ const windowTitle = truncateMiddle(windowTitleFull, 44);
 					}
 				</div>
 
-				<div
-					class="p-6 md:p-8 prose prose-invert prose-zinc prose-pre:text-base max-w-none"
-				>
-					{
-						htmlContent && (
-							<div
-								class="text-[var(--color-muted)] leading-relaxed content-container [&>*:first-child]:mt-0"
-								set:html={htmlContent}
-							/>
-						)
-					}
-				</div>
+				{
+					htmlContent && (
+						<div
+							class="p-6 md:p-8 content-container"
+							set:html={htmlContent}
+						/>
+					)
+				}
 			</WindowFrame>
 		</div>
 	</ShellLayout>
