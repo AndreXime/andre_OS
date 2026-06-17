@@ -4,7 +4,6 @@ export const ACCEPTED_FORMATS_LABEL = "PNG, JPEG, WebP, AVIF";
 
 export const MAX_FILE_BYTES = 25 * 1024 * 1024;
 export const MAX_DIMENSION = 8192;
-export const WORKER_IDLE_MS = 5 * 60 * 1000;
 
 export const BG_REMOVAL_MODEL = "isnet_quint8" as const;
 

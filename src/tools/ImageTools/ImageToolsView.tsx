@@ -78,7 +78,7 @@ export default function ImageToolsView() {
 	const modelPreloadProgress = useStore($modelPreloadProgress);
 
 	const { convert, compress } = useImageProcessor();
-	const { removeBackground, cancelBgRemoval, retryPreload } = useBgRemoval();
+	const { removeBackground, cancelBgRemoval, retryPreload } = useBgRemoval(activeOperation === "bg-removal");
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const [resultAnnouncement, setResultAnnouncement] = useState("");
 
