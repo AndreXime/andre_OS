@@ -1,7 +1,10 @@
 const TOOL_ROUTES: Record<string, string> = {
-	webcodeeditor: "WebCodeEditor",
-	editor: "WebCodeEditor",
-	codigo: "WebCodeEditor",
+	scratchpad: "ScratchPad",
+	bloco: "ScratchPad",
+	notepad: "ScratchPad",
+	notasapp: "ScratchPad",
+	webcodeeditor: "ScratchPad",
+	editor: "ScratchPad",
 	everydayutils: "EveryDayUtils",
 	utils: "EveryDayUtils",
 	cvbuilder: "CVBuilder",

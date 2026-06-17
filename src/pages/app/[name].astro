@@ -2,7 +2,7 @@
 import DocumentLayout from "../../components/layout/DocumentLayout.astro";
 import ShellLayout from "@/components/layout/ShellLayout.astro";
 import { getStatusPath } from "@/lib/osPaths";
-import WebCodeEditor from "../../tools/WebEditor/WebEditor";
+import ScratchPad from "../../tools/ScratchPad/ScratchPad";
 import EveryDayUtils from "../../tools/EveryDayUtils/UtilsApp";
 import CVBuilder from "../../tools/CVBuilder/CVBuilder";
 import WeekPlanner from "../../tools/WeekPlanner/WeekPlanner";
@@ -14,7 +14,7 @@ import "../../tools/theme.css";
 
 export function getStaticPaths() {
 	const ToolNames = [
-		"WebCodeEditor",
+		"ScratchPad",
 		"EveryDayUtils",
 		"CVBuilder",
 		"WeekPlanner",
@@ -44,8 +44,8 @@ const toolName = name ?? "";
 			{
 				(() => {
 					switch (name) {
-						case "WebCodeEditor":
-							return <WebCodeEditor client:load />;
+						case "ScratchPad":
+							return <ScratchPad client:load />;
 						case "EveryDayUtils":
 							return <EveryDayUtils client:load />;
 						case "CVBuilder":
