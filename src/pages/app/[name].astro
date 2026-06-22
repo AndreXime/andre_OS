@@ -7,6 +7,7 @@ import EveryDayUtils from "../../tools/EveryDayUtils/UtilsApp";
 import CVBuilder from "../../tools/CVBuilder/CVBuilder";
 import WeekPlanner from "../../tools/WeekPlanner/WeekPlanner";
 import FinancePlanner from "../../tools/FinancePlanner/FinancePlanner";
+import FirePlanner from "../../tools/FirePlanner/FirePlanner";
 import ImageTools from "../../tools/ImageTools/ImageTools";
 import CookingBook from "../../tools/CookingBook/CookingBook";
 import RssReader from "../../tools/RssReader/RssReader";
@@ -19,6 +20,7 @@ export function getStaticPaths() {
 		"CVBuilder",
 		"WeekPlanner",
 		"FinancePlanner",
+		"FirePlanner",
 		"ImageTools",
 		"CookingBook",
 		"RssReader",
@@ -54,6 +56,8 @@ const toolName = name ?? "";
 							return <WeekPlanner client:load />;
 						case "FinancePlanner":
 							return <FinancePlanner client:load />;
+						case "FirePlanner":
+							return <FirePlanner client:load />;
 						case "ImageTools":
 							return <ImageTools client:load />;
 						case "CookingBook":
