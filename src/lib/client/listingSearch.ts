@@ -56,7 +56,7 @@ function goToHomeWithQuery(query: string): void {
 	window.location.assign(url.toString());
 }
 
-export function initHubSearch(): void {
+export function initListingSearch(): void {
 	const searchInput = getSearchInput();
 	if (!searchInput) return;
 

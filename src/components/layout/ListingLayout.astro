@@ -3,13 +3,13 @@ import type { Post } from "@/content.config";
 import {
 	getListingTitle,
 	getSectionDescription,
-	HUB_CONTENT_SECTIONS,
-	HUB_INTRO,
-	type HubCategory,
-} from "@/lib/hubSections";
-import { accentRailClass } from "@/lib/hubUi";
+	CONTENT_SECTIONS,
+	SITE_INTRO,
+	type SectionCategory,
+} from "@/lib/sections";
+import { accentRailClass } from "@/lib/siteUi";
 import ContentTable from "../ui/ContentTable.astro";
-import HubSearchEmpty from "../ui/HubSearchEmpty.astro";
+import SearchEmpty from "../ui/SearchEmpty.astro";
 import MainLayout from "./MainLayout.astro";
 
 interface Props {
@@ -21,16 +21,16 @@ const { recentPosts, activeCategory } = Astro.props;
 
 const showEmpty = recentPosts.length === 0;
 const listingTitle = getListingTitle(activeCategory);
-const isHubHome = activeCategory === "all";
+const isHome = activeCategory === "all";
 
-const hubRails = isHubHome
+const homeRails = isHome
 	? [
 			{
 				label: "Recente",
 				href: null,
 				posts: recentPosts.slice(0, 8),
 			},
-			...HUB_CONTENT_SECTIONS.map((section) => ({
+			...CONTENT_SECTIONS.map((section) => ({
 				label: section.title,
 				href: section.href,
 				posts: recentPosts
@@ -49,26 +49,26 @@ const categoryCardClass =
 <MainLayout activeCategory={activeCategory}>
 	<div class="container-page flex flex-col gap-section py-lg pb-3xl">
 		{
-			isHubHome ? (
+			isHome ? (
 				<>
 					<section
 						class={accentRailClass}
-						aria-labelledby="hub-intro"
+						aria-labelledby="site-intro"
 					>
 						<h1
-							id="hub-intro"
+							id="site-intro"
 							class="m-0 font-display text-display-s leading-snug font-semibold tracking-display text-ink"
 						>
-							{HUB_INTRO.title}
+							{SITE_INTRO.title}
 						</h1>
 						<p class="mt-md max-w-measure text-md leading-[var(--lh-prose)] text-muted">
-							{HUB_INTRO.lede}
+							{SITE_INTRO.lede}
 						</p>
 					</section>
 
 					<nav aria-label="Seções">
 						<ul class="m-0 grid list-none grid-cols-1 gap-sm p-0 lg:grid-cols-3">
-							{HUB_CONTENT_SECTIONS.map((section) => (
+							{CONTENT_SECTIONS.map((section) => (
 								<li>
 									<a
 										href={section.href}
@@ -86,8 +86,8 @@ const categoryCardClass =
 						</ul>
 					</nav>
 
-					{hubRails.length ? (
-						hubRails.map((rail) => (
+					{homeRails.length ? (
+						homeRails.map((rail) => (
 							<section
 								class="flex flex-col gap-md"
 								aria-labelledby={`rail-${rail.label}`}
@@ -124,16 +124,16 @@ const categoryCardClass =
 					)}
 				</>
 			) : (
-				<section aria-labelledby="hub-listing">
+				<section aria-labelledby="listing">
 					<header class={`flex flex-col gap-sm ${accentRailClass}`}>
 						<h1
-							id="hub-listing"
+							id="listing"
 							class="m-0 font-display text-display-s leading-snug font-semibold text-accent"
 						>
 							{listingTitle}
 						</h1>
 						<p class="m-0 text-md leading-[var(--lh-prose)] text-muted">
-							{getSectionDescription(activeCategory as HubCategory)}
+							{getSectionDescription(activeCategory as SectionCategory)}
 						</p>
 					</header>
 
@@ -147,13 +147,13 @@ const categoryCardClass =
 		}
 
 		{
-			showEmpty && !isHubHome ? (
+			showEmpty && !isHome ? (
 				<div class={emptyClass}>
 					<p>Nenhum item publicado nesta seção ainda.</p>
 				</div>
 			) : null
 		}
 
-		<HubSearchEmpty />
+		<SearchEmpty />
 	</div>
 </MainLayout>

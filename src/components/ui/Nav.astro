@@ -1,6 +1,6 @@
 ---
-import { HUB_NAV_SECTIONS } from "@/lib/hubSections";
-import { navLinkActiveClass, navLinkClass, navLinkRssClass } from "@/lib/hubUi";
+import { NAV_SECTIONS } from "@/lib/sections";
+import { navLinkActiveClass, navLinkClass, navLinkRssClass } from "@/lib/siteUi";
 import { SITE_NAME, SITE_TAGLINE } from "@/content/site";
 
 interface Props {
@@ -51,7 +51,7 @@ const rssUrl = new URL("rss.xml", Astro.site);
 			class="m-0 mt-xs flex list-none flex-wrap justify-center gap-sm px-0 lg:gap-x-md"
 		>
 			{
-				HUB_NAV_SECTIONS.map((section) => (
+				NAV_SECTIONS.map((section) => (
 					<li>
 						<a
 							href={section.href}
@@ -85,9 +85,9 @@ const rssUrl = new URL("rss.xml", Astro.site);
 </header>
 
 <script>
-	import { initHubSearch } from "@/lib/hubSearch";
-	import { initHubNavPrefetch } from "@/lib/hubNavPrefetch";
+	import { initListingSearch } from "@/lib/client/listingSearch";
+	import { initNavPrefetch } from "@/lib/client/navPrefetch";
 
-	initHubSearch();
-	initHubNavPrefetch();
+	initListingSearch();
+	initNavPrefetch();
 </script>

@@ -1,6 +1,6 @@
 ---
 import { getCollection } from "astro:content";
-import HubListingLayout from "@/components/layout/HubListingLayout.astro";
+import ListingLayout from "@/components/layout/ListingLayout.astro";
 import SEOLayout from "@/components/layout/SEOLayout.astro";
 import { pageTitle } from "@/content/site";
 
@@ -16,5 +16,5 @@ const categoryParam = "tool";
 ---
 
 <SEOLayout title={pageTitle("Ferramentas")}>
-    <HubListingLayout recentPosts={appPosts} activeCategory={categoryParam} />
+    <ListingLayout recentPosts={appPosts} activeCategory={categoryParam} />
 </SEOLayout>

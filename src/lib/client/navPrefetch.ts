@@ -1,4 +1,4 @@
-import { HUB_SECTIONS } from "@/lib/hubSections";
+import { SECTIONS } from "@/lib/sections";
 
 function executeLinkPrefetch(url: string): void {
 	const selector = `link[rel="prefetch"][href="${url}"]`;
@@ -15,13 +15,13 @@ function executeLinkPrefetch(url: string): void {
 function prefetchIndexPages(): void {
 	const currentPath = window.location.pathname;
 
-	for (const section of HUB_SECTIONS) {
+	for (const section of SECTIONS) {
 		if (section.href === currentPath) continue;
 		executeLinkPrefetch(section.href);
 	}
 }
 
-export function initHubNavPrefetch(): void {
+export function initNavPrefetch(): void {
 	if (typeof window.requestIdleCallback === "function") {
 		window.requestIdleCallback(prefetchIndexPages, { timeout: 4000 });
 	} else {
