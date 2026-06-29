@@ -1,13 +1,12 @@
 {
 	"name": "andre-os",
 	"type": "module",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"scripts": {
 		"dev": "astro dev",
 		"build": "astro build",
 		"preview": "astro preview",
-		"astro": "astro",
-		"lint": "npx biome lint && npx astro check"
+		"lint": "biome lint && astro check"
 	},
 	"dependencies": {
 		"@astrojs/check": "^0.9.9",
@@ -35,5 +34,8 @@
 			"path-to-regexp": "^6.2.1"
 		},
 		"yaml": "^2.8.3"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.5.1"
 	}
 }
