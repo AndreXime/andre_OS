@@ -1,7 +1,6 @@
 ---
-import DocumentLayout from "../../components/layout/DocumentLayout.astro";
-import ShellLayout from "@/components/layout/ShellLayout.astro";
-import { getStatusPath } from "@/lib/osPaths";
+import SEOLayout from "../../components/layout/SEOLayout.astro";
+import AppLayout from "@/components/layout/AppLayout.astro";
 import ScratchPad from "../../tools/ScratchPad/ScratchPad";
 import EveryDayUtils from "../../tools/EveryDayUtils/UtilsApp";
 import CVBuilder from "../../tools/CVBuilder/CVBuilder";
@@ -11,8 +10,6 @@ import FirePlanner from "../../tools/FirePlanner/FirePlanner";
 import ImageTools from "../../tools/ImageTools/ImageTools";
 import CookingBook from "../../tools/CookingBook/CookingBook";
 import RssReader from "../../tools/RssReader/RssReader";
-import "../../tools/theme.css";
-
 export function getStaticPaths() {
 	const ToolNames = [
 		"ScratchPad",
@@ -35,40 +32,33 @@ const { name } = Astro.params;
 const toolName = name ?? "";
 ---
 
-<DocumentLayout title={toolName + " | andre_OS"}>
-	<ShellLayout
-		activeCategory="tool"
-		statusPath={getStatusPath("tool", toolName)}
-		backHref="/app"
-		backLabel="Voltar para ferramentas"
-	>
-		<div class="os-app-shell flex">
-			{
-				(() => {
-					switch (name) {
-						case "ScratchPad":
-							return <ScratchPad client:load />;
-						case "EveryDayUtils":
-							return <EveryDayUtils client:load />;
-						case "CVBuilder":
-							return <CVBuilder client:load />;
-						case "WeekPlanner":
-							return <WeekPlanner client:load />;
-						case "FinancePlanner":
-							return <FinancePlanner client:load />;
-						case "FirePlanner":
-							return <FirePlanner client:load />;
-						case "ImageTools":
-							return <ImageTools client:load />;
-						case "CookingBook":
-							return <CookingBook client:load />;
-						case "RssReader":
-							return <RssReader client:load />;
-						default:
-							return <div>Ferramenta não encontrada.</div>;
-					}
-				})()
-			}
-		</div>
-	</ShellLayout>
-</DocumentLayout>
+<SEOLayout title={`${toolName} · André`}>
+	<AppLayout>
+		{
+			(() => {
+				switch (name) {
+					case "ScratchPad":
+						return <ScratchPad client:load />;
+					case "EveryDayUtils":
+						return <EveryDayUtils client:load />;
+					case "CVBuilder":
+						return <CVBuilder client:load />;
+					case "WeekPlanner":
+						return <WeekPlanner client:load />;
+					case "FinancePlanner":
+						return <FinancePlanner client:load />;
+					case "FirePlanner":
+						return <FirePlanner client:load />;
+					case "ImageTools":
+						return <ImageTools client:load />;
+					case "CookingBook":
+						return <CookingBook client:load />;
+					case "RssReader":
+						return <RssReader client:load />;
+					default:
+						return <div>Ferramenta não encontrada.</div>;
+				}
+			})()
+		}
+	</AppLayout>
+</SEOLayout>

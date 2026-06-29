@@ -1,0 +1,100 @@
+---
+import { Image } from "astro:assets";
+import type { Post } from "@/content.config";
+import { getPostMeta } from "@/lib/postMeta";
+import { formatDate } from "@/lib/utils";
+import { kindBadgeClass } from "@/lib/hubUi";
+import { ExternalLinkIcon } from "lucide-react";
+
+interface Props {
+	posts: Post[];
+}
+
+const { posts } = Astro.props;
+
+const items = await Promise.all(
+	posts.map(async (post) => ({
+		post,
+		meta: await getPostMeta(post),
+	})),
+);
+---
+
+<div
+	class="overflow-x-auto [-webkit-overflow-scrolling:touch]"
+	role="region"
+	aria-label="Lista de conteúdo"
+>
+	<table class="w-full border-collapse tabular-nums">
+		<thead class="border-b border-rule-2">
+			<tr>
+				<th
+					scope="col"
+					class="px-sm pt-2xs pb-xs text-left font-mono text-xs font-medium tracking-label text-muted uppercase"
+				>
+					Data
+				</th>
+				<th
+					scope="col"
+					class="px-sm pt-2xs pb-xs text-left font-mono text-xs font-medium tracking-label text-muted uppercase"
+				>
+					Tipo
+				</th>
+				<th
+					scope="col"
+					class="px-sm pt-2xs pb-xs text-left font-mono text-xs font-medium tracking-label text-muted uppercase"
+				>
+					Título
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			{
+				items.map(({ post, meta }) => (
+					<tr
+						data-search-text={post.title.toLowerCase()}
+						class="group hover:bg-accent-bg"
+					>
+						<td class="w-30 px-sm py-sm align-middle font-mono text-xs whitespace-nowrap text-muted">
+							<time datetime={post.date.toISOString()}>
+								{formatDate(post.date)}
+							</time>
+						</td>
+						<td class="w-26 px-sm py-sm align-middle">
+							<span class={kindBadgeClass[meta.kind]}>
+								{meta.typeLabel}
+							</span>
+						</td>
+						<td class="min-w-0 px-sm py-sm align-middle">
+							<a
+								href={meta.href}
+								class="focus-ring inline-flex items-center gap-2xs font-medium text-ink no-underline [overflow-wrap:anywhere] group-hover:text-accent hover:text-accent hover:underline hover:underline-offset-[0.18em]"
+								title={post.title}
+								{...(meta.external
+									? {
+											target: "_blank",
+											rel: "noopener noreferrer",
+										}
+									: {})}
+							>
+								{meta.linkFavicon ? (
+									<Image
+										src={meta.linkFavicon}
+										alt=""
+										width={16}
+										height={16}
+										class="size-4 shrink-0 rounded-[2px]"
+										loading="lazy"
+										decoding="async"
+									/>
+								) : null}
+								<span>{post.title}</span>
+								{meta.external ? <ExternalLinkIcon /> : null}
+							</a>
+						</td>
+					</tr>
+				))
+			}
+		</tbody>
+	</table>
+</div>

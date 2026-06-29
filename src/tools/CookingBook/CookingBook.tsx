@@ -176,9 +176,9 @@ export default function CookingBook() {
 				onSave={handleSave}
 			/>
 		) : screen === "list" ? (
-			<div className="cooking-book-panel hidden lg:flex flex-col items-center justify-center rounded-2xl border border-dashed border-[color:var(--card-border)] bg-[color:var(--card-bg)]/30 p-12 text-center min-h-[20rem]">
-				<ChefHat className="size-12 text-[color:var(--primary)]/40 mb-4" />
-				<p className="text-sm text-[color:var(--text)] max-w-xs leading-relaxed">
+			<div className="cooking-book-panel hidden lg:flex flex-col items-center justify-center rounded-card border border-dashed border-rule bg-paper-2/30 p-12 text-center min-h-[20rem]">
+				<ChefHat className="size-12 text-accent/40 mb-4" />
+				<p className="text-sm text-muted max-w-xs leading-relaxed">
 					{recipes.length === 0
 						? "Comece criando sua primeira receita."
 						: "Selecione uma receita na lista ou crie uma nova."}
@@ -191,7 +191,7 @@ export default function CookingBook() {
 			{toast && (
 				<output
 					aria-live="polite"
-					className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 block px-4 py-2 rounded-full text-sm font-medium bg-[color:var(--card-bg)] border border-[color:var(--primary)]/40 text-[color:var(--headline)] shadow-lg shadow-black/30 animate-[cb-fade-in_0.2s_ease-out]"
+					className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 block px-4 py-2 rounded-full text-sm font-medium bg-paper-2 border border-accent/40 text-ink shadow-sm animate-[cb-fade-in_0.2s_ease-out]"
 				>
 					{toast}
 				</output>

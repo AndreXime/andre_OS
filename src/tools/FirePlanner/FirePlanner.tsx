@@ -111,10 +111,10 @@ export default function FirePlanner() {
 				/>
 			</div>
 
-			<div className="h-px w-full bg-gradient-to-r from-transparent via-[color:var(--card-border)]/70 to-transparent" />
+			<div className="h-px w-full bg-gradient-to-r from-transparent via-[color:var(--color-rule)]/70 to-transparent" />
 
 			{!resultado ? (
-				<div className="rounded-xl border border-[color:var(--card-border)] bg-[color:var(--card-bg)] px-4 py-3 text-sm text-[color:var(--text)]">
+				<div className="rounded-card border border-rule bg-paper-2 px-4 py-3 text-sm text-muted">
 					Ajuste os valores para gerar a projeção. A idade mínima do INSS precisa ser maior que a idade atual.
 				</div>
 			) : (
@@ -143,7 +143,7 @@ export default function FirePlanner() {
 						/>
 					</div>
 
-					<div className="rounded-xl border border-[color:var(--card-border)] bg-[color-mix(in_srgb,var(--background)_50%,transparent)] px-4 py-3 text-xs text-[color:var(--text)]/85 leading-relaxed">
+					<div className="rounded-card border border-rule bg-[color-mix(in_srgb,var(--color-paper)_50%,transparent)] px-4 py-3 text-xs text-muted/85 leading-relaxed">
 						{resultado.considerouInssNoAlvo ? (
 							<>
 								A partir dos {inputs.idadeMinimaInss} anos, o INSS de {formatarMoeda(inputs.valorInssFixo)} reduz a
@@ -158,23 +158,23 @@ export default function FirePlanner() {
 						)}
 					</div>
 
-					<div className="rounded-2xl border border-[color:var(--card-border)] bg-[color:var(--card-bg)] overflow-hidden">
+					<div className="rounded-card border border-rule bg-paper-2 overflow-hidden">
 						<button
 							type="button"
 							onClick={() => setShowEvolution((prev) => !prev)}
-							className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left text-sm font-semibold text-[color:var(--headline)] hover:bg-[color-mix(in_srgb,var(--primary)_6%,transparent)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[color:var(--primary)]"
+							className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left text-sm font-semibold text-ink hover:bg-accent-bg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent"
 						>
 							<span>Evolução do patrimônio</span>
-							<span className="text-xs font-medium text-[color:var(--text)]/70">
+							<span className="text-xs font-medium text-muted/70">
 								{showEvolution ? "Ocultar" : "Ver"} ({resultado.evolucaoPatrimonio.length} pontos)
 							</span>
 						</button>
 
 						{showEvolution && (
-							<div className="border-t border-[color:var(--card-border)] overflow-x-auto">
+							<div className="border-t border-rule overflow-x-auto">
 								<table className="w-full min-w-[36rem] text-sm">
 									<thead>
-										<tr className="text-left text-[10px] uppercase tracking-[0.12em] text-[color:var(--text)]/75 border-b border-[color:var(--card-border)]">
+										<tr className="text-left text-[10px] uppercase tracking-[0.12em] text-muted/75 border-b border-rule">
 											<th className="px-4 py-2 font-semibold">Idade</th>
 											<th className="px-4 py-2 font-semibold">Investido</th>
 											<th className="px-4 py-2 font-semibold">Juros</th>
@@ -194,24 +194,24 @@ export default function FirePlanner() {
 												<tr
 													key={row.idade}
 													className={[
-														"border-b border-[color:var(--card-border)]/60 last:border-b-0",
-														atingiuAlvo ? "bg-[color-mix(in_srgb,var(--primary)_8%,transparent)]" : "",
+														"border-b border-rule/60 last:border-b-0",
+														atingiuAlvo ? "bg-accent-bg" : "",
 													].join(" ")}
 												>
-													<td className="px-4 py-2 tabular-nums text-[color:var(--headline)]">{row.idade}</td>
-													<td className="px-4 py-2 tabular-nums text-[color:var(--text)]">
+													<td className="px-4 py-2 tabular-nums text-ink">{row.idade}</td>
+													<td className="px-4 py-2 tabular-nums text-muted">
 														{formatarMoeda(row.totalInvestido)}
 													</td>
-													<td className="px-4 py-2 tabular-nums text-[color:var(--text)]">
+													<td className="px-4 py-2 tabular-nums text-muted">
 														{formatarMoeda(row.jurosAcumulados)}
 													</td>
-													<td className="px-4 py-2 tabular-nums font-medium text-[color:var(--headline)]">
+													<td className="px-4 py-2 tabular-nums font-medium text-ink">
 														{formatarMoeda(row.patrimonioTotal)}
 													</td>
 													<td className="px-4 py-2">
-														<div className="h-2 rounded-full bg-[color:var(--card-border)]/50 overflow-hidden">
+														<div className="h-2 rounded-full bg-[color:var(--color-rule)]/50 overflow-hidden">
 															<div
-																className="h-full rounded-full bg-[color:var(--primary)] transition-all"
+																className="h-full rounded-full bg-accent transition-all"
 																style={{ width: `${progresso}%` }}
 															/>
 														</div>

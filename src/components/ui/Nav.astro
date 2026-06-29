@@ -1,0 +1,84 @@
+---
+import { HUB_NAV_SECTIONS } from "@/lib/hubSections";
+import { navLinkActiveClass, navLinkClass, navLinkRssClass } from "@/lib/hubUi";
+
+interface Props {
+	activeCategory: string;
+}
+
+const { activeCategory } = Astro.props;
+const rssUrl = new URL("rss.xml", Astro.site);
+---
+
+<header class="grid gap-2xs px-gutter pt-md text-center">
+	<p
+		class="m-0 font-serif text-xs tracking-[0.08em] text-muted [font-variant:small-caps]"
+	>
+		Edição contínua · Hub técnico de um autor
+	</p>
+	<p class="m-0">
+		<a
+			href="/"
+			class="font-display text-display font-semibold tracking-display text-accent no-underline [overflow-wrap:anywhere] min-w-0 hover:text-ink"
+		>
+			André
+		</a>
+	</p>
+	<div class="mx-auto w-full max-w-[28rem] pt-2xs">
+		<label
+			for="search"
+			class="flex min-h-11 w-full items-center gap-2xs rounded-input border border-accent-muted bg-accent-bg px-sm transition-[border-color] duration-150 ease-out focus-within:border-accent"
+		>
+			<span
+				class="shrink-0 font-mono text-xs tracking-label text-accent uppercase"
+			>
+				Buscar
+			</span>
+			<input
+				id="search"
+				type="search"
+				placeholder="título, tema, tag…"
+				class="focus-ring min-w-0 flex-1 border-0 bg-transparent p-0 font-body text-sm text-ink outline-none placeholder:text-muted"
+				autocomplete="off"
+				spellcheck="false"
+			/>
+		</label>
+	</div>
+
+	<nav aria-label="Principal">
+		<ul
+			class="m-0 mt-xs flex list-none flex-wrap justify-center gap-sm px-0 lg:gap-x-md"
+		>
+			{
+				HUB_NAV_SECTIONS.map((section) => (
+					<li>
+						<a
+							href={section.href}
+							class:list={[
+								navLinkClass,
+								activeCategory === section.category &&
+									navLinkActiveClass,
+							]}
+							aria-current={
+								activeCategory === section.category
+									? "page"
+									: undefined
+							}
+						>
+							{section.navLabel}
+						</a>
+					</li>
+				))
+			}
+			<li>
+				<a href={rssUrl} class:list={[navLinkClass, navLinkRssClass]}
+					>RSS</a
+				>
+			</li>
+		</ul>
+	</nav>
+	<hr
+		class="mt-sm h-1 border-0 border-t border-rule border-b-[3px] border-b-accent"
+		aria-hidden="true"
+	/>
+</header>

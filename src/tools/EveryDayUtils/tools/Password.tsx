@@ -144,7 +144,7 @@ export default function SecurityToolsCard() {
 
 	// Estilos comuns
 	const checkboxClass =
-		"w-5 h-5 rounded bg-[var(--card-border)]/60 border border-[var(--card-border)] text-[var(--primary)] focus:ring-0";
+		"w-5 h-5 rounded bg-[var(--color-rule)]/60 border border-rule text-accent focus:ring-0";
 
 	return (
 		<div className="space-y-6">
@@ -176,7 +176,7 @@ export default function SecurityToolsCard() {
 								max="64"
 								value={pwLength}
 								onInput={(e) => setPwLength(Number(e.currentTarget.value))}
-								className="w-1/2 h-2 bg-[var(--card-border)]/50 rounded-lg appearance-none cursor-pointer accent-[var(--primary)]"
+								className="w-1/2 h-2 bg-[var(--color-rule)]/50 rounded-lg appearance-none cursor-pointer accent-accent"
 							/>
 						</div>
 						<div className="grid grid-cols-2 gap-3">
@@ -188,7 +188,7 @@ export default function SecurityToolsCard() {
 							].map((opt) => (
 								<label
 									key={opt.name}
-									className="flex items-center space-x-3 p-3 rounded-lg bg-[color-mix(in_srgb,var(--card-bg)_90%,#0000)] border border-transparent hover:border-[var(--card-border)]/80 cursor-pointer"
+									className="flex items-center space-x-3 p-3 rounded-lg bg-[color-mix(in_srgb,var(--color-paper-2)_90%,#0000)] border border-transparent hover:border-rule/80 cursor-pointer"
 								>
 									<input
 										type="checkbox"
@@ -197,14 +197,14 @@ export default function SecurityToolsCard() {
 										onChange={handlePwOption}
 										className={checkboxClass}
 									/>
-									<span className="text-[var(--card-text)] text-sm">{opt.label}</span>
+									<span className="text-ink-2 text-sm">{opt.label}</span>
 								</label>
 							))}
 						</div>
 						<button
 							type="button"
 							onClick={executeAction}
-							className="w-full py-3 rounded-xl font-semibold shadow-sm active:scale-[0.98] transition-transform bg-[color:var(--primary)] text-[color:var(--primary-text)] hover:opacity-90"
+							className="w-full py-3 rounded-card font-semibold shadow-sm active:scale-[0.98] transition-transform bg-accent text-accent-ink hover:opacity-90"
 						>
 							Gerar Nova Senha
 						</button>
@@ -214,13 +214,13 @@ export default function SecurityToolsCard() {
 				{/* MODO: UUID */}
 				{mode === "uuid" && (
 					<div className="space-y-4 animate-in fade-in zoom-in-95 duration-300 text-center py-4">
-						<p className="text-[var(--text)] text-sm mb-4">
+						<p className="text-muted text-sm mb-4">
 							Gera um Identificador Único Universal (UUID v4) criptograficamente seguro.
 						</p>
 						<button
 							type="button"
 							onClick={executeAction}
-							className="w-full py-3 rounded-xl font-semibold shadow-sm active:scale-[0.98] transition-transform bg-[color:var(--primary)] text-[color:var(--primary-text)] hover:opacity-90"
+							className="w-full py-3 rounded-card font-semibold shadow-sm active:scale-[0.98] transition-transform bg-accent text-accent-ink hover:opacity-90"
 						>
 							Gerar Novo UUID
 						</button>
@@ -283,23 +283,23 @@ export default function SecurityToolsCard() {
 			{/* --- Área de Resultado (Comum a todos) --- */}
 			<div
 				onClick={copyToClipboard}
-				className="group relative mt-6 flex flex-col justify-center p-5 rounded-lg border-l-4 bg-[color-mix(in_srgb,var(--card-bg)_88%,#0000)] cursor-pointer hover:bg-[color-mix(in_srgb,var(--card-bg)_95%,#0000)] transition-all border-[var(--primary)]/20"
+				className="group relative mt-6 flex flex-col justify-center p-5 rounded-lg border-l-4 bg-[color-mix(in_srgb,var(--color-paper-2)_88%,#0000)] cursor-pointer hover:bg-[color-mix(in_srgb,var(--color-paper-2)_95%,#0000)] transition-all border-accent/20"
 				title="Clique para Copiar"
 			>
 				<div className="flex justify-between items-start w-full">
-					<code className="font-mono text-lg font-bold break-all text-[var(--card-text)] group-hover:text-[var(--headline)] transition-colors w-full pr-8">
+					<code className="font-mono text-lg font-bold break-all text-ink-2 group-hover:text-ink transition-colors w-full pr-8">
 						{output || (mode === "password" || mode === "uuid" ? "Clique em Gerar" : "Aguardando entrada...")}
 					</code>
 					<span
 						className={`absolute top-5 right-5 text-xs font-bold uppercase tracking-wider transition-colors ${
-							copyFeedback ? "text-[var(--primary)]" : "text-[var(--text)]/70 group-hover:text-[var(--text)]"
+							copyFeedback ? "text-accent" : "text-muted/70 group-hover:text-muted"
 						}`}
 					>
 						{copyFeedback || "Copiar"}
 					</span>
 				</div>
 				{mode === "hash" && output && (
-					<span className="text-xs text-[var(--text)]/80 mt-2 font-mono uppercase">{hashAlgo}</span>
+					<span className="text-xs text-muted/80 mt-2 font-mono uppercase">{hashAlgo}</span>
 				)}
 			</div>
 		</div>

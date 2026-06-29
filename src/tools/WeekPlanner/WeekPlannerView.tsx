@@ -52,27 +52,27 @@ function TimeField({
 	return (
 		<div className={["group/field flex flex-col gap-1.5 min-w-0", className].filter(Boolean).join(" ")}>
 			<div className="flex items-end justify-between gap-1 min-h-[0.875rem]">
-				<span className="text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--text)] group-focus-within/field:opacity-100 transition-colors">
+				<span className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted group-focus-within/field:opacity-100 transition-colors">
 					{label}
-					{optional && <span className="text-[var(--text)]/75 font-normal normal-case"> (opcional)</span>}
+					{optional && <span className="text-muted/75 font-normal normal-case"> (opcional)</span>}
 				</span>
 				{optional && hasTime(value) && (
 					<button
 						type="button"
 						onClick={() => onChange("")}
-						className="text-[10px] text-[var(--text)] hover:text-[var(--headline)]"
+						className="text-[10px] text-muted hover:text-ink"
 					>
 						Limpar
 					</button>
 				)}
 			</div>
-			<div className="relative rounded-lg border border-[var(--card-border)]/90 bg-[var(--card-bg)]/80 shadow-inner shadow-[color-mix(in_srgb,var(--background)_50%,#000)]/20 transition-[border,box-shadow] group-focus-within/field:border-[var(--primary)]/40 group-focus-within/field:ring-2 group-focus-within/field:ring-[var(--primary)]/20">
-				<Clock3 className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-[var(--text)]/80 group-focus-within/field:text-[var(--primary)]/70" />
+			<div className="relative rounded-lg border border-rule/90 bg-paper-2/80 transition-[border,box-shadow] group-focus-within/field:border-accent/40 group-focus-within/field:ring-2 group-focus-within/field:ring-accent/20">
+				<Clock3 className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted/80 group-focus-within/field:text-accent/70" />
 				<input
 					type="time"
 					value={value}
 					onChange={(e) => onChange(e.target.value)}
-					className="w-full min-h-[2.5rem] rounded-lg bg-transparent pl-9 pr-2 py-2 text-sm font-medium text-[var(--headline)] tabular-nums tracking-tight [color-scheme:dark] focus:outline-none"
+					className="w-full min-h-[2.5rem] rounded-lg bg-transparent pl-9 pr-2 py-2 text-sm font-medium text-ink tabular-nums tracking-tight focus:outline-none"
 				/>
 			</div>
 		</div>
@@ -112,27 +112,27 @@ function SavedBlockBody({
 						<>
 							<time
 								dateTime={`${block.start}/${block.end}`}
-								className="font-medium tabular-nums text-[var(--headline)]"
+								className="font-medium tabular-nums text-ink"
 							>
 								{block.start}
 							</time>
-							<ArrowRight className="size-3.5 text-[var(--text)]/80 shrink-0 self-center" aria-hidden />
-							<time className="font-medium tabular-nums text-[var(--card-text)]">{block.end}</time>
+							<ArrowRight className="size-3.5 text-muted/80 shrink-0 self-center" aria-hidden />
+							<time className="font-medium tabular-nums text-ink-2">{block.end}</time>
 						</>
 					)}
 					{hs && !he && (
-						<span className="text-[var(--card-text)]">
-							<span className="text-[var(--text)] text-xs font-normal mr-1.5">De</span>
+						<span className="text-ink-2">
+							<span className="text-muted text-xs font-normal mr-1.5">De</span>
 							<time className="font-medium tabular-nums">{block.start}</time>
 						</span>
 					)}
 					{!hs && he && (
-						<span className="text-[var(--card-text)]">
-							<span className="text-[var(--text)] text-xs font-normal mr-1.5">Até</span>
+						<span className="text-ink-2">
+							<span className="text-muted text-xs font-normal mr-1.5">Até</span>
 							<time className="font-medium tabular-nums">{block.end}</time>
 						</span>
 					)}
-					{!hs && !he && <span className="text-[var(--text)]">Sem horário</span>}
+					{!hs && !he && <span className="text-muted">Sem horário</span>}
 					{timeRangeOk && span > 0 && (
 						<span
 							className={[
@@ -144,10 +144,10 @@ function SavedBlockBody({
 						</span>
 					)}
 				</div>
-				{block.title.trim() !== "" && <p className="text-sm text-[var(--card-text)] leading-snug">{block.title}</p>}
+				{block.title.trim() !== "" && <p className="text-sm text-ink-2 leading-snug">{block.title}</p>}
 				{!timeRangeOk && (
-					<p className="text-xs text-[var(--primary)] flex items-center gap-1">
-						<span className="size-1 rounded-full bg-[var(--primary)]" />
+					<p className="text-xs text-accent flex items-center gap-1">
+						<span className="size-1 rounded-full bg-accent" />
 						Intervalo inválido; apague e crie outro.
 					</p>
 				)}
@@ -155,7 +155,7 @@ function SavedBlockBody({
 			<button
 				type="button"
 				onClick={() => removeWeekBlock(day, block.id)}
-				className="shrink-0 rounded-lg p-2 text-[var(--text)] hover:text-[var(--primary)] hover:bg-[color-mix(in_srgb,var(--primary)_12%,transparent)] opacity-70 group-hover/day:opacity-100 transition-[opacity,background,color] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)]/40"
+				className="shrink-0 rounded-lg p-2 text-muted hover:text-accent hover:bg-accent-bg opacity-70 group-hover/day:opacity-100 transition-[opacity,background,color] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
 				aria-label="Apagar bloco"
 			>
 				<Trash2 className="size-4" />
@@ -181,11 +181,11 @@ function DraftBlockBody({
 		<div className="flex flex-col gap-3 w-full">
 			<div className="flex items-center justify-between gap-2">
 				<div className="flex items-center gap-2 flex-wrap">
-					<span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--primary)]/80">
+					<span className="text-[10px] font-semibold uppercase tracking-widest text-accent/80">
 						A definir
 					</span>
 					{block.groupId && (
-						<span className="text-[10px] font-semibold tracking-wide uppercase rounded-md border border-[var(--primary)]/25 bg-[color-mix(in_srgb,var(--primary)_10%,transparent)] px-1.5 py-0.5 text-[var(--primary)]/95">
+						<span className="text-[10px] font-semibold tracking-wide uppercase rounded-md border border-accent/25 bg-[color-mix(in_srgb,var(--color-accent)_10%,transparent)] px-1.5 py-0.5 text-accent/95">
 							Toda a semana
 						</span>
 					)}
@@ -193,12 +193,12 @@ function DraftBlockBody({
 				<button
 					type="button"
 					onClick={() => removeWeekBlock(day, block.id)}
-					className="shrink-0 text-xs text-[var(--text)] hover:text-[var(--primary)] px-1.5 py-0.5 rounded-md hover:bg-[color-mix(in_srgb,var(--primary)_10%,transparent)] transition-colors"
+					className="shrink-0 text-xs text-muted hover:text-accent px-1.5 py-0.5 rounded-md hover:bg-accent-bg transition-colors"
 				>
 					Descartar
 				</button>
 			</div>
-			<p className="text-xs text-[var(--text)]/90 leading-relaxed -mt-1">
+			<p className="text-xs text-muted/90 leading-relaxed -mt-1">
 				Início, fim e título: escolhe o que precisar (basta preencher uma coisa, ou só horas, etc.).
 			</p>
 			<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -216,35 +216,35 @@ function DraftBlockBody({
 				/>
 			</div>
 			<div className="flex flex-col gap-1.5">
-				<span className="text-[10px] font-medium uppercase tracking-[0.12em] text-[var(--text)]">
-					O quê? <span className="text-[var(--text)]/75 font-normal">(opcional)</span>
+				<span className="text-[10px] font-medium uppercase tracking-[0.12em] text-muted">
+					O quê? <span className="text-muted/75 font-normal">(opcional)</span>
 				</span>
 				<div className="relative">
-					<LayoutList className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-[var(--text)]/80" />
+					<LayoutList className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted/80" />
 					<input
 						type="text"
 						placeholder="Reunião, deep work, treino, estudo…"
 						value={block.title}
 						onChange={(e) => updateWeekBlock(day, block.id, { title: e.target.value })}
-						className="w-full min-h-10 rounded-lg border border-[var(--card-border)]/80 bg-[color-mix(in_srgb,var(--card-bg)_60%,var(--background))] pl-9 pr-3 py-2 text-sm text-[var(--headline)] placeholder:text-[var(--text)]/70 focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/30 focus:border-[var(--primary)]/40 transition-shadow"
+						className="w-full min-h-10 rounded-lg border border-rule/80 bg-paper-2 pl-9 pr-3 py-2 text-sm text-ink placeholder:text-muted/70 focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent/40 transition-shadow"
 					/>
 				</div>
 			</div>
 			{timeRangeBad && (
-				<p className="text-xs text-[var(--primary)] flex items-center gap-1">
-					<span className="size-1 rounded-full bg-[var(--primary)]" />
+				<p className="text-xs text-accent flex items-center gap-1">
+					<span className="size-1 rounded-full bg-accent" />
 					Com início e fim preenchidos, a hora de fim tem de ser depois do início.
 				</p>
 			)}
 			{!timeRangeBad && !canSave && (
-				<p className="text-xs text-[var(--primary)] flex items-center gap-1">
-					<span className="size-1 rounded-full bg-[var(--primary)]" />
+				<p className="text-xs text-accent flex items-center gap-1">
+					<span className="size-1 rounded-full bg-accent" />
 					Indique pelo menos início, fim ou a atividade.
 				</p>
 			)}
 			{canSave && span > 0 && (
-				<p className="text-xs text-[var(--text)]">
-					Pré-visualização: <span className="text-[var(--card-text)] tabular-nums">{formatDuration(span)}</span>
+				<p className="text-xs text-muted">
+					Pré-visualização: <span className="text-ink-2 tabular-nums">{formatDuration(span)}</span>
 				</p>
 			)}
 			<button
@@ -252,11 +252,11 @@ function DraftBlockBody({
 				disabled={!canSave}
 				onClick={() => saveWeekBlock(day, block.id)}
 				className={[
-					"inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-[opacity,transform,background,box-shadow]",
+					"inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-card px-4 py-2.5 text-sm font-semibold transition-[opacity,transform,background,box-shadow]",
 					canSave
-						? "bg-[var(--primary)] text-[var(--primary-text)] hover:brightness-110 shadow-sm shadow-[color-mix(in_srgb,var(--background)_50%,#000)]/40 active:scale-[0.99]"
-						: "bg-[var(--card-bg)] text-[var(--text)]/60 cursor-not-allowed",
-					"focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)]",
+						? "bg-accent text-accent-ink hover:brightness-110 active:scale-[0.99]"
+						: "bg-paper-2 text-muted/60 cursor-not-allowed",
+					"focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 focus-visible:ring-offset-2 focus-visible:ring-offset-paper",
 				].join(" ")}
 			>
 				<Check className="size-4" strokeWidth={2.5} />
@@ -276,9 +276,9 @@ function WeekStatCard({
 	readonly title?: string;
 }) {
 	return (
-		<div className="flex-1 min-w-0 sm:flex-initial sm:min-w-[8.5rem] flex flex-col justify-center rounded-2xl border border-[var(--card-border)]/80 bg-[color-mix(in_srgb,var(--card-bg)_40%,var(--background))] px-4 py-3 shadow-inner shadow-[color-mix(in_srgb,var(--background)_50%,#000)]/20">
-			<div className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--text)]">{label}</div>
-			<div className="text-2xl font-bold tabular-nums text-[var(--headline)]" title={title}>
+		<div className="flex-1 min-w-0 sm:flex-initial sm:min-w-[8.5rem] flex flex-col justify-center rounded-card border border-rule/80 bg-paper-2 px-4 py-3 ">
+			<div className="text-[10px] font-semibold uppercase tracking-[0.15em] text-muted">{label}</div>
+			<div className="text-2xl font-bold tabular-nums text-ink" title={title}>
 				{value}
 			</div>
 		</div>
@@ -309,9 +309,9 @@ function DaySection({
 		>
 			<article
 				className={[
-					"group/day relative overflow-hidden rounded-2xl border backdrop-blur-sm transition-[box-shadow,transform] duration-300",
+					"group/day relative overflow-hidden rounded-card border backdrop-blur-sm transition-[box-shadow,transform] duration-300",
 					"motion-reduce:transition-none",
-					"bg-gradient-to-b from-[var(--card-bg)]/90 to-[color-mix(in_srgb,var(--background)_80%,#0000)]/95",
+					"bg-paper-2",
 					"shadow-[0_1px_0_rgba(255,255,255,0.04)] hover:shadow-[0_8px_40px_-12px_rgba(0,0,0,0.55)]",
 					theme.border,
 					hasBlocks ? "min-h-0" : "min-h-[8.5rem]",
@@ -326,7 +326,7 @@ function DaySection({
 							<div className="flex items-center gap-2 flex-wrap">
 								<h2
 									id={`week-day-heading-${day}`}
-									className="text-base font-semibold text-[var(--headline)] tracking-tight"
+									className="text-base font-semibold text-ink tracking-tight"
 								>
 									{WEEK_DAY_LABEL[day]}
 								</h2>
@@ -342,7 +342,7 @@ function DaySection({
 									</span>
 								)}
 							</div>
-							<p className="text-xs text-[var(--text)]">
+							<p className="text-xs text-muted">
 								{hasBlocks
 									? `${blocks.length} ${blocks.length === 1 ? "bloco" : "blocos"} planejado${blocks.length === 1 ? "" : "s"}`
 									: "Use o botão no topo da página para adicionar blocos a todos os dias de uma vez."}
@@ -355,18 +355,18 @@ function DaySection({
 							<button
 								type="button"
 								onClick={() => addWeekBlockToAllDays()}
-								className="flex flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-[var(--card-border)]/90 bg-[color-mix(in_srgb,var(--card-bg)_30%,var(--background))] py-7 px-4 text-center transition-all hover:border-[var(--primary)]/35 hover:bg-[color-mix(in_srgb,var(--primary)_4%,var(--background))] group/empty"
+								className="flex flex-col items-center justify-center gap-2 rounded-card border border-dashed border-rule/90 bg-paper-2/80 py-7 px-4 text-center transition-all hover:border-accent/35 hover:bg-accent-bg group/empty"
 							>
-								<div className="flex size-11 items-center justify-center rounded-2xl bg-[color-mix(in_srgb,var(--card-bg)_80%,#0000)] text-[var(--text)] ring-1 ring-[var(--card-border)] group-hover/empty:ring-[var(--primary)]/30 group-hover/empty:text-[var(--primary)]/95 transition-all">
+								<div className="flex size-11 items-center justify-center rounded-card bg-paper-2 text-muted ring-1 ring-[var(--color-rule)] group-hover/empty:ring-accent/30 group-hover/empty:text-accent/95 transition-all">
 									<CalendarRange className="size-5" />
 								</div>
 								<div>
-									<p className="text-sm font-medium text-[var(--card-text)]">Nada neste dia ainda</p>
-									<p className="text-xs text-[var(--text)]/90 mt-0.5 max-w-[16rem] mx-auto leading-relaxed">
+									<p className="text-sm font-medium text-ink-2">Nada neste dia ainda</p>
+									<p className="text-xs text-muted/90 mt-0.5 max-w-[16rem] mx-auto leading-relaxed">
 										Blocos são adicionados à semana inteira. Toque abaixo ou use o botão no topo.
 									</p>
 								</div>
-								<span className="mt-0.5 inline-flex items-center gap-1.5 text-xs font-medium text-[var(--primary)]/85 group-hover/empty:text-[var(--primary)]">
+								<span className="mt-0.5 inline-flex items-center gap-1.5 text-xs font-medium text-accent/85 group-hover/empty:text-accent">
 									<Plus className="size-3.5" />
 									Adicionar bloco à semana
 								</span>
@@ -390,31 +390,31 @@ function DaySection({
 										>
 											<div
 												className={[
-													"relative flex gap-0 overflow-hidden rounded-xl border border-[var(--card-border)]/80 bg-[color-mix(in_srgb,var(--card-bg)_50%,var(--background))]/90",
-													"shadow-sm shadow-[color-mix(in_srgb,var(--background)_50%,#000)]/30 transition-[box-shadow,transform] duration-200",
+													"relative flex gap-0 overflow-hidden rounded-card border border-rule/80 bg-paper-2/90",
+													" transition-[box-shadow,transform] duration-200",
 													"motion-reduce:transition-none",
-													isHovered ? "ring-1 ring-inset ring-[var(--headline)]/5" : "",
-													!block.saved ? "border-[var(--primary)]/20" : "",
+													isHovered ? "ring-1 ring-inset ring-[var(--color-ink)]/5" : "",
+													!block.saved ? "border-accent/20" : "",
 												].join(" ")}
 											>
 												<div aria-hidden className={`w-1 shrink-0 bg-gradient-to-b ${theme.bar}`} />
 												{canReorder && (
-													<div className="flex flex-col border-r border-[var(--card-border)]/60 bg-[color-mix(in_srgb,var(--card-bg)_20%,#0000)] shrink-0">
+													<div className="flex flex-col border-r border-rule/60 bg-paper-2/60 shrink-0">
 														<button
 															type="button"
 															disabled={index === 0}
 															onClick={() => moveWeekBlock(day, block.id, -1)}
-															className="flex-1 p-1.5 text-[var(--text)] enabled:hover:text-[var(--headline)] enabled:hover:bg-[color-mix(in_srgb,var(--card-bg)_70%,var(--background))] disabled:opacity-25 disabled:cursor-not-allowed transition-colors"
+															className="flex-1 p-1.5 text-muted enabled:hover:text-ink enabled:hover:bg-accent-bg disabled:opacity-25 disabled:cursor-not-allowed transition-colors"
 															aria-label="Mover para cima"
 														>
 															<ChevronUp className="size-4" />
 														</button>
-														<div className="h-px bg-[var(--card-border)]/80 shrink-0" aria-hidden />
+														<div className="h-px bg-[var(--color-rule)]/80 shrink-0" aria-hidden />
 														<button
 															type="button"
 															disabled={index === blocks.length - 1}
 															onClick={() => moveWeekBlock(day, block.id, 1)}
-															className="flex-1 p-1.5 text-[var(--text)] enabled:hover:text-[var(--headline)] enabled:hover:bg-[color-mix(in_srgb,var(--card-bg)_70%,var(--background))] disabled:opacity-25 disabled:cursor-not-allowed transition-colors"
+															className="flex-1 p-1.5 text-muted enabled:hover:text-ink enabled:hover:bg-accent-bg disabled:opacity-25 disabled:cursor-not-allowed transition-colors"
 															aria-label="Mover para baixo"
 														>
 															<ChevronDown className="size-4" />
@@ -473,9 +473,9 @@ export function WeekPlannerView({
 				<button
 					type="button"
 					onClick={() => addWeekBlockToAllDays()}
-					className="w-full lg:w-auto flex items-center justify-center gap-2 rounded-xl border border-[var(--card-border)]/90 bg-[color-mix(in_srgb,var(--card-bg)_50%,var(--background))] px-3.5 py-2 text-sm font-medium text-[var(--card-text)] hover:border-[var(--primary)]/45 hover:bg-[color-mix(in_srgb,var(--primary)_10%,var(--background))] hover:text-[var(--headline)] transition-[border,background,color] focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)]/50 focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--background)] shrink-0"
+					className="w-full lg:w-auto flex items-center justify-center gap-2 rounded-card border border-rule/90 bg-paper-2 px-3.5 py-2 text-sm font-medium text-ink-2 hover:border-accent/45 hover:bg-accent-bg hover:text-ink transition-[border,background,color] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-paper shrink-0"
 				>
-					<CalendarDays className="size-4 text-[var(--primary)]/85" strokeWidth={2.25} />
+					<CalendarDays className="size-4 text-accent/85" strokeWidth={2.25} />
 					Adicionar bloco à semana
 				</button>
 				<div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full lg:w-auto">
@@ -484,7 +484,7 @@ export function WeekPlannerView({
 						value={
 							<span className="flex items-baseline gap-1">
 								{totalBlocks}
-								<span className="text-sm font-medium text-[var(--text)]/80">/ semana</span>
+								<span className="text-sm font-medium text-muted/80">/ semana</span>
 							</span>
 						}
 					/>

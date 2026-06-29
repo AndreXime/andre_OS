@@ -32,19 +32,6 @@ function parseTitle(html: string): string | null {
 	return match[1].replace(/\s+/g, " ").trim() || null;
 }
 
-function parseOgImage(html: string, baseUrl: string): string | null {
-	const patterns = [
-		/<meta[^>]+(?:property|name)=["'](?:og:image|twitter:image)["'][^>]+content=["']([^"']+)["']/i,
-		/<meta[^>]+content=["']([^"']+)["'][^>]+(?:property|name)=["'](?:og:image|twitter:image)["']/i,
-	];
-	for (const pattern of patterns) {
-		const match = html.match(pattern);
-		const url = normalizeUrl(match?.[1], baseUrl);
-		if (url) return url;
-	}
-	return null;
-}
-
 function parseBaseHref(html: string, documentUrl: string): string {
 	const match = html.match(/<base[^>]+href=["']([^"']+)["']/i);
 	if (!match?.[1]) return documentUrl;
@@ -100,14 +87,12 @@ export async function getLinkInfo(targetUrl: string) {
 		return {
 			title: parseTitle(html),
 			domain,
-			ogImage: parseOgImage(html, resolveBase),
 			favicon: parseFavicon(html, resolveBase),
 		};
 	} catch {
 		return {
 			title: null,
 			domain,
-			ogImage: null,
 			favicon: null,
 		};
 	}

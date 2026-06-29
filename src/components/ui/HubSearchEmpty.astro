@@ -1,0 +1,64 @@
+---
+const emptyClass =
+	"rounded-card border border-dashed border-rule p-2xl text-center text-muted";
+---
+
+<div id="search-empty" class:list={[emptyClass, "hidden"]}>
+	<p>
+		Nenhum resultado para <span id="search-empty-term"></span>.
+	</p>
+	<button
+		type="button"
+		id="search-clear"
+		class="mt-sm inline-flex min-h-11 cursor-pointer items-center border-0 bg-transparent font-mono text-sm text-accent hover:underline"
+	>
+		Limpar busca
+	</button>
+</div>
+
+<script>
+	function initHubSearch(): void {
+		const searchInput = document.getElementById(
+			"search",
+		) as HTMLInputElement | null;
+		const emptyState = document.getElementById("search-empty");
+		const emptyTerm = document.getElementById("search-empty-term");
+		const clearBtn = document.getElementById("search-clear");
+
+		if (!searchInput || !emptyState || !emptyTerm || !clearBtn) return;
+
+		const getRows = () =>
+			document.querySelectorAll<HTMLTableRowElement>(
+				"tr[data-search-text]",
+			);
+
+		const filterRows = () => {
+			const query = searchInput.value.trim().toLowerCase();
+			const rows = getRows();
+			let visible = 0;
+
+			for (const row of rows) {
+				const text = row.dataset.searchText ?? "";
+				const match = !query || text.includes(query);
+				row.hidden = !match;
+				if (match) visible++;
+			}
+
+			if (query && visible === 0) {
+				emptyState.classList.remove("hidden");
+				emptyTerm.textContent = `"${query}"`;
+			} else {
+				emptyState.classList.add("hidden");
+			}
+		};
+
+		searchInput.addEventListener("input", filterRows);
+
+		clearBtn.addEventListener("click", () => {
+			searchInput.value = "";
+			filterRows();
+			searchInput.focus();
+		});
+	}
+	initHubSearch();
+</script>

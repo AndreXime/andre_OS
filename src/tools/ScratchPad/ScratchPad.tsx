@@ -68,7 +68,7 @@ export default function ScratchPad() {
 			{toast && (
 				<output
 					aria-live="polite"
-					className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 block px-4 py-2 rounded-full text-sm font-medium bg-[color:var(--card-bg)] border border-[color:var(--primary)]/40 text-[color:var(--headline)] shadow-lg shadow-black/30"
+					className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 block px-4 py-2 rounded-full text-sm font-medium bg-paper-2 border border-accent/40 text-ink shadow-sm"
 				>
 					{toast}
 				</output>
@@ -81,7 +81,7 @@ export default function ScratchPad() {
 				storage={scratchPadStorage}
 			>
 				<div className="flex flex-1 min-h-0 min-w-0 w-full flex-col lg:flex-row">
-					<aside className="flex w-full shrink-0 flex-col min-h-0 border-b border-[color:var(--card-border)] p-4 lg:w-72 lg:border-b-0 lg:border-r lg:p-3">
+					<aside className="flex w-full shrink-0 flex-col min-h-0 border-b border-rule p-4 lg:w-72 lg:border-b-0 lg:border-r lg:p-3">
 						<ListPanel
 							notes={notes}
 							filtered={filtered}

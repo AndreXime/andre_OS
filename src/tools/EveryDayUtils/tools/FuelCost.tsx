@@ -65,7 +65,7 @@ export default function FuelCostCard() {
 
 	return (
 		<div className="space-y-6">
-			<p className="text-sm text-[var(--text)]">Descubra o impacto do combustível no seu orçamento mensal e anual.</p>
+			<p className="text-sm text-muted">Descubra o impacto do combustível no seu orçamento mensal e anual.</p>
 
 			{/* --- Campos de Entrada --- */}
 			<div className="space-y-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -104,8 +104,8 @@ export default function FuelCostCard() {
 			</div>
 
 			{/* --- Resultados --- */}
-			<div className="mt-8 border-t border-[var(--card-border)]/50 pt-6 space-y-3">
-				<h3 className="text-lg font-bold mb-4 text-[var(--primary)]">Estimativa de Gastos</h3>
+			<div className="mt-8 border-t border-rule/50 pt-6 space-y-3">
+				<h3 className="text-lg font-bold mb-4 text-accent">Estimativa de Gastos</h3>
 
 				<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 					{/* Coluna da Esquerda (Curto Prazo) */}
@@ -159,9 +159,9 @@ interface ResultItemProps {
 }
 
 const ResultItem: React.FC<ResultItemProps> = ({ label, value }) => (
-	<div className="flex justify-between items-center p-3 rounded-lg bg-[color-mix(in_srgb,var(--card-bg)_88%,#0000)] border-l-4 border-[var(--primary)]/20">
+	<div className="flex justify-between items-center p-3 rounded-lg bg-[color-mix(in_srgb,var(--color-paper-2)_88%,#0000)] border-l-4 border-accent/20">
 		{/* Removi as condições isTotal ? ... : ... e fixei as cores claras */}
-		<span className="font-medium text-[var(--card-text)]">{label}</span>
-		<span className="text-lg font-bold text-[var(--primary)]">{value}</span>
+		<span className="font-medium text-ink-2">{label}</span>
+		<span className="text-lg font-bold text-accent">{value}</span>
 	</div>
 );

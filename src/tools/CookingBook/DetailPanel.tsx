@@ -4,7 +4,7 @@ import { formatDate } from "./utils";
 
 function RecipeBody({ body }: { readonly body: string }) {
 	return (
-		<pre className="whitespace-pre-wrap font-sans text-sm sm:text-[15px] leading-[1.7] text-[color:var(--card-text)] m-0">
+		<pre className="whitespace-pre-wrap font-sans text-sm sm:text-[15px] leading-[1.7] text-ink-2 m-0">
 			{body}
 		</pre>
 	);
@@ -26,7 +26,7 @@ export function DetailPanel({ recipe, onBack, onCopy, onDuplicate, onEdit, onDel
 				<button
 					type="button"
 					onClick={onBack}
-					className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm text-[color:var(--text)] hover:text-[color:var(--headline)] hover:bg-[color:var(--primary)]/10 lg:hidden"
+					className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm text-muted hover:text-ink hover:bg-accent/10 lg:hidden"
 				>
 					<ArrowLeft className="size-4" />
 					Voltar
@@ -35,7 +35,7 @@ export function DetailPanel({ recipe, onBack, onCopy, onDuplicate, onEdit, onDel
 				<button
 					type="button"
 					onClick={() => onCopy(recipe)}
-					className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-[color:var(--text)] border border-[color:var(--card-border)] hover:border-[color:var(--primary)]/50 hover:text-[color:var(--headline)]"
+					className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-muted border border-rule hover:border-accent/50 hover:text-ink"
 				>
 					<Copy className="size-3.5" />
 					Copiar
@@ -43,7 +43,7 @@ export function DetailPanel({ recipe, onBack, onCopy, onDuplicate, onEdit, onDel
 				<button
 					type="button"
 					onClick={() => onDuplicate(recipe)}
-					className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-[color:var(--text)] border border-[color:var(--card-border)] hover:border-[color:var(--primary)]/50 hover:text-[color:var(--headline)]"
+					className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-muted border border-rule hover:border-accent/50 hover:text-ink"
 				>
 					<Files className="size-3.5" />
 					Duplicar
@@ -51,7 +51,7 @@ export function DetailPanel({ recipe, onBack, onCopy, onDuplicate, onEdit, onDel
 				<button
 					type="button"
 					onClick={() => onEdit(recipe)}
-					className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-[color:var(--headline)] border border-[color:var(--card-border)] hover:border-[color:var(--primary)]/50"
+					className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-ink border border-rule hover:border-accent/50"
 				>
 					<Pencil className="size-4" />
 					Editar
@@ -59,24 +59,24 @@ export function DetailPanel({ recipe, onBack, onCopy, onDuplicate, onEdit, onDel
 				<button
 					type="button"
 					onClick={() => onDelete(recipe)}
-					className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-[color:var(--text)] hover:text-red-300 hover:bg-red-500/10"
+					className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm text-muted hover:text-red-300 hover:bg-red-500/10"
 				>
 					<Trash2 className="size-4" />
 				</button>
 			</div>
 
-			<div className="rounded-2xl border border-[color:var(--card-border)] bg-[color:var(--card-bg)] overflow-hidden shadow-lg shadow-black/15">
+			<div className="rounded-card border border-rule bg-paper-2 overflow-hidden shadow-sm">
 				<div className="p-4 sm:p-6 flex flex-col gap-3">
-					<h2 className="text-2xl sm:text-3xl font-bold text-[color:var(--headline)] tracking-tight leading-tight">
+					<h2 className="text-2xl sm:text-3xl font-bold text-ink tracking-tight leading-tight">
 						{displayTitle(recipe)}
 					</h2>
-					<p className="text-xs text-[color:var(--text)]/80">
+					<p className="text-xs text-muted/80">
 						Atualizado em {formatDate(recipe.updatedAt)}
 						{recipe.createdAt !== recipe.updatedAt && (
-							<span className="text-[color:var(--text)]/55"> · Criado em {formatDate(recipe.createdAt)}</span>
+							<span className="text-muted/55"> · Criado em {formatDate(recipe.createdAt)}</span>
 						)}
 					</p>
-					<div className="h-px bg-gradient-to-r from-transparent via-[color:var(--card-border)] to-transparent" />
+					<div className="h-px bg-gradient-to-r from-transparent via-[color:var(--color-rule)] to-transparent" />
 					<RecipeBody body={recipe.body} />
 				</div>
 			</div>

@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content";
-import DirectoryLayout from "@/components/layout/DirectoryLayout.astro";
-import DocumentLayout from "@/components/layout/DocumentLayout.astro";
+import HubListingLayout from "@/components/layout/HubListingLayout.astro";
+import SEOLayout from "@/components/layout/SEOLayout.astro";
 
 const entries = (await getCollection("posts")).map((entry) => entry.data);
 
@@ -14,9 +14,6 @@ const appPosts = entries
 const categoryParam = "note";
 ---
 
-<DocumentLayout title="andre_OS">
-    <DirectoryLayout
-        recentPosts={appPosts}
-        activeCategory={categoryParam}
-    />
-</DocumentLayout>
+<SEOLayout title="André · Hub técnico">
+    <HubListingLayout recentPosts={appPosts} activeCategory={categoryParam} />
+</SEOLayout>

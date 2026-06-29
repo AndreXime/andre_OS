@@ -10,72 +10,43 @@ export interface ToolShellProps {
 	storage?: ToolStorageEntry;
 	actions?: ReactNode;
 	children: ReactNode;
-	variant?: "default" | "compact";
 }
 
 function HeaderActions({ storage, actions }: { storage?: ToolStorageEntry; actions?: ReactNode }) {
 	if (!storage && !actions) return null;
 
 	return (
-		<div className="flex flex-wrap items-center gap-2 shrink-0">
+		<div className="flex shrink-0 flex-wrap items-center gap-2xs">
 			{storage && <CopyLinkButton storage={storage} />}
 			{actions}
 		</div>
 	);
 }
 
-export function ToolShell({
-	title,
-	description,
-	icon,
-	storage,
-	actions,
-	children,
-	variant = "default",
-}: ToolShellProps) {
+export function ToolShell({ title, description, icon, storage, actions, children }: ToolShellProps) {
 	useImportStateFromUrl(storage);
 
-	if (variant === "compact") {
-		return (
-			<div className="flex flex-1 flex-col min-h-0 w-full min-w-0">
-				<header className="shrink-0 border-b border-[color:var(--card-border)] px-4 py-3 md:px-6 flex items-center gap-3 w-full">
-					{icon && (
-						<div className="shrink-0 rounded-lg border border-[color:var(--card-border)] bg-[color:var(--card-bg)] p-2 text-[color:var(--primary)]">
-							{icon}
-						</div>
-					)}
-					<div className="min-w-0 flex flex-col gap-0.5 flex-1">
-						<h1 className="text-base font-bold text-[color:var(--headline)] tracking-tight">{title}</h1>
-						{description && <p className="text-xs text-[color:var(--text)] truncate hidden sm:block">{description}</p>}
-					</div>
-					<HeaderActions {...(storage ? { storage } : {})} {...(actions ? { actions } : {})} />
-				</header>
-				<main className="flex flex-1 min-h-0 min-w-0 flex-col">{children}</main>
-			</div>
-		);
-	}
-
 	return (
-		<div className="relative w-full min-h-full flex flex-col">
-			<header className="os-chrome-inner pt-6 pb-3 md:pt-8 md:pb-4">
-				<div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-					<div className="flex items-start gap-3 min-w-0">
+		<div className="relative flex min-h-full w-full flex-col">
+			<header className="container-page w-full border-b border-b-rule pb-md pt-lg">
+				<div className="flex w-full flex-col gap-sm lg:flex-row lg:items-start lg:justify-between">
+					<div className="flex min-w-0 flex-1 items-start gap-sm border-l-[3px] border-accent pl-md">
 						{icon && (
-							<div className="shrink-0 rounded-xl border border-[color:var(--card-border)] bg-[color:var(--card-bg)] p-2.5 text-[color:var(--primary)] shadow-inner shadow-black/20">
+							<div className="shrink-0 rounded-card border border-accent-muted bg-accent-bg p-2.5 text-accent">
 								{icon}
 							</div>
 						)}
-						<div className="flex flex-col gap-2 max-w-3xl min-w-0">
-							<h1 className="text-3xl sm:text-4xl font-bold text-[color:var(--headline)] tracking-tight">{title}</h1>
-							{description && (
-								<p className="text-sm sm:text-[15px] text-[color:var(--text)] leading-relaxed">{description}</p>
-							)}
+						<div className="flex min-w-0 flex-1 flex-col gap-2xs">
+							<h1 className="m-0 font-display text-display-s font-semibold leading-snug tracking-display text-ink">
+								{title}
+							</h1>
+							{description && <p className="m-0 text-sm leading-normal text-muted">{description}</p>}
 						</div>
 					</div>
 					<HeaderActions {...(storage ? { storage } : {})} {...(actions ? { actions } : {})} />
 				</div>
 			</header>
-			<main className="os-chrome-inner pb-12 flex flex-col gap-4 flex-1">{children}</main>
+			<main className="container-page flex flex-1 flex-col gap-md pb-3xl pt-md">{children}</main>
 		</div>
 	);
 }

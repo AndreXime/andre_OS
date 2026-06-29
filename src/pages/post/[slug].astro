@@ -1,12 +1,9 @@
 ---
-import DocumentLayout from "../../components/layout/DocumentLayout.astro";
-import ShellLayout from "@/components/layout/ShellLayout.astro";
-import WindowFrame from "@/components/ui/WindowFrame.astro";
-import { formatDate, truncateMiddle } from "@/lib/utils";
+import SEOLayout from "../../components/layout/SEOLayout.astro";
+import MainLayout from "@/components/layout/MainLayout.astro";
+import { formatDate } from "@/lib/utils";
 import { getCollection } from "astro:content";
-import { ChevronLeft } from "lucide-react";
 import { marked, type Tokens } from "marked";
-import "@/styles/post-typography.css";
 
 export async function getStaticPaths() {
 	const entries = await getCollection(
@@ -42,59 +39,43 @@ const renderer = {
 
 marked.use({ renderer });
 const htmlContent = marked.parse(post.content || "", { async: false });
-const windowTitleFull = `~/notas/${post.slug}.md`;
-const windowTitle = truncateMiddle(windowTitleFull, 44);
 ---
 
-<DocumentLayout title={post.title + " | andre_OS"}>
-	<ShellLayout activeCategory="note" statusPath={windowTitleFull}>
-		<div class="mx-auto w-full max-w-5xl px-4 pt-8 pb-4">
-			<div class="mb-6 flex items-center gap-4 flex-shrink-0">
-				<a
-					href="/post"
-					class="ui-focus-ring flex items-center gap-2 px-3 py-1.5 rounded-md bg-[color-mix(in_oklch,var(--color-surface-1)_85%,transparent_15%)] border border-[var(--color-border)] hover:border-[var(--color-border-strong)] text-sm transition-colors text-[var(--color-dim)] hover:text-[var(--color-fg)] group"
+<SEOLayout title={`${post.title} · André`}>
+	<MainLayout activeCategory="note">
+		<article class="container-page py-lg pb-3xl">
+			<div class="mx-auto w-full">
+				<header
+					class="border-b border-b-rule pb-xl pl-md border-l-[3px] border-l-accent [box-shadow:inset_3px_0_0_var(--color-accent)]"
 				>
-					<ChevronLeft
-						size={16}
-						className="group-hover:-translate-x-0.5 transition-transform"
-					/>
-					Voltar para notas
-				</a>
-			</div>
-
-			<WindowFrame
-				title={windowTitle}
-				titleFull={windowTitleFull}
-				kind="note"
-				typeLabel="Nota"
-				padded={false}
-			>
-				<div
-					class="p-6 md:p-8 border-b border-[var(--color-border)] bg-[color-mix(in_oklch,var(--color-surface-2)_85%,transparent_15%)]"
-				>
+					<a
+						href="/post"
+						class="focus-ring mb-md inline-flex min-h-11 items-center font-mono text-sm text-muted no-underline hover:text-accent"
+					>
+						← Notas
+					</a>
 					<h1
-						class="text-3xl md:text-4xl font-bold text-[var(--color-fg)]"
+						class="m-0 font-display text-display-s leading-snug font-semibold tracking-display text-ink"
 					>
 						{post.title}
 					</h1>
-					{
-						post.date && (
-							<p class="mt-3 text-sm text-[var(--color-dim)] font-mono">
-								{formatDate(post.date)}
-							</p>
-						)
-					}
-				</div>
+
+					<p class="mt-sm font-mono text-xs text-muted">
+						<time datetime={post.date.toISOString()}>
+							{formatDate(post.date)}
+						</time>
+					</p>
+				</header>
 
 				{
-					htmlContent && (
+					htmlContent ? (
 						<div
-							class="p-6 md:p-8 content-container"
+							class="content-container pt-xl"
 							set:html={htmlContent}
 						/>
-					)
+					) : null
 				}
-			</WindowFrame>
-		</div>
-	</ShellLayout>
-</DocumentLayout>
+			</div>
+		</article>
+	</MainLayout>
+</SEOLayout>

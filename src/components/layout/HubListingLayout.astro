@@ -1,0 +1,159 @@
+---
+import type { Post } from "@/content.config";
+import {
+	getListingTitle,
+	getSectionDescription,
+	HUB_CONTENT_SECTIONS,
+	HUB_INTRO,
+	type HubCategory,
+} from "@/lib/hubSections";
+import { accentRailClass } from "@/lib/hubUi";
+import ContentTable from "../ui/ContentTable.astro";
+import HubSearchEmpty from "../ui/HubSearchEmpty.astro";
+import MainLayout from "./MainLayout.astro";
+
+interface Props {
+	recentPosts: Post[];
+	activeCategory: string;
+}
+
+const { recentPosts, activeCategory } = Astro.props;
+
+const showEmpty = recentPosts.length === 0;
+const listingTitle = getListingTitle(activeCategory);
+const isHubHome = activeCategory === "all";
+
+const hubRails = isHubHome
+	? [
+			{
+				label: "Recente",
+				href: null,
+				posts: recentPosts.slice(0, 8),
+			},
+			...HUB_CONTENT_SECTIONS.map((section) => ({
+				label: section.title,
+				href: section.href,
+				posts: recentPosts
+					.filter((post) => post.type === section.kind)
+					.slice(0, 5),
+			})),
+		]
+	: [];
+
+const emptyClass =
+	"rounded-card border border-dashed border-rule p-2xl text-center text-muted";
+const categoryCardClass =
+	"focus-ring flex min-h-11 flex-col gap-3xs rounded-card border border-rule border-t-[3px] border-t-accent-muted bg-paper-2 p-md no-underline transition-[border-color,background-color] duration-150 ease-out hover:border-rule hover:border-t-accent hover:bg-accent-bg";
+---
+
+<MainLayout activeCategory={activeCategory}>
+	<div class="container-page flex flex-col gap-section py-lg pb-3xl">
+		{
+			isHubHome ? (
+				<>
+					<section
+						class={accentRailClass}
+						aria-labelledby="hub-intro"
+					>
+						<h1
+							id="hub-intro"
+							class="m-0 font-display text-display-s leading-snug font-semibold tracking-display text-ink"
+						>
+							{HUB_INTRO.title}
+						</h1>
+						<p class="mt-md max-w-measure text-md leading-[var(--lh-prose)] text-muted">
+							{HUB_INTRO.lede}
+						</p>
+					</section>
+
+					<nav aria-label="Seções">
+						<ul class="m-0 grid list-none grid-cols-1 gap-sm p-0 lg:grid-cols-3">
+							{HUB_CONTENT_SECTIONS.map((section) => (
+								<li>
+									<a
+										href={section.href}
+										class={categoryCardClass}
+									>
+										<span class="font-display text-lg font-semibold text-accent">
+											{section.title}
+										</span>
+										<span class="text-sm leading-normal text-muted">
+											{section.description}
+										</span>
+									</a>
+								</li>
+							))}
+						</ul>
+					</nav>
+
+					{hubRails.length ? (
+						hubRails.map((rail) => (
+							<section
+								class="flex flex-col gap-md"
+								aria-labelledby={`rail-${rail.label}`}
+							>
+								<div class="flex flex-col gap-2xs lg:flex-row lg:items-baseline lg:justify-between">
+									<h2
+										id={`rail-${rail.label}`}
+										class="m-0 font-display text-xl font-semibold text-accent"
+									>
+										{rail.label}
+									</h2>
+									{rail.href ? (
+										<a
+											href={rail.href}
+											class="focus-ring inline-flex min-h-11 items-center font-mono text-sm text-accent no-underline hover:underline hover:underline-offset-[0.18em]"
+										>
+											Ver todas →
+										</a>
+									) : null}
+								</div>
+								{rail.posts.length ? (
+									<ContentTable posts={rail.posts} />
+								) : (
+									<p class="m-0 text-sm text-muted">
+										Nada publicado ainda.
+									</p>
+								)}
+							</section>
+						))
+					) : (
+						<div class={emptyClass}>
+							<p>Por enquanto não há publicações.</p>
+						</div>
+					)}
+				</>
+			) : (
+				<section aria-labelledby="hub-listing">
+					<header class={`flex flex-col gap-sm ${accentRailClass}`}>
+						<h1
+							id="hub-listing"
+							class="m-0 font-display text-display-s leading-snug font-semibold text-accent"
+						>
+							{listingTitle}
+						</h1>
+						<p class="m-0 text-md leading-[var(--lh-prose)] text-muted">
+							{getSectionDescription(activeCategory as HubCategory)}
+						</p>
+					</header>
+
+					{recentPosts.length ? (
+						<div class="mt-lg">
+							<ContentTable posts={recentPosts} />
+						</div>
+					) : null}
+				</section>
+			)
+		}
+
+		{
+			showEmpty && !isHubHome ? (
+				<div class={emptyClass}>
+					<p>Nenhum item publicado nesta seção ainda.</p>
+				</div>
+			) : null
+		}
+
+		<HubSearchEmpty />
+	</div>
+</MainLayout>

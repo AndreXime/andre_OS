@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { Check, Link2 } from "lucide-react";
+import { toolBtnGhostClass } from "@/lib/toolUi";
 import { generateStateUrl, StateUrlTooLargeError } from "./stateUrl";
 import type { ToolStorageEntry } from "./types";
-
-const actionButtonClass =
-	"inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium border border-[color:var(--card-border)] text-[color:var(--text)] hover:text-[color:var(--headline)] hover:border-[color:var(--primary)]/40 disabled:opacity-50 disabled:cursor-not-allowed transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--primary)]";
 
 type CopyStatus = "idle" | "loading" | "copied" | "tooLarge" | "error";
 
@@ -59,7 +57,7 @@ export function CopyLinkButton({ storage, className }: { storage: ToolStorageEnt
 			onClick={() => void handleCopy()}
 			disabled={status === "loading"}
 			title={statusHint ?? "Copiar link com o estado atual"}
-			className={className ?? actionButtonClass}
+			className={className ?? toolBtnGhostClass}
 		>
 			{status === "copied" ? <Check className="size-3.5" /> : <Link2 className="size-3.5" />}
 			{copyLinkLabel(status)}

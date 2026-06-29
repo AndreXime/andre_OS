@@ -1,10 +1,10 @@
 .rss-reader {
 	--rss-accent: #6eb5ff;
-	--rss-accent-dim: color-mix(in srgb, var(--rss-accent) 30%, var(--background));
+	--rss-accent-dim: color-mix(in srgb, var(--rss-accent) 30%, var(--color-paper));
 }
 
 .rss-reader-feed {
-	border-color: var(--card-border);
+	border-color: var(--color-rule);
 	transition:
 		border-color 0.2s ease,
 		background-color 0.2s ease,
@@ -12,16 +12,16 @@
 }
 
 .rss-reader-feed:hover {
-	border-color: color-mix(in srgb, var(--rss-accent) 40%, var(--card-border));
+	border-color: color-mix(in srgb, var(--rss-accent) 40%, var(--color-rule));
 }
 
 .rss-reader-feed--active {
-	border-color: color-mix(in srgb, var(--primary) 55%, var(--card-border));
-	background: color-mix(in srgb, var(--primary) 8%, var(--card-bg));
+	border-color: color-mix(in srgb, var(--color-accent) 55%, var(--color-rule));
+	background: color-mix(in srgb, var(--color-accent) 8%, var(--color-paper-2));
 }
 
 .rss-reader-article {
-	border-color: var(--card-border);
+	border-color: var(--color-rule);
 	transition:
 		border-color 0.2s ease,
 		box-shadow 0.2s ease,
@@ -29,8 +29,8 @@
 }
 
 .rss-reader-article:hover {
-	border-color: color-mix(in srgb, var(--rss-accent) 35%, var(--card-border));
-	box-shadow: 0 6px 20px color-mix(in srgb, #000 30%, transparent);
+	border-color: color-mix(in srgb, var(--rss-accent) 35%, var(--color-rule));
+	box-shadow: 0 4px 16px color-mix(in oklch, var(--color-ink) 8%, transparent);
 }
 
 @keyframes rss-fade-in {

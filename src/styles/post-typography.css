@@ -1,10 +1,8 @@
-@import "tailwindcss";
-@plugin "@tailwindcss/typography";
-
 .content-container {
-	@apply prose prose-invert prose-zinc max-w-none;
-	color: var(--color-fg);
-	line-height: 1.625;
+	@apply prose max-w-none;
+	color: var(--color-ink-2);
+	line-height: var(--lh-prose);
+	font-size: var(--text-md);
 }
 
 .content-container > :first-child {
@@ -12,24 +10,30 @@
 }
 
 .content-container a {
-	color: color-mix(in oklch, var(--color-accent) 75%, var(--color-fg) 25%);
+	color: var(--color-accent);
 	text-decoration: underline;
 	text-decoration-thickness: 1px;
 	text-underline-offset: 0.18em;
 }
 
-.content-container a:hover {
-	color: var(--color-accent);
+@media (hover: hover) {
+	.content-container a:hover {
+		color: var(--color-ink);
+	}
 }
 
 .content-container :is(h1, h2, h3, h4) {
-	color: var(--color-fg);
+	color: var(--color-ink);
+	font-family: var(--font-display);
+	font-weight: 600;
 }
 
 .content-container blockquote {
-	border-left: 2px solid color-mix(in oklch, var(--color-accent) 25%, var(--color-border) 75%);
-	padding-left: 1rem;
+	border-left: 2px solid var(--color-rule-2);
+	padding-left: var(--space-sm);
 	color: var(--color-muted);
+	font-family: var(--font-serif);
+	font-style: italic;
 }
 
 .content-container table {
@@ -38,55 +42,57 @@
 }
 
 .content-container thead {
-	background: color-mix(in oklch, var(--color-accent-bg) 75%, var(--color-surface-2) 25%);
+	background: var(--color-accent-bg);
 }
 
 .content-container th,
 .content-container td {
 	padding: 0.65em 1em;
-	border-bottom: 1px solid var(--color-border);
+	border-bottom: var(--rule-hair) solid var(--color-rule);
 }
 
 .content-container th {
-	color: var(--color-fg);
-	font-weight: 600;
+	color: var(--color-code-fg);
+	font-weight: 700;
 	text-align: left;
 }
 
 .content-container tbody tr:nth-child(even) {
-	background: color-mix(in oklch, var(--color-surface-1) 65%, transparent 35%);
+	background: var(--color-paper-2);
 }
 
-.content-container tbody tr:hover {
-	background: color-mix(in oklch, var(--color-accent-bg) 40%, var(--color-surface-1) 60%);
+@media (hover: hover) {
+	.content-container tbody tr:hover {
+		background: var(--color-accent-bg);
+	}
 }
 
 .content-container pre {
-	font-size: 1rem;
+	font-size: var(--text-sm);
 	line-height: 1.75;
 	background-color: var(--color-code-bg);
-	border: 1px solid var(--color-code-border);
+	border: var(--rule-hair) solid var(--color-code-border);
 	border-radius: var(--radius-sm);
-	padding: 16px;
+	padding: var(--space-sm);
 	overflow: auto;
-	margin: 1.5rem 0;
+	margin: var(--space-md) 0;
 }
 
-.content-container code {
+.content-container :where(code) {
 	font-family: var(--font-mono);
-	font-size: 85%;
-	color: var(--color-accent);
+	font-size: 0.875em;
 }
 
 .content-container :not(pre) > code {
-	background-color: color-mix(in oklch, var(--color-accent-bg) 80%, transparent 20%);
-	padding: 0.2em 0.4em;
+	background-color: var(--color-code-bg);
+	border: var(--rule-hair) solid var(--color-code-border);
+	padding: 0.15em 0.35em;
 	border-radius: var(--radius-sm);
-	color: var(--color-accent);
+	color: var(--color-code-fg);
 }
 
 .content-container pre code {
-	color: var(--color-accent-weak);
+	color: var(--color-code-fg);
 	background: transparent;
 }
 

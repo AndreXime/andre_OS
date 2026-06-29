@@ -1,0 +1,12 @@
+---
+const rssUrl = new URL("rss.xml", Astro.site);
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t-[3px] border-accent bg-accent-bg px-gutter py-xl">
+	<p class="container-page m-0 text-center font-mono text-xs leading-normal text-muted">
+		André · notas, ferramentas e links ·
+		<a href={rssUrl} class="text-accent no-underline hover:underline">Assinar via RSS</a>
+		· © {year}
+	</p>
+</footer>

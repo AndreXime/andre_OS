@@ -4,9 +4,9 @@ import type { ReactNode } from "react";
 
 export function FieldLabel({ children, optional }: { readonly children: ReactNode; readonly optional?: boolean }) {
 	return (
-		<span className="text-[10px] font-medium uppercase tracking-[0.14em] text-[color:var(--text)]/80">
+		<span className="text-[10px] font-medium uppercase tracking-[0.14em] text-muted/80">
 			{children}
-			{optional && <span className="normal-case font-normal text-[color:var(--text)]/60"> (opcional)</span>}
+			{optional && <span className="normal-case font-normal text-muted/60"> (opcional)</span>}
 		</span>
 	);
 }
@@ -46,17 +46,17 @@ export function FormPanel({
 				<button
 					type="button"
 					onClick={onBack}
-					className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm text-[color:var(--text)] hover:text-[color:var(--headline)] lg:hidden"
+					className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm text-muted hover:text-ink lg:hidden"
 				>
 					<ArrowLeft className="size-4" />
 					Voltar
 				</button>
-				<h2 className="text-lg sm:text-xl font-semibold text-[color:var(--headline)]">
+				<h2 className="text-lg sm:text-xl font-semibold text-ink">
 					{selectedId ? "Editar receita" : "Nova receita"}
 				</h2>
 			</div>
 
-			<div className="rounded-2xl border border-[color:var(--card-border)] bg-[color:var(--card-bg)] p-4 sm:p-5 flex flex-col gap-4 shadow-lg shadow-black/10">
+			<div className="rounded-card border border-rule bg-paper-2 p-4 sm:p-5 flex flex-col gap-4 shadow-lg shadow-black/10">
 				<div className="flex flex-col gap-1.5">
 					<label htmlFor="recipe-title">
 						<FieldLabel optional>Título</FieldLabel>
@@ -67,7 +67,7 @@ export function FormPanel({
 						value={title}
 						onChange={(e) => onTitleChange(e.target.value)}
 						placeholder="Bolo de cenoura, risoto…"
-						className="w-full min-h-10 rounded-lg border border-[color:var(--card-border)] bg-[color:var(--background)] px-3 py-2 text-sm text-[color:var(--headline)] placeholder:text-[color:var(--text)]/70 focus:outline-none focus:ring-2 focus:ring-[color:var(--primary)]"
+						className="w-full min-h-10 rounded-lg border border-rule bg-paper px-3 py-2 text-sm text-ink placeholder:text-muted/70 focus:outline-none focus:ring-2 focus:ring-accent"
 					/>
 				</div>
 
@@ -83,7 +83,7 @@ export function FormPanel({
 						placeholder={
 							"Ingredientes, modo de preparo, temperos, tempo no forno…\nEscreva como quiser, sem formato fixo."
 						}
-						className="w-full min-h-[10rem] rounded-lg border border-[color:var(--card-border)] bg-[color:var(--background)] px-3 py-2.5 text-sm text-[color:var(--headline)] placeholder:text-[color:var(--text)]/70 focus:outline-none focus:ring-2 focus:ring-[color:var(--primary)] resize-y leading-relaxed"
+						className="w-full min-h-[10rem] rounded-lg border border-rule bg-paper px-3 py-2.5 text-sm text-ink placeholder:text-muted/70 focus:outline-none focus:ring-2 focus:ring-accent resize-y leading-relaxed"
 					/>
 				</div>
 
@@ -91,10 +91,10 @@ export function FormPanel({
 					type="submit"
 					disabled={!canSave}
 					className={[
-						"inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-[opacity,transform]",
+						"inline-flex w-full items-center justify-center gap-2 rounded-card px-4 py-2.5 text-sm font-semibold transition-[opacity,transform]",
 						canSave
-							? "bg-[color:var(--primary)] text-[color:var(--primary-text)] hover:opacity-90 active:scale-[0.99]"
-							: "bg-[color:var(--card-border)]/40 text-[color:var(--text)]/60 cursor-not-allowed",
+							? "bg-accent text-accent-ink hover:opacity-90 active:scale-[0.99]"
+							: "bg-[color:var(--color-rule)]/40 text-muted/60 cursor-not-allowed",
 					].join(" ")}
 				>
 					{selectedId ? "Salvar alterações" : "Salvar receita"}

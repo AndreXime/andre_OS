@@ -9,7 +9,7 @@ import vercel from "@astrojs/vercel";
 
 // https://astro.build/config
 export default defineConfig({
-	site: "https://andreximenes.xyz",
+	site: "https://dev.andreximenes.xyz",
 	output: "static",
 	image: {
 		remotePatterns: [{ protocol: "https" }],

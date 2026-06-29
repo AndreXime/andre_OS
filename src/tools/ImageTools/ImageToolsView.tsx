@@ -52,10 +52,10 @@ const OPERATIONS: { id: OperationType; label: string; icon: typeof Upload }[] = 
 const CONVERT_FORMATS: OutputFormat[] = ["png", "jpeg", "webp", "avif"];
 
 const PROGRESS_BAR_CLASS =
-	"block w-full h-1.5 appearance-none overflow-hidden rounded-full bg-[var(--background)] [&::-webkit-progress-bar]:rounded-full [&::-webkit-progress-bar]:bg-[var(--background)] [&::-webkit-progress-value]:rounded-full [&::-webkit-progress-value]:bg-[var(--primary)] transition-all duration-300 [&::-moz-progress-bar]:rounded-full [&::-moz-progress-bar]:bg-[var(--primary)]";
+	"block w-full h-1.5 appearance-none overflow-hidden rounded-full bg-paper [&::-webkit-progress-bar]:rounded-full [&::-webkit-progress-bar]:bg-paper [&::-webkit-progress-value]:rounded-full [&::-webkit-progress-value]:bg-accent transition-all duration-300 [&::-moz-progress-bar]:rounded-full [&::-moz-progress-bar]:bg-accent";
 
 const PRELOAD_PROGRESS_BAR_CLASS =
-	"block w-full h-1 appearance-none overflow-hidden rounded-full bg-[var(--card-border)]/30 [&::-webkit-progress-bar]:rounded-full [&::-webkit-progress-bar]:bg-[var(--card-border)]/30 [&::-webkit-progress-value]:rounded-full [&::-webkit-progress-value]:bg-[var(--primary)]/70 [&::-moz-progress-bar]:rounded-full [&::-moz-progress-bar]:bg-[var(--primary)]/70";
+	"block w-full h-1 appearance-none overflow-hidden rounded-full bg-[var(--color-rule)]/30 [&::-webkit-progress-bar]:rounded-full [&::-webkit-progress-bar]:bg-[var(--color-rule)]/30 [&::-webkit-progress-value]:rounded-full [&::-webkit-progress-value]:bg-accent/70 [&::-moz-progress-bar]:rounded-full [&::-moz-progress-bar]:bg-accent/70";
 
 export default function ImageToolsView() {
 	const sourceFile = useStore($sourceFile);
@@ -202,12 +202,12 @@ export default function ImageToolsView() {
 				<button
 					type="button"
 					onClick={clearAll}
-					className="flex items-center gap-1.5 text-sm text-[var(--text)] hover:text-[var(--headline)] transition-colors cursor-pointer"
+					className="flex items-center gap-1.5 text-sm text-muted hover:text-ink transition-colors cursor-pointer"
 				>
 					<ArrowLeft className="w-4 h-4" aria-hidden="true" />
 					Nova imagem
 				</button>
-				<div className="flex items-center gap-2 text-xs text-[var(--text)]">
+				<div className="flex items-center gap-2 text-xs text-muted">
 					<span>{sourceFile.name}</span>
 					<span className="opacity-50" aria-hidden="true">
 						|
@@ -226,7 +226,7 @@ export default function ImageToolsView() {
 				</div>
 			</div>
 
-			<div className="relative bg-[var(--background)] border border-[var(--card-border)]/30 rounded-lg overflow-hidden min-h-48">
+			<div className="relative bg-paper border border-rule/30 rounded-lg overflow-hidden min-h-48">
 				<div className="checkered-bg absolute inset-0" aria-hidden="true" />
 				{resultUrl ? (
 					<div className="relative flex flex-col lg:flex-row gap-2 p-2">
@@ -254,9 +254,9 @@ export default function ImageToolsView() {
 
 			{processing && (
 				<div className="space-y-1.5">
-					<div className="flex items-center justify-between text-xs text-[var(--text)]">
+					<div className="flex items-center justify-between text-xs text-muted">
 						<span className="flex items-center gap-1.5">
-							<Loader2 className="w-3.5 h-3.5 animate-spin text-[var(--primary)]" aria-hidden="true" />
+							<Loader2 className="w-3.5 h-3.5 animate-spin text-accent" aria-hidden="true" />
 							{progressLabel}
 						</span>
 						<span>{progress}%</span>
@@ -270,7 +270,7 @@ export default function ImageToolsView() {
 					<button
 						type="button"
 						onClick={handleCancel}
-						className="text-xs text-[var(--text)] hover:text-[var(--headline)] transition-colors cursor-pointer"
+						className="text-xs text-muted hover:text-ink transition-colors cursor-pointer"
 					>
 						Cancelar
 					</button>
@@ -306,7 +306,7 @@ export default function ImageToolsView() {
 						<button
 							type="button"
 							onClick={() => void handleUseResultAsSource()}
-							className="flex items-center gap-1.5 text-sm font-medium text-[var(--text)] hover:text-[var(--headline)] transition-colors cursor-pointer"
+							className="flex items-center gap-1.5 text-sm font-medium text-muted hover:text-ink transition-colors cursor-pointer"
 						>
 							<ImagePlus className="w-4 h-4" aria-hidden="true" />
 							Usar como nova imagem
@@ -314,7 +314,7 @@ export default function ImageToolsView() {
 						<button
 							type="button"
 							onClick={handleDownload}
-							className="flex items-center gap-1.5 text-sm font-medium text-[var(--primary)] hover:text-[var(--headline)] transition-colors cursor-pointer"
+							className="flex items-center gap-1.5 text-sm font-medium text-accent hover:text-ink transition-colors cursor-pointer"
 						>
 							<Download className="w-4 h-4" aria-hidden="true" />
 							Baixar
@@ -340,8 +340,8 @@ export default function ImageToolsView() {
 							}}
 							className={`cursor-pointer flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-all border ${
 								isActive
-									? "bg-[var(--primary)]/15 border-[var(--primary)]/40 text-[var(--primary)]"
-									: "bg-[var(--card-bg)] border-[var(--card-border)]/30 text-[var(--card-text)] hover:border-[var(--primary)]/30 hover:text-[var(--headline)]"
+									? "bg-accent/15 border-accent/40 text-accent"
+									: "bg-paper-2 border-rule/30 text-ink-2 hover:border-accent/30 hover:text-ink"
 							} disabled:opacity-40 disabled:cursor-not-allowed`}
 						>
 							<Icon className="w-4 h-4 flex-shrink-0" aria-hidden="true" />
@@ -352,7 +352,7 @@ export default function ImageToolsView() {
 			</div>
 
 			{activeOperation && (
-				<div className="bg-[var(--card-bg)] border border-[var(--card-border)]/30 rounded-lg p-4 space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-200">
+				<div className="bg-paper-2 border border-rule/30 rounded-lg p-4 space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-200">
 					{activeOperation === "convert" && (
 						<ConvertControls format={outputFormat} quality={quality} supportedFormats={supportedFormats} />
 					)}
@@ -367,7 +367,7 @@ export default function ImageToolsView() {
 						disabled={isApplyDisabled}
 						onClick={() => void handleExecute()}
 						type="button"
-						className="cursor-pointer w-full py-2.5 rounded-lg font-medium text-sm bg-[var(--primary)] text-[var(--primary-text)] hover:brightness-110 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+						className="cursor-pointer w-full py-2.5 rounded-lg font-medium text-sm bg-accent text-accent-ink hover:brightness-110 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
 					>
 						{processing ? (
 							<span className="flex items-center justify-center gap-2">
@@ -425,24 +425,24 @@ function UploadZone({
 					onDrop(e);
 				}}
 				onClick={() => !loading && fileInputRef.current?.click()}
-				className={`w-full cursor-pointer flex flex-col items-center justify-center gap-4 py-16 px-8 border-2 border-dashed rounded-xl transition-all duration-200 ${
+				className={`w-full cursor-pointer flex flex-col items-center justify-center gap-4 py-16 px-8 border-2 border-dashed rounded-card transition-all duration-200 ${
 					dragOver
-						? "border-[var(--primary)] bg-[var(--primary)]/10"
-						: "border-[var(--card-border)] hover:border-[var(--primary)]/50 hover:bg-[var(--card-bg)]/50"
+						? "border-accent bg-accent/10"
+						: "border-rule hover:border-accent/50 hover:bg-paper-2/50"
 				} ${loading ? "opacity-60 pointer-events-none" : ""}`}
 			>
-				<div className="w-16 h-16 rounded-2xl bg-[var(--primary)]/10 flex items-center justify-center">
+				<div className="w-16 h-16 rounded-card bg-accent/10 flex items-center justify-center">
 					{loading ? (
-						<Loader2 className="w-8 h-8 text-[var(--primary)] animate-spin" aria-hidden="true" />
+						<Loader2 className="w-8 h-8 text-accent animate-spin" aria-hidden="true" />
 					) : (
-						<Upload className="w-8 h-8 text-[var(--primary)]" aria-hidden="true" />
+						<Upload className="w-8 h-8 text-accent" aria-hidden="true" />
 					)}
 				</div>
 				<div className="text-center">
-					<p className="text-[var(--headline)] font-medium mb-1">
+					<p className="text-ink font-medium mb-1">
 						{loading ? "Validando imagem..." : "Arraste uma imagem ou clique para selecionar"}
 					</p>
-					<p className="text-sm text-[var(--text)]/60">
+					<p className="text-sm text-muted/60">
 						{ACCEPTED_FORMATS_LABEL} (max {formatFileSize(MAX_FILE_BYTES)}, {MAX_DIMENSION}px)
 					</p>
 				</div>
@@ -477,7 +477,7 @@ function UploadZone({
 
 function Label({ children, htmlFor }: { children: React.ReactNode; htmlFor?: string }) {
 	return (
-		<label htmlFor={htmlFor} className="block text-xs font-medium text-[var(--text)] mb-1">
+		<label htmlFor={htmlFor} className="block text-xs font-medium text-muted mb-1">
 			{children}
 		</label>
 	);
@@ -508,8 +508,8 @@ function ConvertControls({
 								onClick={() => $outputFormat.set(f)}
 								className={`cursor-pointer px-3 py-1.5 rounded-md text-xs font-medium border transition-colors disabled:opacity-30 disabled:cursor-not-allowed ${
 									format === f
-										? "bg-[var(--primary)]/15 border-[var(--primary)]/40 text-[var(--primary)]"
-										: "border-[var(--card-border)] text-[var(--card-text)] hover:border-[var(--primary)]/30"
+										? "bg-accent/15 border-accent/40 text-accent"
+										: "border-rule text-ink-2 hover:border-accent/30"
 								}`}
 							>
 								{f.toUpperCase()}
@@ -528,7 +528,7 @@ function ConvertControls({
 						max={100}
 						value={quality}
 						onChange={(e) => $quality.set(Number(e.target.value))}
-						className="w-full accent-[var(--primary)]"
+						className="w-full accent-accent"
 					/>
 				</div>
 			)}
@@ -553,9 +553,9 @@ function CompressControls({ quality, maxWidth, hasAlpha }: { quality: number; ma
 					max={100}
 					value={quality}
 					onChange={(e) => $quality.set(Number(e.target.value))}
-					className="w-full accent-[var(--primary)]"
+					className="w-full accent-accent"
 				/>
-				<div className="flex justify-between text-[10px] text-[var(--text)]/50 mt-1">
+				<div className="flex justify-between text-[10px] text-muted/50 mt-1">
 					<span>Menor arquivo</span>
 					<span>Maior qualidade</span>
 				</div>
@@ -570,8 +570,8 @@ function CompressControls({ quality, maxWidth, hasAlpha }: { quality: number; ma
 							onClick={() => $compressMaxWidth.set(opt.value)}
 							className={`cursor-pointer px-3 py-1.5 rounded-md text-xs font-medium border transition-colors ${
 								maxWidth === opt.value
-									? "bg-[var(--primary)]/15 border-[var(--primary)]/40 text-[var(--primary)]"
-									: "border-[var(--card-border)] text-[var(--card-text)] hover:border-[var(--primary)]/30"
+									? "bg-accent/15 border-accent/40 text-accent"
+									: "border-rule text-ink-2 hover:border-accent/30"
 							}`}
 						>
 							{opt.label}
@@ -596,7 +596,7 @@ function ModelPreloadBanner({
 
 	if (status === "error") {
 		return (
-			<div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between text-xs text-[var(--text)]/60 bg-[var(--background)] border border-[var(--card-border)]/30 rounded-lg px-3 py-2">
+			<div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between text-xs text-muted/60 bg-paper border border-rule/30 rounded-lg px-3 py-2">
 				<p>
 					Nao foi possivel preparar o modelo de IA em segundo plano. A remocao de fundo ainda funciona, mas pode
 					demorar mais na primeira execucao.
@@ -604,7 +604,7 @@ function ModelPreloadBanner({
 				<button
 					type="button"
 					onClick={onRetry}
-					className="shrink-0 text-[var(--primary)] hover:text-[var(--headline)] transition-colors cursor-pointer font-medium"
+					className="shrink-0 text-accent hover:text-ink transition-colors cursor-pointer font-medium"
 				>
 					Tentar novamente
 				</button>
@@ -614,12 +614,12 @@ function ModelPreloadBanner({
 
 	return (
 		<output
-			className="block text-xs text-[var(--text)] bg-[var(--background)] border border-[var(--card-border)]/30 rounded-lg px-3 py-2 space-y-1.5"
+			className="block text-xs text-muted bg-paper border border-rule/30 rounded-lg px-3 py-2 space-y-1.5"
 			aria-live="polite"
 		>
 			<span className="flex items-center justify-between gap-2">
 				<span className="flex items-center gap-1.5">
-					<Loader2 className="w-3.5 h-3.5 animate-spin text-[var(--primary)]" aria-hidden="true" />
+					<Loader2 className="w-3.5 h-3.5 animate-spin text-accent" aria-hidden="true" />
 					Preparando modelo de IA em segundo plano...
 				</span>
 				<span>{progress}%</span>
@@ -636,9 +636,9 @@ function ModelPreloadBanner({
 
 function BgRemovalInfo({ modelPreloadStatus }: { modelPreloadStatus: ModelPreloadStatus }) {
 	return (
-		<div className="text-sm text-[var(--text)] space-y-2">
+		<div className="text-sm text-muted space-y-2">
 			<p>Remove o fundo da imagem usando IA diretamente no navegador.</p>
-			<p className="text-xs text-[var(--text)]/60">
+			<p className="text-xs text-muted/60">
 				{modelPreloadStatus === "ready"
 					? "Modelo de IA pronto. O resultado sera salvo em PNG."
 					: modelPreloadStatus === "loading"

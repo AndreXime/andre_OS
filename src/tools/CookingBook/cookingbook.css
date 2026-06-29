@@ -1,11 +1,11 @@
 .cooking-book {
 	--cb-warm: #e8a87c;
-	--cb-warm-dim: color-mix(in srgb, var(--cb-warm) 35%, var(--background));
+	--cb-warm-dim: color-mix(in srgb, var(--cb-warm) 35%, var(--color-paper));
 	--cb-sage: #7eb09b;
 }
 
 .cooking-book-card {
-	border-color: var(--card-border);
+	border-color: var(--color-rule);
 	transition:
 		border-color 0.2s ease,
 		box-shadow 0.2s ease,
@@ -13,13 +13,13 @@
 }
 
 .cooking-book-card:hover {
-	box-shadow: 0 8px 24px color-mix(in srgb, #000 35%, transparent);
+	box-shadow: 0 4px 16px color-mix(in oklch, var(--color-ink) 8%, transparent);
 }
 
 .cooking-book-card.cooking-book-card--active,
 .cooking-book-card.cooking-book-card--active:hover {
-	border-color: color-mix(in srgb, var(--primary) 55%, var(--card-border));
-	box-shadow: 0 0 0 1px color-mix(in srgb, var(--primary) 25%, transparent);
+	border-color: color-mix(in srgb, var(--color-accent) 55%, var(--color-rule));
+	box-shadow: 0 0 0 1px color-mix(in srgb, var(--color-accent) 25%, transparent);
 }
 
 @keyframes cb-fade-in {

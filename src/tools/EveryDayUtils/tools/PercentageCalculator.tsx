@@ -46,18 +46,18 @@ const Row = ({
 	unit?: string;
 }) => {
 	const resultBox =
-		"flex flex-col justify-center items-end px-4 py-2 rounded-lg bg-[color-mix(in_srgb,var(--card-bg)_90%,#0000)] border-l-4 border-[var(--primary)]/20";
+		"flex flex-col justify-center items-end px-4 py-2 rounded-lg bg-[color-mix(in_srgb,var(--color-paper-2)_90%,#0000)] border-l-4 border-accent/20";
 
 	return (
-		<div className="bg-[color-mix(in_srgb,var(--card-bg)_88%,#0000)] p-5 rounded-xl border border-[var(--card-border)]/50 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
-			<div className="text-xl font-light text-[var(--card-text)] leading-relaxed w-full text-center sm:text-left">
+		<div className="bg-[color-mix(in_srgb,var(--color-paper-2)_88%,#0000)] p-5 rounded-card border border-rule/50 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
+			<div className="text-xl font-light text-ink-2 leading-relaxed w-full text-center sm:text-left">
 				{children}
 			</div>
 			<div className={`flex-shrink-0 w-full sm:w-auto ${resultBox}`}>
-				<span className="text-xs uppercase tracking-wider text-[var(--text)]/90 font-semibold text-right w-full block">
+				<span className="text-xs uppercase tracking-wider text-muted/90 font-semibold text-right w-full block">
 					Resultado
 				</span>
-				<span className="text-2xl font-bold leading-none text-[var(--primary)]">{formatResult(result, unit)}</span>
+				<span className="text-2xl font-bold leading-none text-accent">{formatResult(result, unit)}</span>
 			</div>
 		</div>
 	);
@@ -111,7 +111,7 @@ export default function PercentageCalculatorCard() {
 
 	// Estilo do Input
 	const inlineInput =
-		"inline-block w-24 sm:w-32 mx-2 p-1 text-center font-bold bg-transparent border-b-2 border-[var(--card-border)] text-[var(--primary)] placeholder:text-[var(--text)]/40 transition-colors focus:outline-none focus:border-[var(--primary)]";
+		"inline-block w-24 sm:w-32 mx-2 p-1 text-center font-bold bg-transparent border-b-2 border-rule text-accent placeholder:text-muted/40 transition-colors focus:outline-none focus:border-accent";
 
 	return (
 		<div className="space-y-6">
@@ -204,9 +204,9 @@ export default function PercentageCalculatorCard() {
 			</Row>
 
 			{/* O bloco de Desconto/Aumento continua igual pois é HTML direto */}
-			<div className="bg-[color-mix(in_srgb,var(--card-bg)_88%,#0000)] p-5 rounded-xl border border-[var(--card-border)]/50 shadow-sm space-y-5">
-				<div className="flex items-center justify-between border-b border-[var(--card-border)]/50 pb-2">
-					<h4 className="text-lg font-semibold text-[var(--card-text)]">Cálculo de Desconto/Aumento</h4>
+			<div className="bg-[color-mix(in_srgb,var(--color-paper-2)_88%,#0000)] p-5 rounded-card border border-rule/50 shadow-sm space-y-5">
+				<div className="flex items-center justify-between border-b border-rule/50 pb-2">
+					<h4 className="text-lg font-semibold text-ink-2">Cálculo de Desconto/Aumento</h4>
 					<div className={tabBarClass}>
 						<button
 							type="button"
@@ -225,12 +225,12 @@ export default function PercentageCalculatorCard() {
 					</div>
 				</div>
 
-				<div className="text-xl font-light text-[var(--card-text)] leading-relaxed text-center sm:text-left">
+				<div className="text-xl font-light text-ink-2 leading-relaxed text-center sm:text-left">
 					Qual o valor final após{" "}
 					{isDiscount ? (
-						<span className="text-[var(--primary)] font-medium">desconto</span>
+						<span className="text-accent font-medium">desconto</span>
 					) : (
-						<span className="text-[var(--headline)] font-medium">aumento</span>
+						<span className="text-ink font-medium">aumento</span>
 					)}{" "}
 					de
 					<input
@@ -254,13 +254,13 @@ export default function PercentageCalculatorCard() {
 				</div>
 
 				<div className="grid grid-cols-2 gap-4 pt-2">
-					<div className={`p-3 rounded-lg bg-[color-mix(in_srgb,var(--card-bg)_90%,#0000)] border border-[var(--card-border)]/50`}>
-						<p className="text-[var(--text)]/80 text-sm mb-1">Valor Final</p>
-						<span className="text-2xl font-bold text-[var(--primary)]">{formatResult(res3?.finalValue)}</span>
+					<div className={`p-3 rounded-lg bg-[color-mix(in_srgb,var(--color-paper-2)_90%,#0000)] border border-rule/50`}>
+						<p className="text-muted/80 text-sm mb-1">Valor Final</p>
+						<span className="text-2xl font-bold text-accent">{formatResult(res3?.finalValue)}</span>
 					</div>
-					<div className={`p-3 rounded-lg bg-[color-mix(in_srgb,var(--card-bg)_90%,#0000)] border border-[var(--card-border)]/50 text-right`}>
-						<p className="text-[var(--text)]/80 text-sm mb-1">Diferença</p>
-						<span className="text-xl font-semibold text-[var(--card-text)]">{formatResult(res3?.changeAmount)}</span>
+					<div className={`p-3 rounded-lg bg-[color-mix(in_srgb,var(--color-paper-2)_90%,#0000)] border border-rule/50 text-right`}>
+						<p className="text-muted/80 text-sm mb-1">Diferença</p>
+						<span className="text-xl font-semibold text-ink-2">{formatResult(res3?.changeAmount)}</span>
 					</div>
 				</div>
 			</div>

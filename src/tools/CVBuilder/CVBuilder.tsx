@@ -38,7 +38,7 @@ export default function CVBuilderApp() {
 						<button
 							type="button"
 							onClick={printResume}
-							className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold bg-[color:var(--primary)] text-[color:var(--primary-text)] hover:opacity-90 shadow-sm shadow-black/20 active:scale-[0.99] transition-[opacity,transform] focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[color:var(--background)] shrink-0"
+							className="inline-flex items-center gap-2 rounded-card px-4 py-2.5 text-sm font-semibold bg-accent text-accent-ink hover:opacity-90 active:scale-[0.99] transition-[opacity,transform] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper shrink-0"
 							title="Imprimir / Salvar PDF"
 						>
 							<Printer size={16} />
@@ -59,7 +59,7 @@ export default function CVBuilderApp() {
 											"flex shrink-0 items-center justify-center gap-2 px-3 py-2.5 text-xs font-semibold uppercase tracking-wider transition-all rounded-t-xl border border-b-0",
 											isActive
 												? "bg-white border-slate-200 text-slate-800"
-												: "bg-[color:var(--card-bg)] border-[color:var(--card-border)] text-[color:var(--text)] hover:text-[color:var(--headline)] hover:border-[color:var(--primary)]/35",
+												: "bg-paper-2 border-rule text-muted hover:text-ink hover:border-accent/35",
 										].join(" ")}
 									>
 										{tab.icon}

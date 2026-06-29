@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { Copy, Eye, EyeOff, Pin, StickyNote, Trash2 } from "lucide-react";
 import { marked } from "marked";
+import { toolEditorSurfaceClass, toolIconBtnActiveClass, toolIconBtnClass, toolProseClass, toolTextareaClass } from "@/lib/toolUi";
 import { displayTitle, removeNote, togglePin, updateNote, type Note } from "./store";
 import { countWords, formatDate } from "./utils";
 
@@ -35,7 +36,7 @@ export function NotePanel({ note, preview, onPreviewChange, onDelete, onCopy }: 
 					defaultValue={note.title}
 					placeholder={displayTitle(note)}
 					onChange={(e) => updateNote(note.id, { title: e.target.value })}
-					className="flex-1 min-w-[12rem] bg-transparent text-base font-semibold text-[color:var(--headline)] placeholder:text-[color:var(--text)]/50 outline-none border-b border-transparent focus:border-[color:var(--card-border)] pb-1"
+					className="flex-1 min-w-[12rem] bg-transparent text-base font-semibold text-ink placeholder:text-muted/50 outline-none border-b border-transparent focus:border-rule pb-1"
 				/>
 				<div className="flex items-center gap-1 ml-auto">
 					<button
@@ -43,10 +44,8 @@ export function NotePanel({ note, preview, onPreviewChange, onDelete, onCopy }: 
 						onClick={() => togglePin(note.id)}
 						title={note.pinned ? "Desafixar" : "Fixar"}
 						className={[
-							"p-2 rounded-lg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--primary)]",
-							note.pinned
-								? "text-[color:var(--primary)] bg-[color-mix(in_srgb,var(--primary)_15%,var(--card-bg))]"
-								: "text-[color:var(--text)] hover:text-[color:var(--headline)] hover:bg-[color:var(--card-bg)]",
+							toolIconBtnClass,
+							note.pinned ? toolIconBtnActiveClass : "",
 						].join(" ")}
 					>
 						<Pin className="size-4" fill={note.pinned ? "currentColor" : "none"} />
@@ -55,7 +54,7 @@ export function NotePanel({ note, preview, onPreviewChange, onDelete, onCopy }: 
 						type="button"
 						onClick={() => onPreviewChange(!preview)}
 						title={preview ? "Editar" : "Preview Markdown"}
-						className="p-2 rounded-lg text-[color:var(--text)] hover:text-[color:var(--headline)] hover:bg-[color:var(--card-bg)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--primary)]"
+						className={toolIconBtnClass}
 					>
 						{preview ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
 					</button>
@@ -63,7 +62,7 @@ export function NotePanel({ note, preview, onPreviewChange, onDelete, onCopy }: 
 						type="button"
 						onClick={onCopy}
 						title="Copiar"
-						className="p-2 rounded-lg text-[color:var(--text)] hover:text-[color:var(--headline)] hover:bg-[color:var(--card-bg)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--primary)]"
+						className={toolIconBtnClass}
 					>
 						<Copy className="size-4" />
 					</button>
@@ -76,17 +75,17 @@ export function NotePanel({ note, preview, onPreviewChange, onDelete, onCopy }: 
 							onDelete();
 						}}
 						title="Excluir"
-						className="p-2 rounded-lg text-[color:var(--text)] hover:text-[color:var(--primary)] hover:bg-[color-mix(in_srgb,var(--primary)_10%,var(--card-bg))] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--primary)]"
+						className="p-2 rounded-lg text-muted hover:text-accent hover:bg-accent-bg transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
 					>
 						<Trash2 className="size-4" />
 					</button>
 				</div>
 			</div>
 
-			<div className="flex-1 min-h-0 rounded-xl border border-[color:var(--card-border)] bg-[color:var(--card-bg)] overflow-hidden">
+			<div className={toolEditorSurfaceClass}>
 				{preview ? (
 					<div
-						className="prose prose-invert prose-sm max-w-none h-full overflow-y-auto p-4 text-[color:var(--card-text)]"
+						className={toolProseClass}
 						dangerouslySetInnerHTML={{ __html: html || "<p class='opacity-50 italic'>Nada para visualizar</p>" }}
 					/>
 				) : (
@@ -96,12 +95,12 @@ export function NotePanel({ note, preview, onPreviewChange, onDelete, onCopy }: 
 						defaultValue={note.body}
 						onChange={(e) => updateNote(note.id, { body: e.target.value })}
 						placeholder="Comece a escrever… Suporta Markdown."
-						className="w-full h-full min-h-[16rem] resize-none bg-transparent p-4 text-sm leading-relaxed text-[color:var(--card-text)] placeholder:text-[color:var(--text)]/50 outline-none"
+						className={`${toolTextareaClass} h-full min-h-[16rem] resize-none border-0 bg-transparent`}
 					/>
 				)}
 			</div>
 
-			<footer className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[10px] uppercase tracking-[0.12em] text-[color:var(--text)]/70 shrink-0">
+			<footer className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[10px] uppercase tracking-[0.12em] text-muted/70 shrink-0">
 				<span>{wordCount} palavras</span>
 				<span>{charCount} caracteres</span>
 				<span className="ml-auto normal-case tracking-normal text-[11px]">
@@ -114,8 +113,8 @@ export function NotePanel({ note, preview, onPreviewChange, onDelete, onCopy }: 
 
 export function EmptyNotePanel() {
 	return (
-		<div className="flex min-h-0 flex-1 flex-col items-center justify-center text-[color:var(--text)]/80 opacity-60 px-4">
-			<StickyNote size={56} strokeWidth={1.5} className="mb-3 text-[color:var(--primary)]" />
+		<div className="flex min-h-0 flex-1 flex-col items-center justify-center text-muted/80 opacity-60 px-4">
+			<StickyNote size={56} strokeWidth={1.5} className="mb-3 text-accent" />
 			<p className="text-sm text-center max-w-xs">Selecione uma nota ou crie uma nova para começar.</p>
 		</div>
 	);

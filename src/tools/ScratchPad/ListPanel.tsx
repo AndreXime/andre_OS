@@ -1,4 +1,5 @@
 import { Pin, Plus, Search, StickyNote, X } from "lucide-react";
+import { toolBtnPrimaryClass, toolInputClass } from "@/lib/toolUi";
 import { displayTitle, type Note } from "./store";
 import { formatDate } from "./utils";
 
@@ -30,18 +31,18 @@ export function ListPanel({
 	return (
 		<div className="flex flex-col gap-3 h-full min-h-0">
 			<div className="relative shrink-0">
-				<Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 size-4 text-[color:var(--text)]/70" />
+				<Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted" />
 				<input
 					value={query}
 					onChange={(e) => onQueryChange(e.target.value)}
 					placeholder="Buscar notas…"
-					className="w-full min-h-10 rounded-xl border border-[color:var(--card-border)] bg-[color:var(--card-bg)] pl-10 pr-9 py-2 text-sm text-[color:var(--headline)] placeholder:text-[color:var(--text)]/70 focus:outline-none focus:ring-2 focus:ring-[color:var(--primary)]"
+					className={`${toolInputClass} pl-10 pr-9`}
 				/>
 				{query && (
 					<button
 						type="button"
 						onClick={() => onQueryChange("")}
-						className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-md text-[color:var(--text)] hover:text-[color:var(--headline)]"
+						className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1 text-muted hover:text-ink"
 						aria-label="Limpar busca"
 					>
 						<X className="size-3.5" />
@@ -52,7 +53,7 @@ export function ListPanel({
 			<button
 				type="button"
 				onClick={onCreate}
-				className="inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold bg-[color:var(--primary)] text-[color:var(--primary-text)] hover:opacity-90 shadow-sm shadow-black/20 active:scale-[0.99] focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--primary)]"
+				className={`inline-flex w-full shrink-0 items-center justify-center gap-2 ${toolBtnPrimaryClass}`}
 			>
 				<Plus className="size-4" strokeWidth={2.5} />
 				Nova nota
@@ -63,16 +64,16 @@ export function ListPanel({
 					<button
 						type="button"
 						onClick={onCreate}
-						className="rounded-2xl border border-dashed border-[color:var(--card-border)] bg-[color:var(--card-bg)]/50 p-6 text-center flex flex-col items-center gap-3 w-full hover:border-[color:var(--primary)]/50 hover:bg-[color:var(--card-bg)] transition-[border,background] focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--primary)]"
+						className="rounded-card border border-dashed border-rule bg-paper-2/50 p-6 text-center flex flex-col items-center gap-3 w-full hover:border-accent/50 hover:bg-paper-2 transition-[border,background] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
 					>
-						<StickyNote className="size-9 text-[color:var(--text)]/50" />
-						<p className="text-sm text-[color:var(--text)] max-w-xs leading-relaxed">
+						<StickyNote className="size-9 text-muted/50" />
+						<p className="text-sm text-muted max-w-xs leading-relaxed">
 							Nenhuma nota ainda. Toque para começar a escrever.
 						</p>
 					</button>
 				) : (
-					<div className="rounded-2xl border border-dashed border-[color:var(--card-border)] bg-[color:var(--card-bg)]/50 p-6 text-center">
-						<p className="text-sm text-[color:var(--text)]">Nenhum resultado para &quot;{query}&quot;</p>
+					<div className="rounded-card border border-dashed border-rule bg-paper-2/50 p-6 text-center">
+						<p className="text-sm text-muted">Nenhum resultado para &quot;{query}&quot;</p>
 					</div>
 				)
 			) : (
@@ -85,22 +86,22 @@ export function ListPanel({
 									type="button"
 									onClick={() => onSelect(note.id)}
 									className={[
-										"w-full text-left rounded-xl border bg-[color:var(--card-bg)] p-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-[color:var(--primary)] transition-colors",
+										"w-full text-left rounded-card border bg-paper-2 p-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent transition-colors",
 										active
-											? "border-[color:var(--primary)]/60 bg-[color-mix(in_srgb,var(--primary)_10%,var(--card-bg))]"
-											: "border-[color:var(--card-border)] hover:border-[color:var(--primary)]/30",
+											? "border-accent/60 bg-accent-bg"
+											: "border-rule hover:border-accent/30",
 									].join(" ")}
 								>
 									<div className="flex items-start gap-2 min-w-0">
 										{note.pinned && (
-											<Pin className="size-3.5 shrink-0 mt-0.5 text-[color:var(--primary)] fill-[color:var(--primary)]" />
+											<Pin className="size-3.5 shrink-0 mt-0.5 text-accent fill-accent" />
 										)}
 										<div className="flex flex-col gap-0.5 min-w-0 flex-1">
-											<span className="text-sm font-semibold text-[color:var(--headline)] truncate">
+											<span className="text-sm font-semibold text-ink truncate">
 												{displayTitle(note)}
 											</span>
-											<span className="text-[10px] text-[color:var(--text)]/75">{formatDate(note.updatedAt)}</span>
-											<span className="text-xs text-[color:var(--text)]/65 line-clamp-2 leading-snug">
+											<span className="text-[10px] text-muted/75">{formatDate(note.updatedAt)}</span>
+											<span className="text-xs text-muted/65 line-clamp-2 leading-snug">
 												{notePreview(note.body)}
 											</span>
 										</div>
