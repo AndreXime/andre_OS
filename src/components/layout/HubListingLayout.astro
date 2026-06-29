@@ -43,7 +43,7 @@ const hubRails = isHubHome
 const emptyClass =
 	"rounded-card border border-dashed border-rule p-2xl text-center text-muted";
 const categoryCardClass =
-	"focus-ring flex min-h-11 flex-col gap-3xs rounded-card border border-rule border-t-[3px] border-t-accent-muted bg-paper-2 p-md no-underline transition-[border-color,background-color] duration-150 ease-out hover:border-rule hover:border-t-accent hover:bg-accent-bg";
+	"focus-ring flex min-h-11 flex-col gap-3xs rounded-card border border-accent-muted border-t-[3px] border-t-accent bg-accent-bg p-md no-underline transition-[border-color,background-color] duration-150 ease-out hover:border-accent hover:bg-paper";
 ---
 
 <MainLayout activeCategory={activeCategory}>
@@ -77,7 +77,7 @@ const categoryCardClass =
 										<span class="font-display text-lg font-semibold text-accent">
 											{section.title}
 										</span>
-										<span class="text-sm leading-normal text-muted">
+										<span class="text-sm leading-normal text-ink">
 											{section.description}
 										</span>
 									</a>
