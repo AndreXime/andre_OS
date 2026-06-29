@@ -48,7 +48,7 @@ export const GET: APIRoute = async ({ request }) => {
 			signal: controller.signal,
 			headers: {
 				Accept: "application/rss+xml, application/atom+xml, application/xml, text/xml, */*",
-				"User-Agent": "andre_OS RSS Reader/1.0",
+				"User-Agent": "dev.andreximenes RSS Reader/1.0",
 			},
 		});
 

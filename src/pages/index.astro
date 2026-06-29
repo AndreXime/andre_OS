@@ -2,12 +2,13 @@
 import { getCollection } from "astro:content";
 import HubListingLayout from "@/components/layout/HubListingLayout.astro";
 import SEOLayout from "@/components/layout/SEOLayout.astro";
+import { SITE_NAME } from "@/content/site";
 
 const entries = (await getCollection("posts")).map((entry) => entry.data);
 
 const recentPosts = entries.sort((a, b) => b.date.getTime() - a.date.getTime());
 ---
 
-<SEOLayout title="André · Hub técnico">
+<SEOLayout title={SITE_NAME}>
 	<HubListingLayout recentPosts={recentPosts} activeCategory="all" />
 </SEOLayout>

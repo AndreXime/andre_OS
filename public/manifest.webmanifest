@@ -1,13 +1,13 @@
 {
-	"name": "andre_OS",
-	"short_name": "andre_OS",
-	"description": "Blog pessoal e ferramentas web com estetica de sistema operacional.",
+	"name": "dev.andreximenes",
+	"short_name": "dev.andreximenes",
+	"description": "Notas técnicas, ferramentas web e links curados por André Ximenes.",
 	"start_url": "/",
 	"scope": "/",
 	"display": "standalone",
 	"lang": "pt-BR",
-	"theme_color": "#1e1e28",
-	"background_color": "#1e1e28",
+	"theme_color": "#c45a1a",
+	"background_color": "#edece9",
 	"icons": [
 		{
 			"src": "/pwa-192x192.png",

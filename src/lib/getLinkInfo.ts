@@ -73,7 +73,7 @@ export async function getLinkInfo(targetUrl: string) {
 
 	try {
 		const response = await fetch(targetUrl, {
-			headers: { "User-Agent": "Mozilla/5.0 (compatible; andre_OS/1.0)" },
+			headers: { "User-Agent": "Mozilla/5.0 (compatible; dev.andreximenes/1.0)" },
 			signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
 			redirect: "follow",
 		});

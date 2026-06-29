@@ -2,6 +2,7 @@
 import SEOLayout from "../../components/layout/SEOLayout.astro";
 import MainLayout from "@/components/layout/MainLayout.astro";
 import { formatDate } from "@/lib/utils";
+import { pageTitle } from "@/content/site";
 import { getCollection } from "astro:content";
 import { marked, type Tokens } from "marked";
 
@@ -41,7 +42,7 @@ marked.use({ renderer });
 const htmlContent = marked.parse(post.content || "", { async: false });
 ---
 
-<SEOLayout title={`${post.title} · André`}>
+<SEOLayout title={pageTitle(post.title)}>
 	<MainLayout activeCategory="note">
 		<article class="container-page py-lg pb-3xl">
 			<div class="mx-auto w-full">

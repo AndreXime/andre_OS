@@ -1,5 +1,6 @@
 ---
 import SEOLayout from "../../components/layout/SEOLayout.astro";
+import { pageTitle } from "@/content/site";
 import AppLayout from "@/components/layout/AppLayout.astro";
 import ScratchPad from "../../tools/ScratchPad/ScratchPad";
 import EveryDayUtils from "../../tools/EveryDayUtils/UtilsApp";
@@ -32,7 +33,7 @@ const { name } = Astro.params;
 const toolName = name ?? "";
 ---
 
-<SEOLayout title={`${toolName} · André`}>
+<SEOLayout title={pageTitle(toolName)}>
 	<AppLayout>
 		{
 			(() => {

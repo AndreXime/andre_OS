@@ -1,4 +1,4 @@
-# Design — André · Hub de Conteúdo Técnico
+# Design — dev.andreximenes · Hub de Conteúdo Técnico
 
 Sistema visual locked para o hub de um autor. Páginas de conteúdo leem este arquivo antes de emitir código.
 

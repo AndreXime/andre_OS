@@ -1,6 +1,6 @@
-# André · Hub técnico
+# dev.andreximenes
 
-Hub editorial de um autor: notas longas, ferramentas web e links curados. Visual tema Almanac (papel frio, acento laranja, tipografia Hanken Grotesk).
+Hub editorial de André Ximenes: notas longas, ferramentas web e links curados. Visual tema Almanac (papel frio, acento laranja, tipografia Hanken Grotesk).
 
 **Site:** [https://dev.andreximenes.xyz](https://dev.andreximenes.xyz)
 

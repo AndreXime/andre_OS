@@ -1,6 +1,7 @@
 ---
 import { HUB_NAV_SECTIONS } from "@/lib/hubSections";
 import { navLinkActiveClass, navLinkClass, navLinkRssClass } from "@/lib/hubUi";
+import { SITE_NAME, SITE_TAGLINE } from "@/content/site";
 
 interface Props {
 	activeCategory: string;
@@ -14,14 +15,14 @@ const rssUrl = new URL("rss.xml", Astro.site);
 	<p
 		class="m-0 font-serif text-xs tracking-[0.08em] text-muted [font-variant:small-caps]"
 	>
-		Edição contínua · Hub técnico de um autor
+		{SITE_TAGLINE}
 	</p>
 	<p class="m-0">
 		<a
 			href="/"
 			class="font-display text-display font-semibold tracking-display text-accent no-underline [overflow-wrap:anywhere] min-w-0 hover:text-ink"
 		>
-			André
+			{SITE_NAME}
 		</a>
 	</p>
 	<div class="mx-auto w-full max-w-[28rem] pt-2xs">

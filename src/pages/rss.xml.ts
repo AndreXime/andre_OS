@@ -2,6 +2,7 @@ import rss from "@astrojs/rss";
 import { getCollection } from "astro:content";
 import type { APIContext } from "astro";
 import type { Post } from "@/content.config";
+import { SITE_DESCRIPTION, SITE_NAME } from "@/content/site";
 
 function getPostLink(post: Pick<Post, "type" | "slug" | "target">): string | undefined {
 	switch (post.type) {
@@ -38,8 +39,8 @@ export async function GET(context: APIContext) {
 		.filter((item): item is NonNullable<typeof item> => item !== undefined);
 
 	return rss({
-		title: "andre_OS",
-		description: "Notas tecnicas, ferramentas web e recomendacoes de Andre Ximenes.",
+		title: SITE_NAME,
+		description: SITE_DESCRIPTION,
 		site,
 		trailingSlash: false,
 		items,

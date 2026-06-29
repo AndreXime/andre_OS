@@ -2,15 +2,14 @@
 import SEOLayout from "@/components/layout/SEOLayout.astro";
 import MainLayout from "@/components/layout/MainLayout.astro";
 import { AUTHOR } from "@/content/author";
+import { pageTitle as buildPageTitle, SITE_NAME } from "@/content/site";
 import { kindBadgeClass } from "@/lib/hubUi";
 import { ExternalLinkIcon } from "lucide-react";
-
-const pageTitle = "Sobre mim";
 ---
 
 <SEOLayout
-	title={`${pageTitle} · André`}
-	description="Quem escreve este hub: André Ximenes, desenvolvedor backend TypeScript. Portfólio, LinkedIn e GitHub."
+	title={buildPageTitle("Sobre mim")}
+	description={`Quem escreve o ${SITE_NAME}: André Ximenes, desenvolvedor backend TypeScript. Portfólio, LinkedIn e GitHub.`}
 >
 	<MainLayout activeCategory="author">
 		<article class="container-page py-lg pb-3xl">
