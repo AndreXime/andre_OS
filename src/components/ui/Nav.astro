@@ -38,7 +38,7 @@ const rssUrl = new URL("rss.xml", Astro.site);
 			<input
 				id="search"
 				type="search"
-				placeholder="título, tema, tag…"
+				placeholder="por títulos ou temas..."
 				class="focus-ring min-w-0 flex-1 border-0 bg-transparent p-0 font-body text-sm text-ink outline-none placeholder:text-muted"
 				autocomplete="off"
 				spellcheck="false"
@@ -83,3 +83,9 @@ const rssUrl = new URL("rss.xml", Astro.site);
 		aria-hidden="true"
 	/>
 </header>
+
+<script>
+	import { initHubSearch } from "@/lib/hubSearch";
+
+	initHubSearch();
+</script>
