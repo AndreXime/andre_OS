@@ -36,7 +36,7 @@ export function FormPanel({
 }: FormPanelProps) {
 	return (
 		<form
-			className="cooking-book-panel flex flex-col gap-4"
+			className="flex flex-col gap-4"
 			onSubmit={(e) => {
 				e.preventDefault();
 				onSave();

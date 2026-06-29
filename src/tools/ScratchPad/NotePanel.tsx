@@ -1,7 +1,13 @@
 import { useEffect, useMemo, useRef } from "react";
-import { Copy, Eye, EyeOff, Pin, StickyNote, Trash2 } from "lucide-react";
+import { ArrowLeft, Copy, Eye, EyeOff, Pin, Trash2 } from "lucide-react";
 import { marked } from "marked";
-import { toolEditorSurfaceClass, toolIconBtnActiveClass, toolIconBtnClass, toolProseClass, toolTextareaClass } from "@/lib/toolUi";
+import {
+	toolEditorSurfaceClass,
+	toolIconBtnActiveClass,
+	toolIconBtnClass,
+	toolProseClass,
+	toolTextareaClass,
+} from "@/lib/toolUi";
 import { displayTitle, removeNote, togglePin, updateNote, type Note } from "./store";
 import { countWords, formatDate } from "./utils";
 
@@ -9,11 +15,12 @@ interface NotePanelProps {
 	note: Note;
 	preview: boolean;
 	onPreviewChange: (preview: boolean) => void;
+	onBack: () => void;
 	onDelete: () => void;
 	onCopy: () => void;
 }
 
-export function NotePanel({ note, preview, onPreviewChange, onDelete, onCopy }: NotePanelProps) {
+export function NotePanel({ note, preview, onPreviewChange, onBack, onDelete, onCopy }: NotePanelProps) {
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 
 	useEffect(() => {
@@ -31,6 +38,14 @@ export function NotePanel({ note, preview, onPreviewChange, onDelete, onCopy }: 
 	return (
 		<div className="flex flex-col min-h-0 flex-1 gap-3">
 			<div className="flex flex-wrap items-center gap-2 shrink-0">
+				<button
+					type="button"
+					onClick={onBack}
+					className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm text-muted hover:text-ink hover:bg-accent/10 lg:hidden"
+				>
+					<ArrowLeft className="size-4" />
+					Voltar
+				</button>
 				<input
 					key={`title-${note.id}`}
 					defaultValue={note.title}
@@ -43,10 +58,7 @@ export function NotePanel({ note, preview, onPreviewChange, onDelete, onCopy }: 
 						type="button"
 						onClick={() => togglePin(note.id)}
 						title={note.pinned ? "Desafixar" : "Fixar"}
-						className={[
-							toolIconBtnClass,
-							note.pinned ? toolIconBtnActiveClass : "",
-						].join(" ")}
+						className={[toolIconBtnClass, note.pinned ? toolIconBtnActiveClass : ""].join(" ")}
 					>
 						<Pin className="size-4" fill={note.pinned ? "currentColor" : "none"} />
 					</button>
@@ -58,12 +70,7 @@ export function NotePanel({ note, preview, onPreviewChange, onDelete, onCopy }: 
 					>
 						{preview ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
 					</button>
-					<button
-						type="button"
-						onClick={onCopy}
-						title="Copiar"
-						className={toolIconBtnClass}
-					>
+					<button type="button" onClick={onCopy} title="Copiar" className={toolIconBtnClass}>
 						<Copy className="size-4" />
 					</button>
 					<button
@@ -103,19 +110,8 @@ export function NotePanel({ note, preview, onPreviewChange, onDelete, onCopy }: 
 			<footer className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[10px] uppercase tracking-[0.12em] text-muted/70 shrink-0">
 				<span>{wordCount} palavras</span>
 				<span>{charCount} caracteres</span>
-				<span className="ml-auto normal-case tracking-normal text-[11px]">
-					Atualizado {formatDate(note.updatedAt)}
-				</span>
+				<span className="ml-auto normal-case tracking-normal text-[11px]">Atualizado {formatDate(note.updatedAt)}</span>
 			</footer>
-		</div>
-	);
-}
-
-export function EmptyNotePanel() {
-	return (
-		<div className="flex min-h-0 flex-1 flex-col items-center justify-center text-muted/80 opacity-60 px-4">
-			<StickyNote size={56} strokeWidth={1.5} className="mb-3 text-accent" />
-			<p className="text-sm text-center max-w-xs">Selecione uma nota ou crie uma nova para começar.</p>
 		</div>
 	);
 }

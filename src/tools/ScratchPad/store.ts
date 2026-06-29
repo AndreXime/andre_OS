@@ -1,6 +1,8 @@
 import { createJsonPersistentAtom } from "@/lib/toolStorage/persistentAtom";
 import type { ToolStorageEntry } from "@/lib/toolStorage/types";
 
+export type Screen = "list" | "note";
+
 export interface Note {
 	readonly id: string;
 	readonly title: string;

@@ -15,7 +15,6 @@ import {
 	type Recipe,
 } from "./store";
 import type { Screen } from "./store";
-import "./cookingbook.css";
 
 export default function CookingBook() {
 	const { recipes } = useStore(cookingBook$);
@@ -176,9 +175,9 @@ export default function CookingBook() {
 				onSave={handleSave}
 			/>
 		) : screen === "list" ? (
-			<div className="cooking-book-panel hidden lg:flex flex-col items-center justify-center rounded-card border border-dashed border-rule bg-paper-2/30 p-12 text-center min-h-[20rem]">
-				<ChefHat className="size-12 text-accent/40 mb-4" />
-				<p className="text-sm text-muted max-w-xs leading-relaxed">
+			<div className="hidden min-h-[20rem] w-full flex-col items-center justify-center gap-md rounded-card border border-dashed border-rule bg-paper-2/30 p-12 lg:flex">
+				<ChefHat className="size-14 shrink-0 text-accent/45" strokeWidth={1.5} />
+				<p className="text-left text-base leading-relaxed text-muted">
 					{recipes.length === 0
 						? "Comece criando sua primeira receita."
 						: "Selecione uma receita na lista ou crie uma nova."}
@@ -187,11 +186,11 @@ export default function CookingBook() {
 		) : null;
 
 	return (
-		<div className="cooking-book min-h-full w-full">
+		<div className="min-h-full w-full">
 			{toast && (
 				<output
 					aria-live="polite"
-					className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 block px-4 py-2 rounded-full text-sm font-medium bg-paper-2 border border-accent/40 text-ink shadow-sm animate-[cb-fade-in_0.2s_ease-out]"
+					className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 block px-4 py-2 rounded-full text-sm font-medium bg-paper-2 border border-accent/40 text-ink shadow-sm"
 				>
 					{toast}
 				</output>
@@ -203,8 +202,13 @@ export default function CookingBook() {
 				icon={<ChefHat className="size-6" strokeWidth={2} />}
 				storage={cookingBookStorage}
 			>
-				<div className="cooking-book-layout flex flex-col lg:flex-row lg:gap-8 lg:items-start" data-screen={screen}>
-					<aside className="cooking-book-list w-full lg:w-[min(100%,22rem)] lg:shrink-0 lg:sticky lg:top-6">
+				<div className="flex flex-col lg:flex-row lg:gap-8 lg:items-start">
+					<aside
+						className={[
+							"w-full lg:w-[min(100%,22rem)] lg:shrink-0 lg:sticky lg:top-6",
+							screen === "list" ? "block" : "hidden lg:block",
+						].join(" ")}
+					>
 						<ListPanel
 							recipes={recipes}
 							filtered={filtered}
@@ -217,7 +221,11 @@ export default function CookingBook() {
 						/>
 					</aside>
 
-					<section className="cooking-book-main flex-1 min-w-0 mt-4 lg:mt-0">{mainPanel}</section>
+					<section
+						className={["flex-1 min-w-0 mt-4 lg:mt-0", screen === "list" ? "hidden lg:block" : "block"].join(" ")}
+					>
+						{mainPanel}
+					</section>
 				</div>
 			</ToolShell>
 		</div>

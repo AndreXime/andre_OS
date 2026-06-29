@@ -21,7 +21,7 @@ interface DetailPanelProps {
 
 export function DetailPanel({ recipe, onBack, onCopy, onDuplicate, onEdit, onDelete }: DetailPanelProps) {
 	return (
-		<article className="cooking-book-panel flex flex-col gap-4">
+		<article className="flex flex-col gap-4">
 			<div className="flex flex-wrap items-center gap-2">
 				<button
 					type="button"

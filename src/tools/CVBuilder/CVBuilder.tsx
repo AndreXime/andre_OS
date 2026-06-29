@@ -28,7 +28,7 @@ export default function CVBuilderApp() {
 
 	return (
 		<>
-			<div className="print:hidden overflow-x-hidden">
+			<div className="cv-builder min-h-full w-full print:hidden">
 				<ToolShell
 					title="Gerador de CV"
 					description="Monte currículos em Markdown, gere prompts para IA e exporte em PDF."
@@ -56,10 +56,10 @@ export default function CVBuilderApp() {
 										type="button"
 										onClick={() => setActiveTab(tab.id)}
 										className={[
-											"flex shrink-0 items-center justify-center gap-2 px-3 py-2.5 text-xs font-semibold uppercase tracking-wider transition-all rounded-t-xl border border-b-0",
+											"flex shrink-0 items-center justify-center gap-2 rounded-t-card border border-b-0 px-3 py-2.5 text-xs font-semibold uppercase tracking-wider transition-all",
 											isActive
-												? "bg-white border-slate-200 text-slate-800"
-												: "bg-paper-2 border-rule text-muted hover:text-ink hover:border-accent/35",
+												? "border-accent-muted bg-paper text-ink"
+												: "border-rule bg-paper-2 text-muted hover:border-accent-muted hover:text-ink",
 										].join(" ")}
 									>
 										{tab.icon}
@@ -77,7 +77,7 @@ export default function CVBuilderApp() {
 								</div>
 							</div>
 						) : (
-							<div className="flex-1 flex flex-col bg-slate-50 relative overflow-hidden pointer-events-auto rounded-b-2xl rounded-tr-2xl border border-slate-200 min-h-[400px] -mt-px">
+							<div className="pointer-events-auto relative -mt-px flex min-h-[400px] flex-1 flex-col overflow-hidden rounded-b-card rounded-tr-card border border-rule bg-paper-2">
 								{activeTab === 1 && <ContextTab />}
 								{activeTab === 2 && <JobTab />}
 								{activeTab === 3 && <PromptTab />}

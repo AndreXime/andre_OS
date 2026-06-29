@@ -3,6 +3,7 @@ import {
 	toolBtnPrimaryClass,
 	toolEmptyPanelClass,
 	toolInputClass,
+	toolListItemActiveClass,
 	toolListItemClass,
 } from "@/lib/toolUi";
 import { displayTitle, type Recipe } from "./store";
@@ -72,10 +73,10 @@ export function ListPanel({
 					<button
 						type="button"
 						onClick={onOpenNew}
-						className={`${toolEmptyPanelClass} flex w-full flex-col items-center gap-sm hover:border-accent-muted hover:bg-paper-2`}
+						className={`${toolEmptyPanelClass} flex w-full flex-row items-center gap-md hover:border-accent-muted hover:bg-paper-2`}
 					>
-						<BookOpen className="size-9 text-muted/50" />
-						<p className="text-sm text-muted max-w-xs leading-relaxed">
+						<BookOpen className="size-10 shrink-0 text-muted/50" />
+						<p className="text-left text-base leading-relaxed text-muted">
 							Seu caderno está vazio. Toque para anotar a primeira receita.
 						</p>
 					</button>
@@ -94,9 +95,9 @@ export function ListPanel({
 									type="button"
 									onClick={() => onOpenDetail(recipe.id)}
 									className={[
-										"cooking-book-card overflow-hidden",
+										"overflow-hidden",
 										toolListItemClass,
-										active ? "cooking-book-card--active" : "",
+										active ? toolListItemActiveClass : "",
 									].join(" ")}
 								>
 									<div className="flex gap-0 min-h-[4.25rem]">
