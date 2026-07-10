@@ -2,6 +2,7 @@
 import SEOLayout from "../../components/layout/SEOLayout.astro";
 import { pageTitle } from "@/content/site";
 import AppLayout from "@/components/layout/AppLayout.astro";
+import { getCollection } from "astro:content";
 import ScratchPad from "../../tools/ScratchPad/ScratchPad";
 import EveryDayUtils from "../../tools/EveryDayUtils/UtilsApp";
 import CVBuilder from "../../tools/CVBuilder/CVBuilder";
@@ -11,33 +12,27 @@ import FirePlanner from "../../tools/FirePlanner/FirePlanner";
 import ImageTools from "../../tools/ImageTools/ImageTools";
 import CookingBook from "../../tools/CookingBook/CookingBook";
 import RssReader from "../../tools/RssReader/RssReader";
-export function getStaticPaths() {
-	const ToolNames = [
-		"ScratchPad",
-		"EveryDayUtils",
-		"CVBuilder",
-		"WeekPlanner",
-		"FinancePlanner",
-		"FirePlanner",
-		"ImageTools",
-		"CookingBook",
-		"RssReader",
-	] as const;
 
-	return ToolNames.map((tool) => ({
-		params: { name: tool },
+export async function getStaticPaths() {
+	const tools = await getCollection("posts", ({ data }) => data.type === "tool");
+
+	return tools.map((entry) => ({
+		params: { slug: entry.data.slug },
+		props: {
+			title: entry.data.title,
+			target: entry.data.target,
+		},
 	}));
 }
 
-const { name } = Astro.params;
-const toolName = name ?? "";
+const { title, target } = Astro.props;
 ---
 
-<SEOLayout title={pageTitle(toolName)}>
+<SEOLayout title={pageTitle(title)}>
 	<AppLayout>
 		{
 			(() => {
-				switch (name) {
+				switch (target) {
 					case "ScratchPad":
 						return <ScratchPad client:load />;
 					case "EveryDayUtils":

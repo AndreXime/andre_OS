@@ -4,12 +4,12 @@ import type { APIContext } from "astro";
 import type { Post } from "@/content.config";
 import { SITE_DESCRIPTION, SITE_NAME } from "@/content/site";
 
-function getPostLink(post: Pick<Post, "type" | "slug" | "target">): string | undefined {
+function getPostLink(post: Pick<Post, "type" | "slug">): string | undefined {
 	switch (post.type) {
 		case "note":
 			return `/post/${post.slug}`;
 		case "tool":
-			return post.target ? `/app/${post.target}` : undefined;
+			return `/app/${post.slug}`;
 		default:
 			return undefined;
 	}

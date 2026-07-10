@@ -14,7 +14,7 @@ function getPostUrl(post: Post): string {
 		case "note":
 			return `/post/${post.slug}`;
 		case "tool":
-			return `/app/${post.target ?? post.slug}`;
+			return `/app/${post.slug}`;
 		case "link":
 			return post.target ?? "#";
 	}
