@@ -12,6 +12,7 @@ import FirePlanner from "../../tools/FirePlanner/FirePlanner";
 import ImageTools from "../../tools/ImageTools/ImageTools";
 import CookingBook from "../../tools/CookingBook/CookingBook";
 import RssReader from "../../tools/RssReader/RssReader";
+import CssThemes from "../../tools/CssThemes/CssThemes";
 
 export async function getStaticPaths() {
 	const tools = await getCollection("posts", ({ data }) => data.type === "tool");
@@ -51,6 +52,8 @@ const { title, target } = Astro.props;
 						return <CookingBook client:load />;
 					case "RssReader":
 						return <RssReader client:load />;
+					case "CssThemes":
+						return <CssThemes client:load />;
 					default:
 						return <div>Ferramenta não encontrada.</div>;
 				}

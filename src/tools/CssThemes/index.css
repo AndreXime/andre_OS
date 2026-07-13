@@ -1,0 +1,74 @@
+@theme inline {
+	--color-ct-primary: var(--ct-color-primary);
+	--color-ct-primary-foreground: var(--ct-color-primary-foreground);
+	--color-ct-secondary: var(--ct-color-secondary);
+	--color-ct-secondary-foreground: var(--ct-color-secondary-foreground);
+	--color-ct-background: var(--ct-color-background);
+	--color-ct-foreground: var(--ct-color-foreground);
+	--color-ct-muted: var(--ct-color-muted);
+	--color-ct-muted-foreground: var(--ct-color-muted-foreground);
+	--color-ct-accent: var(--ct-color-accent);
+	--color-ct-accent-foreground: var(--ct-color-accent-foreground);
+	--color-ct-destructive: var(--ct-color-destructive);
+	--color-ct-destructive-foreground: var(--ct-color-destructive-foreground);
+	--color-ct-border: var(--ct-color-border);
+	--color-ct-ring: var(--ct-color-ring);
+
+	--font-ct-sans: var(--ct-font-family);
+	--font-ct-heading: var(--ct-font-family-heading);
+
+	--radius-ct-sm: var(--ct-radius-sm);
+	--radius-ct-md: var(--ct-radius);
+	--radius-ct-lg: var(--ct-radius-lg);
+}
+
+.css-themes {
+	--ct-color-primary: #2563eb;
+	--ct-color-primary-foreground: #ffffff;
+	--ct-color-secondary: #f1f5f9;
+	--ct-color-secondary-foreground: #0f172a;
+	--ct-color-background: #ffffff;
+	--ct-color-foreground: #0f172a;
+	--ct-color-muted: #f8fafc;
+	--ct-color-muted-foreground: #64748b;
+	--ct-color-accent: #f1f5f9;
+	--ct-color-accent-foreground: #0f172a;
+	--ct-color-destructive: #dc2626;
+	--ct-color-destructive-foreground: #ffffff;
+	--ct-color-border: #e2e8f0;
+	--ct-color-ring: #2563eb;
+	--ct-font-family: Inter, system-ui, sans-serif;
+	--ct-font-family-heading: Inter, system-ui, sans-serif;
+	--ct-radius: 0.5rem;
+	--ct-radius-sm: 0.25rem;
+	--ct-radius-lg: 0.75rem;
+
+	box-sizing: border-box;
+	background: var(--ct-color-background);
+	color: var(--ct-color-foreground);
+	font-family: var(--ct-font-family);
+}
+
+.css-themes *,
+.css-themes *::before,
+.css-themes *::after {
+	box-sizing: border-box;
+}
+
+.css-themes h1,
+.css-themes h2,
+.css-themes h3,
+.css-themes h4 {
+	margin: 0;
+	font-family: var(--ct-font-family-heading);
+}
+
+.css-themes p {
+	margin: 0;
+}
+
+.css-themes button,
+.css-themes input,
+.css-themes textarea {
+	font: inherit;
+}
