@@ -25,24 +25,26 @@ const items = await Promise.all(
 	role="region"
 	aria-label="Lista de conteúdo"
 >
-	<table class="w-full border-collapse tabular-nums">
+	<table
+		class="w-full table-fixed border-collapse tabular-nums sm:table-auto"
+	>
 		<thead class="border-b border-rule-2">
 			<tr>
 				<th
 					scope="col"
-					class="px-sm pt-2xs pb-xs text-left font-mono text-xs font-medium tracking-label text-muted uppercase"
+					class="w-1/3 px-sm pt-2xs pb-xs text-left font-mono text-xs font-medium tracking-label text-muted uppercase sm:w-0 sm:whitespace-nowrap"
 				>
 					Data
 				</th>
 				<th
 					scope="col"
-					class="px-sm pt-2xs pb-xs text-left font-mono text-xs font-medium tracking-label text-muted uppercase"
+					class="w-1/3 px-sm pt-2xs pb-xs text-left font-mono text-xs font-medium tracking-label text-muted uppercase sm:w-0 sm:whitespace-nowrap"
 				>
 					Tipo
 				</th>
 				<th
 					scope="col"
-					class="px-sm pt-2xs pb-xs text-left font-mono text-xs font-medium tracking-label text-muted uppercase"
+					class="w-1/3 min-w-0 px-sm pt-2xs pb-xs text-left font-mono text-xs font-medium tracking-label text-muted uppercase sm:w-full"
 				>
 					Título
 				</th>
@@ -55,17 +57,17 @@ const items = await Promise.all(
 						data-search-text={post.title.toLowerCase()}
 						class="group hover:bg-accent-bg"
 					>
-						<td class="w-30 px-sm py-sm align-middle font-mono text-xs whitespace-nowrap text-muted">
+						<td class="w-1/3 px-sm py-sm align-middle font-mono text-xs text-muted sm:w-0 sm:whitespace-nowrap">
 							<time datetime={post.date.toISOString()}>
 								{formatDate(post.date)}
 							</time>
 						</td>
-						<td class="w-26 px-sm py-sm align-middle">
+						<td class="w-1/3 px-sm py-sm align-middle sm:w-0 sm:whitespace-nowrap">
 							<span class={kindBadgeClass[meta.kind]}>
 								{meta.typeLabel}
 							</span>
 						</td>
-						<td class="min-w-0 px-sm py-sm align-middle">
+						<td class="w-1/3 min-w-0 px-sm py-sm align-middle sm:w-full">
 							<a
 								href={meta.href}
 								class="focus-ring inline-flex items-center gap-2xs font-medium text-ink no-underline [overflow-wrap:anywhere] group-hover:text-accent hover:text-accent hover:underline hover:underline-offset-[0.18em]"
