@@ -17,9 +17,18 @@ const TOKEN_TO_CSS_VAR: Record<string, string> = {
 	"colors.ring": "--ct-color-ring",
 	"typography.fontFamily": "--ct-font-family",
 	"typography.fontFamilyHeading": "--ct-font-family-heading",
+	"typography.fontSizeBase": "--ct-font-size-base",
+	"typography.fontSizeSm": "--ct-font-size-sm",
+	"typography.fontSizeLg": "--ct-font-size-lg",
+	"typography.fontSizeXl": "--ct-font-size-xl",
+	"typography.lineHeightBase": "--ct-line-height-base",
+	"typography.fontWeightNormal": "--ct-font-weight-normal",
+	"typography.fontWeightMedium": "--ct-font-weight-medium",
+	"typography.fontWeightBold": "--ct-font-weight-bold",
 	"spacing.radius": "--ct-radius",
 	"spacing.radiusSm": "--ct-radius-sm",
 	"spacing.radiusLg": "--ct-radius-lg",
+	"spacing.spacingUnit": "--ct-spacing-unit",
 };
 
 function flattenTokens(
@@ -65,5 +74,14 @@ export function applyCssVariables(
 ): void {
 	for (const [key, value] of Object.entries(variables)) {
 		root.style.setProperty(key, value);
+	}
+}
+
+export function clearCssVariables(
+	variables: Record<string, string>,
+	root: HTMLElement,
+): void {
+	for (const key of Object.keys(variables)) {
+		root.style.removeProperty(key);
 	}
 }

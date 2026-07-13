@@ -2,6 +2,7 @@ import { createJsonPersistentAtom } from "@/lib/toolStorage/persistentAtom";
 import type { ToolStorageEntry } from "@/lib/toolStorage/types";
 import {
 	applyCssVariables,
+	clearCssVariables,
 	tokensToCssVariables,
 } from "../tokens/css-variables";
 import { getPresetById } from "../tokens/presets";
@@ -147,8 +148,14 @@ export function resetTokens(): void {
 	});
 }
 
-export function syncThemeToRoot(root: HTMLElement): void {
+export function syncThemeToRoot(root: HTMLElement = document.documentElement): void {
 	applyCssVariables(tokensToCssVariables(getTokens()), root);
+}
+
+export function clearThemeFromRoot(
+	root: HTMLElement = document.documentElement,
+): void {
+	clearCssVariables(tokensToCssVariables(getTokens()), root);
 }
 
 export { getBaseTokens };
