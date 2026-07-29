@@ -6,17 +6,17 @@
 :root {
 	/* Surfaces */
 	--color-paper: oklch(94% 0.008 245);
-	--color-paper-2: oklch(91% 0.010 245);
+	--color-paper-2: oklch(91% 0.01 245);
 	--color-paper-3: oklch(86% 0.012 240);
-	--color-ink: oklch(16% 0.020 245);
+	--color-ink: oklch(16% 0.02 245);
 	--color-ink-2: oklch(20% 0.018 245);
 	--color-muted: oklch(46% 0.014 245);
 	--color-rule: oklch(74% 0.012 240);
 	--color-rule-2: oklch(38% 0.018 240);
-	--color-accent: oklch(58% 0.20 42);
+	--color-accent: oklch(58% 0.2 42);
 	--color-accent-ink: oklch(98% 0.01 42);
-	--color-focus: oklch(58% 0.20 42);
-	--color-accent-bg: oklch(92% 0.06 42);
+	--color-focus: oklch(58% 0.2 42);
+	--color-accent-bg: oklch(96% 0.035 42);
 	--color-accent-weak: oklch(52% 0.16 42);
 	--color-accent-muted: oklch(76% 0.12 42);
 

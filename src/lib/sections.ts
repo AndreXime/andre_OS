@@ -1,11 +1,6 @@
 export type SectionCategory = "all" | "tool" | "note" | "link" | "author";
 export type ContentKind = "note" | "tool" | "link";
 
-export const SITE_INTRO = {
-	title: "Notas de um desenvolvedor",
-	lede: "Escrevo sobre arquitetura web, runtime e ferramentas. Publico apps utilitários e curadoria de links que uso no dia a dia.",
-} as const;
-
 export interface SectionDefinition {
 	category: SectionCategory;
 	href: string;

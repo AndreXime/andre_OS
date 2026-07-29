@@ -4,7 +4,6 @@ import {
 	getListingTitle,
 	getSectionDescription,
 	CONTENT_SECTIONS,
-	SITE_INTRO,
 	type SectionCategory,
 } from "@/lib/sections";
 import { accentRailClass } from "@/lib/siteUi";
@@ -22,28 +21,12 @@ const { recentPosts, activeCategory } = Astro.props;
 const showEmpty = recentPosts.length === 0;
 const listingTitle = getListingTitle(activeCategory);
 const isHome = activeCategory === "all";
-
-const homeRails = isHome
-	? [
-			{
-				label: "Recente",
-				href: null,
-				posts: recentPosts.slice(0, 8),
-			},
-			...CONTENT_SECTIONS.map((section) => ({
-				label: section.title,
-				href: section.href,
-				posts: recentPosts
-					.filter((post) => post.type === section.kind)
-					.slice(0, 5),
-			})),
-		]
-	: [];
+const homeRecentPosts = isHome ? recentPosts.slice(0, 12) : [];
 
 const emptyClass =
 	"rounded-card border border-dashed border-rule p-2xl text-center text-muted";
 const categoryCardClass =
-	"focus-ring flex min-h-11 flex-col gap-3xs rounded-card border border-accent-muted border-t-[3px] border-t-accent bg-accent-bg p-md no-underline transition-[border-color,background-color] duration-150 ease-out hover:border-accent hover:bg-paper";
+	"focus-ring flex min-h-11 flex-col gap-3xs rounded-card border border-accent-muted border-t-[3px] border-t-accent bg-accent-bg p-md no-underline transition-[border-color,background-color] duration-150 ease-out hover:border-accent";
 ---
 
 <MainLayout activeCategory={activeCategory}>
@@ -51,21 +34,6 @@ const categoryCardClass =
 		{
 			isHome ? (
 				<>
-					<section
-						class={accentRailClass}
-						aria-labelledby="site-intro"
-					>
-						<h1
-							id="site-intro"
-							class="m-0 font-display text-display-s leading-snug font-semibold tracking-display text-ink"
-						>
-							{SITE_INTRO.title}
-						</h1>
-						<p class="mt-md max-w-measure text-md leading-[var(--lh-prose)] text-muted">
-							{SITE_INTRO.lede}
-						</p>
-					</section>
-
 					<nav aria-label="Seções">
 						<ul class="m-0 grid list-none grid-cols-1 gap-sm p-0 lg:grid-cols-3">
 							{CONTENT_SECTIONS.map((section) => (
@@ -86,37 +54,19 @@ const categoryCardClass =
 						</ul>
 					</nav>
 
-					{homeRails.length ? (
-						homeRails.map((rail) => (
-							<section
-								class="flex flex-col gap-md"
-								aria-labelledby={`rail-${rail.label}`}
+					{homeRecentPosts.length ? (
+						<section
+							class="flex flex-col gap-md"
+							aria-labelledby="rail-recente"
+						>
+							<h2
+								id="rail-recente"
+								class="m-0 font-display text-xl font-semibold text-accent"
 							>
-								<div class="flex flex-col gap-2xs lg:flex-row lg:items-baseline lg:justify-between">
-									<h2
-										id={`rail-${rail.label}`}
-										class="m-0 font-display text-xl font-semibold text-accent"
-									>
-										{rail.label}
-									</h2>
-									{rail.href ? (
-										<a
-											href={rail.href}
-											class="focus-ring inline-flex min-h-11 items-center font-mono text-sm text-accent no-underline hover:underline hover:underline-offset-[0.18em]"
-										>
-											Ver todas →
-										</a>
-									) : null}
-								</div>
-								{rail.posts.length ? (
-									<ContentTable posts={rail.posts} />
-								) : (
-									<p class="m-0 text-sm text-muted">
-										Nada publicado ainda.
-									</p>
-								)}
-							</section>
-						))
+								Recente
+							</h2>
+							<ContentTable posts={homeRecentPosts} />
+						</section>
 					) : (
 						<div class={emptyClass}>
 							<p>Por enquanto não há publicações.</p>
@@ -133,7 +83,9 @@ const categoryCardClass =
 							{listingTitle}
 						</h1>
 						<p class="m-0 text-md leading-[var(--lh-prose)] text-muted">
-							{getSectionDescription(activeCategory as SectionCategory)}
+							{getSectionDescription(
+								activeCategory as SectionCategory,
+							)}
 						</p>
 					</header>
 

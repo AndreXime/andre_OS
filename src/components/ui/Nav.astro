@@ -1,6 +1,6 @@
 ---
 import { NAV_SECTIONS } from "@/lib/sections";
-import { navLinkActiveClass, navLinkClass, navLinkRssClass } from "@/lib/siteUi";
+import { navLinkActiveClass, navLinkClass } from "@/lib/siteUi";
 import { SITE_NAME, SITE_TAGLINE } from "@/content/site";
 
 interface Props {
@@ -8,12 +8,11 @@ interface Props {
 }
 
 const { activeCategory } = Astro.props;
-const rssUrl = new URL("rss.xml", Astro.site);
 ---
 
 <header class="grid gap-2xs px-gutter pt-md text-center">
 	<p
-		class="m-0 font-serif text-xs tracking-[0.08em] text-muted [font-variant:small-caps]"
+		class="m-0 font-serif text-sm tracking-[0.08em] text-muted [font-variant:small-caps]"
 	>
 		{SITE_TAGLINE}
 	</p>
@@ -71,11 +70,6 @@ const rssUrl = new URL("rss.xml", Astro.site);
 					</li>
 				))
 			}
-			<li>
-				<a href={rssUrl} class:list={[navLinkClass, navLinkRssClass]}
-					>RSS</a
-				>
-			</li>
 		</ul>
 	</nav>
 	<hr
