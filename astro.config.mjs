@@ -19,6 +19,10 @@ export default defineConfig({
 
 	vite: {
 		plugins: [tailwindcss()],
+		build: {
+			// lightningcss ainda nao entende @theme do Tailwind v4 no passo de minify
+			cssMinify: "esbuild",
+		},
 	},
 
 	integrations: [react(), sitemap()],
