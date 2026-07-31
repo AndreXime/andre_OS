@@ -1,4 +1,4 @@
-import { formatToMime, type OutputFormat } from "./domain";
+import { formatToMime, type OutputFormat } from "../domain";
 import { canvasToBlob } from "./imageLoader";
 
 const ALL_FORMATS: OutputFormat[] = ["png", "jpeg", "webp", "avif"];

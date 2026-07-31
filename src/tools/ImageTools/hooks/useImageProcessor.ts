@@ -1,106 +1,140 @@
 import { useCallback } from "react";
+import type { OutputFormat } from "../domain";
+import { mapPool } from "../lib/batchRunner";
+import { compressFile, convertFile } from "../lib/processImage";
 import {
-	beginOperation,
-	finishOperation,
+	$batchProgress,
+	$selectedIds,
+	beginBatch,
+	beginItemOperation,
+	bumpBatchProgress,
+	finishBatch,
+	finishItemOperation,
+	getItem,
 	isAbortError,
-	isOperationCurrent,
-	setError,
-	setProgress,
-	setResult,
-	$supportedFormats,
+	isBatchCurrent,
+	isItemOperationCurrent,
+	setItemError,
+	setItemResult,
 } from "../store";
-import { computeTargetSize, formatToMime, type OutputFormat } from "../domain";
-import { isFormatSupported } from "../formatSupport";
-import {
-	canvasToBlob,
-	drawToCanvas,
-	loadImageFromFile,
-	releaseLoadedImage,
-	throwIfAborted,
-} from "../imageLoader";
+
+const CONVERT_COMPRESS_CONCURRENCY = 3;
 
 export function useImageProcessor() {
-	const convert = useCallback(async (file: File, format: OutputFormat, quality: number) => {
-		const support = $supportedFormats.get();
-		if (!isFormatSupported(support, format)) {
-			setError(`Seu navegador nao suporta conversao para ${format.toUpperCase()}. Escolha outro formato.`);
-			return;
-		}
+	const convert = useCallback(async (itemId: string, format: OutputFormat, quality: number) => {
+		const item = getItem(itemId);
+		if (!item) return;
 
-		const { signal, id } = beginOperation("Convertendo imagem...");
-		let loaded: Awaited<ReturnType<typeof loadImageFromFile>> | null = null;
+		const started = beginItemOperation(itemId, "Convertendo imagem...");
+		if (!started) return;
+		const { signal, batchId } = started;
 
 		try {
-			setProgress(15, "Carregando imagem...");
-			loaded = await loadImageFromFile(file, signal);
-			throwIfAborted(signal);
-
-			setProgress(45, "Preparando canvas...");
-			const canvas = drawToCanvas(loaded.bitmap, loaded.width, loaded.height);
-			releaseLoadedImage(loaded);
-			loaded = null;
-			throwIfAborted(signal);
-
-			const mime = formatToMime(format);
-			const needsQuality = mime === "image/jpeg" || mime === "image/webp";
-
-			setProgress(75, "Encodando imagem...");
-			const blob = await canvasToBlob(canvas, mime, needsQuality ? quality : 100, signal);
-
-			if (!isOperationCurrent(id)) return;
-			setResult(blob, id);
+			$batchProgress.set({ current: 0, total: 1, label: "Convertendo imagem..." });
+			const blob = await convertFile(item.file, format, quality, signal);
+			if (!isItemOperationCurrent(itemId, batchId)) return;
+			setItemResult(itemId, blob, "convert", batchId);
 		} catch (err) {
-			if (loaded) releaseLoadedImage(loaded);
-			if (isAbortError(err)) return;
-			setError((err as Error).message, id);
-		} finally {
-			finishOperation(id);
-		}
-	}, []);
-
-	const compress = useCallback(async (file: File, quality: number, maxWidth: number) => {
-		const { signal, id } = beginOperation("Comprimindo imagem...");
-		let loaded: Awaited<ReturnType<typeof loadImageFromFile>> | null = null;
-
-		try {
-			setProgress(15, "Carregando imagem...");
-			loaded = await loadImageFromFile(file, signal);
-			throwIfAborted(signal);
-
-			const target = computeTargetSize(loaded.width, loaded.height, maxWidth);
-
-			setProgress(45, "Preparando canvas...");
-			const canvas = drawToCanvas(loaded.bitmap, target.width, target.height);
-			const hasAlpha = loaded.hasAlpha;
-			releaseLoadedImage(loaded);
-			loaded = null;
-			throwIfAborted(signal);
-
-			const support = $supportedFormats.get();
-			let mime: string;
-			if (hasAlpha) {
-				mime = isFormatSupported(support, "webp") ? "image/webp" : "image/png";
-			} else if (file.type === "image/webp" && isFormatSupported(support, "webp")) {
-				mime = "image/webp";
-			} else {
-				mime = "image/jpeg";
+			if (isAbortError(err)) {
+				finishItemOperation(itemId);
+				return;
 			}
-
-			const qualityValue = mime === "image/png" ? 100 : quality;
-
-			setProgress(75, "Encodando imagem...");
-			const blob = await canvasToBlob(canvas, mime, qualityValue, signal);
-
-			if (!isOperationCurrent(id)) return;
-			setResult(blob, id);
-		} catch (err) {
-			if (loaded) releaseLoadedImage(loaded);
-			if (isAbortError(err)) return;
-			setError((err as Error).message, id);
+			setItemError(itemId, (err as Error).message || "Falha ao converter imagem", batchId);
 		} finally {
-			finishOperation(id);
+			finishItemOperation(itemId);
 		}
 	}, []);
 
-	return { convert, compress };
+	const compress = useCallback(async (itemId: string, quality: number, maxWidth: number) => {
+		const item = getItem(itemId);
+		if (!item) return;
+
+		const started = beginItemOperation(itemId, "Comprimindo imagem...");
+		if (!started) return;
+		const { signal, batchId } = started;
+
+		try {
+			$batchProgress.set({ current: 0, total: 1, label: "Comprimindo imagem..." });
+			const blob = await compressFile(item.file, quality, maxWidth, signal);
+			if (!isItemOperationCurrent(itemId, batchId)) return;
+			setItemResult(itemId, blob, "compress", batchId);
+		} catch (err) {
+			if (isAbortError(err)) {
+				finishItemOperation(itemId);
+				return;
+			}
+			setItemError(itemId, (err as Error).message || "Falha ao comprimir imagem", batchId);
+		} finally {
+			finishItemOperation(itemId);
+		}
+	}, []);
+
+	const runBatchOnSelected = useCallback(
+		async (
+			operation: "convert" | "compress",
+			options: { format: OutputFormat; quality: number; maxWidth: number },
+		) => {
+			const selected = $selectedIds.get();
+			const ids = selected.filter((id) => {
+				const item = getItem(id);
+				return item && item.status !== "loading";
+			});
+			if (ids.length === 0) return;
+
+			const label = operation === "convert" ? "Convertendo lote..." : "Comprimindo lote...";
+			const batchId = beginBatch(ids.length, label);
+
+			await mapPool(
+				ids,
+				CONVERT_COMPRESS_CONCURRENCY,
+				async (itemId) => {
+					if (!isBatchCurrent(batchId)) return;
+					const item = getItem(itemId);
+					if (!item) {
+						bumpBatchProgress(label);
+						return;
+					}
+
+					const started = beginItemOperation(itemId, label);
+					if (!started || !isBatchCurrent(batchId)) {
+						bumpBatchProgress(label);
+						return;
+					}
+					const { signal } = started;
+
+					try {
+						const blob =
+							operation === "convert"
+								? await convertFile(item.file, options.format, options.quality, signal)
+								: await compressFile(item.file, options.quality, options.maxWidth, signal);
+
+						if (!isItemOperationCurrent(itemId, batchId) || !isBatchCurrent(batchId)) return;
+						setItemResult(itemId, blob, operation, batchId);
+					} catch (err) {
+						if (isAbortError(err) || !isBatchCurrent(batchId)) {
+							finishItemOperation(itemId);
+							return;
+						}
+						setItemError(
+							itemId,
+							(err as Error).message ||
+								(operation === "convert" ? "Falha ao converter imagem" : "Falha ao comprimir imagem"),
+							batchId,
+						);
+					} finally {
+						finishItemOperation(itemId);
+						if (isBatchCurrent(batchId)) {
+							bumpBatchProgress(label);
+						}
+					}
+				},
+				() => isBatchCurrent(batchId),
+			);
+
+			finishBatch(batchId);
+		},
+		[],
+	);
+
+	return { convert, compress, runBatchOnSelected };
 }

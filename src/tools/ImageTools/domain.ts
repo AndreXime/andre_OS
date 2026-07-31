@@ -151,3 +151,42 @@ export function buildSizeDiffLabel(originalBytes: number, resultBytes: number): 
 
 	return `Aumento: ${formatFileSize(diffAbs)} (${pctLabel})`;
 }
+
+export type ImageItemStatus = "loading" | "ready" | "processing" | "done" | "error";
+
+export interface ImageItem {
+	id: string;
+	file: File;
+	sourceUrl: string;
+	dimensions: ImageDimensions | null;
+	hasAlpha: boolean;
+	status: ImageItemStatus;
+	resultBlob: Blob | null;
+	resultUrl: string | null;
+	error: string | null;
+	lastOperation: OperationType | null;
+}
+
+export function createImageItemId(): string {
+	if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
+		return crypto.randomUUID();
+	}
+	return `img_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+}
+
+export function getSelectedDoneItems(items: ImageItem[], selectedIds: string[]): ImageItem[] {
+	const selected = new Set(selectedIds);
+	return items.filter((item) => selected.has(item.id) && item.status === "done" && item.resultBlob);
+}
+
+export function buildZipEntryName(item: ImageItem, outputFormat?: OutputFormat): string {
+	if (!item.resultBlob || !item.lastOperation) {
+		return item.file.name;
+	}
+	return buildDownloadFilename(
+		item.file.name,
+		item.resultBlob,
+		item.lastOperation,
+		item.lastOperation === "convert" ? outputFormat : undefined,
+	);
+}

@@ -1,19 +1,27 @@
 import { useCallback, useEffect, useRef } from "react";
+import { mapPool } from "../lib/batchRunner";
+import { bgRemovalConfig } from "../lib/bgRemovalConfig";
+import { removeBackgroundFile } from "../lib/processImage";
 import {
-	beginOperation,
-	cancelProcessing,
-	isOperationCurrent,
-	setError,
-	setProgress,
-	setResult,
-	$modelPreloadStatus,
+	$batchProgress,
 	$modelPreloadProgress,
+	$modelPreloadStatus,
+	$selectedIds,
+	beginBatch,
+	beginItemOperation,
+	bumpBatchProgress,
+	cancelAll,
+	finishBatch,
+	finishItemOperation,
+	getItem,
+	isBatchCurrent,
+	isItemOperationCurrent,
+	setItemError,
+	setItemResult,
 } from "../store";
-import { bgRemovalConfig } from "../bgRemovalConfig";
 
 export function useBgRemoval(shouldPreload = false) {
 	const preloadAbortRef = useRef<AbortController | null>(null);
-	const operationIdRef = useRef(0);
 
 	const startPreload = useCallback(async (signal: AbortSignal) => {
 		if ($modelPreloadStatus.get() === "ready") return;
@@ -71,43 +79,110 @@ export function useBgRemoval(shouldPreload = false) {
 		void startPreload(controller.signal);
 	}, [startPreload]);
 
-	const removeBackground = useCallback((file: File) => {
+	const removeBackground = useCallback((itemId: string) => {
+		const item = getItem(itemId);
+		if (!item) return;
+
 		const modelReady = $modelPreloadStatus.get() === "ready";
-		const { id } = beginOperation(modelReady ? "Processando imagem..." : "Carregando modelo de IA...");
-		operationIdRef.current = id;
+		const started = beginItemOperation(
+			itemId,
+			modelReady ? "Processando imagem..." : "Carregando modelo de IA...",
+		);
+		if (!started) return;
+		const { batchId } = started;
+
+		$batchProgress.set({
+			current: 0,
+			total: 1,
+			label: modelReady ? "Processando imagem..." : "Carregando modelo de IA...",
+		});
 
 		void (async () => {
 			try {
-				const { removeBackground: imglyRemoveBackground } = await import("@imgly/background-removal");
-
-				const blob = await imglyRemoveBackground(file, {
-					...bgRemovalConfig,
-					progress: (key, current, total) => {
-						if (!isOperationCurrent(operationIdRef.current)) return;
-						const pct = total > 0 ? Math.round((current / total) * 100) : 0;
-						setProgress(pct, formatProgressKey(key));
-					},
+				const blob = await removeBackgroundFile(item.file, (pct, label) => {
+					if (!isItemOperationCurrent(itemId, batchId)) return;
+					$batchProgress.set({ current: 0, total: 1, label });
+					void pct;
 				});
 
-				if (!isOperationCurrent(operationIdRef.current)) return;
-				setResult(blob, operationIdRef.current);
+				if (!isItemOperationCurrent(itemId, batchId)) return;
+				setItemResult(itemId, blob, "bg-removal", batchId);
 			} catch (err) {
-				if (!isOperationCurrent(operationIdRef.current)) return;
+				if (!isItemOperationCurrent(itemId, batchId)) return;
 				const message =
 					err instanceof Error && err.message
 						? err.message
 						: "Falha ao remover fundo da imagem.";
-				setError(message, operationIdRef.current);
+				setItemError(itemId, message, batchId);
+			} finally {
+				finishItemOperation(itemId);
 			}
 		})();
 	}, []);
 
-	return { removeBackground, cancelBgRemoval: cancelProcessing, retryPreload };
-}
+	const runBgRemovalBatchOnSelected = useCallback(async () => {
+		const ids = $selectedIds.get().filter((id) => {
+			const item = getItem(id);
+			return item && item.status !== "loading";
+		});
+		if (ids.length === 0) return;
 
-function formatProgressKey(key: string): string {
-	if (key.includes("fetch")) return "Baixando modelo...";
-	if (key.includes("compute") || key.includes("inference")) return "Processando imagem...";
-	if (key.includes("mask")) return "Gerando mascara...";
-	return "Processando...";
+		const label = "Removendo fundo (lote)...";
+		const batchId = beginBatch(ids.length, label);
+
+		await mapPool(
+			ids,
+			1,
+			async (itemId) => {
+				if (!isBatchCurrent(batchId)) return;
+				const item = getItem(itemId);
+				if (!item) {
+					bumpBatchProgress(label);
+					return;
+				}
+
+				const started = beginItemOperation(itemId, label);
+				if (!started || !isBatchCurrent(batchId)) {
+					bumpBatchProgress(label);
+					return;
+				}
+
+				try {
+					const blob = await removeBackgroundFile(item.file, (_pct, progressLabel) => {
+						if (!isItemOperationCurrent(itemId, batchId) || !isBatchCurrent(batchId)) return;
+						const prev = $batchProgress.get();
+						$batchProgress.set({ ...prev, label: progressLabel });
+					});
+
+					if (!isItemOperationCurrent(itemId, batchId) || !isBatchCurrent(batchId)) return;
+					setItemResult(itemId, blob, "bg-removal", batchId);
+				} catch (err) {
+					if (!isBatchCurrent(batchId)) {
+						finishItemOperation(itemId);
+						return;
+					}
+					const message =
+						err instanceof Error && err.message
+							? err.message
+							: "Falha ao remover fundo da imagem.";
+					setItemError(itemId, message, batchId);
+				} finally {
+					finishItemOperation(itemId);
+					if (isBatchCurrent(batchId)) {
+						bumpBatchProgress(label);
+					}
+				}
+			},
+			() => isBatchCurrent(batchId),
+		);
+
+		finishBatch(batchId);
+	}, []);
+
+	return {
+		removeBackground,
+		runBgRemovalBatchOnSelected,
+		cancelBgRemoval: cancelAll,
+		retryPreload,
+	};
 }
