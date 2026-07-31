@@ -5,9 +5,9 @@ const rssUrl = new URL("rss.xml", Astro.site);
 const year = new Date().getFullYear();
 ---
 
-<footer class="border-t-[3px] border-accent bg-accent-bg px-gutter py-xl">
+<footer class="border-t-[3px] border-accent bg-accent-bg px-gutter py-lg">
 	<p
-		class="container-page m-0 text-center font-mono text-xs leading-normal text-muted"
+		class="container-page m-0 text-center font-mono text-sm leading-normal text-muted"
 	>
 		{SITE_NAME} · notas, ferramentas e links ·
 		<a href={rssUrl} class="text-accent no-underline hover:underline"

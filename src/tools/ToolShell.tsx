@@ -40,7 +40,7 @@ export function ToolShell({ title, description, icon, storage, actions, children
 							<h1 className="m-0 font-display text-display-s font-semibold leading-snug tracking-display text-ink">
 								{title}
 							</h1>
-							{description && <p className="m-0 text-sm leading-normal text-muted">{description}</p>}
+							{description && <p className="m-0 leading-normal text-muted">{description}</p>}
 						</div>
 					</div>
 					<HeaderActions {...(storage ? { storage } : {})} {...(actions ? { actions } : {})} />
