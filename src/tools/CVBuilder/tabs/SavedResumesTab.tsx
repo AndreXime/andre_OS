@@ -1,6 +1,6 @@
-import { Plus, Trash2, FileText } from "lucide-react";
 import { useStore } from "@nanostores/react";
-import { resumes$, createNewResume, setActiveResume, deleteResume } from "../lib/store";
+import { FileText, Plus, Trash2 } from "lucide-react";
+import { createNewResume, deleteResume, resumes$, setActiveResume } from "../lib/store";
 
 export function SavedResumesTab() {
 	const resumes = useStore(resumes$);

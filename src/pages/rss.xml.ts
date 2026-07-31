@@ -1,8 +1,8 @@
-import rss from "@astrojs/rss";
 import { getCollection } from "astro:content";
+import rss from "@astrojs/rss";
 import type { APIContext } from "astro";
-import type { Post } from "@/content.config";
 import { SITE_DESCRIPTION, SITE_NAME } from "@/content/site";
+import type { Post } from "@/content.config";
 
 function getPostLink(post: Pick<Post, "type" | "slug">): string | undefined {
 	switch (post.type) {

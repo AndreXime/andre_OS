@@ -31,19 +31,13 @@ const TOKEN_TO_CSS_VAR: Record<string, string> = {
 	"spacing.spacingUnit": "--ct-spacing-unit",
 };
 
-function flattenTokens(
-	obj: Record<string, unknown>,
-	prefix = "",
-): Record<string, string> {
+function flattenTokens(obj: Record<string, unknown>, prefix = ""): Record<string, string> {
 	const result: Record<string, string> = {};
 
 	for (const [key, value] of Object.entries(obj)) {
 		const path = prefix ? `${prefix}.${key}` : key;
 		if (typeof value === "object" && value !== null) {
-			Object.assign(
-				result,
-				flattenTokens(value as Record<string, unknown>, path),
-			);
+			Object.assign(result, flattenTokens(value as Record<string, unknown>, path));
 		} else if (typeof value === "string") {
 			result[path] = value;
 		}
@@ -52,9 +46,7 @@ function flattenTokens(
 	return result;
 }
 
-export function tokensToCssVariables(
-	tokens: DesignTokens,
-): Record<string, string> {
+export function tokensToCssVariables(tokens: DesignTokens): Record<string, string> {
 	const flat = flattenTokens(tokens as unknown as Record<string, unknown>);
 	const cssVars: Record<string, string> = {};
 
@@ -68,19 +60,13 @@ export function tokensToCssVariables(
 	return cssVars;
 }
 
-export function applyCssVariables(
-	variables: Record<string, string>,
-	root: HTMLElement,
-): void {
+export function applyCssVariables(variables: Record<string, string>, root: HTMLElement): void {
 	for (const [key, value] of Object.entries(variables)) {
 		root.style.setProperty(key, value);
 	}
 }
 
-export function clearCssVariables(
-	variables: Record<string, string>,
-	root: HTMLElement,
-): void {
+export function clearCssVariables(variables: Record<string, string>, root: HTMLElement): void {
 	for (const key of Object.keys(variables)) {
 		root.style.removeProperty(key);
 	}

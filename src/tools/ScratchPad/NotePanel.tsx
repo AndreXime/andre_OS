@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useRef } from "react";
 import { ArrowLeft, Copy, Eye, EyeOff, Pin, Trash2 } from "lucide-react";
 import { marked } from "marked";
+import { useEffect, useMemo, useRef } from "react";
 import {
 	toolEditorSurfaceClass,
 	toolIconBtnActiveClass,
@@ -8,7 +8,7 @@ import {
 	toolProseClass,
 	toolTextareaClass,
 } from "@/lib/toolUi";
-import { displayTitle, removeNote, togglePin, updateNote, type Note } from "./store";
+import { displayTitle, type Note, removeNote, togglePin, updateNote } from "./store";
 import { countWords, formatDate } from "./utils";
 
 interface NotePanelProps {

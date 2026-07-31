@@ -51,11 +51,7 @@ export function estimarContribuicaoInssMensal(salarioBruto: number): number {
  * Estima benefício mensal proporcional ao salário e ao tempo até a aposentadoria.
  * Usa teto 2025 e coeficiente da reforma (60% + 2% por ano acima de 20, até 100%).
  */
-export function estimarBeneficioInssMensal(
-	salarioBruto: number,
-	idadeAtual: number,
-	idadeMinimaInss: number,
-): number {
+export function estimarBeneficioInssMensal(salarioBruto: number, idadeAtual: number, idadeMinimaInss: number): number {
 	if (salarioBruto <= 0 || idadeMinimaInss <= idadeAtual) return 0;
 
 	const contribuicaoMensal = estimarContribuicaoInssMensal(salarioBruto);
@@ -73,10 +69,8 @@ const DEFAULT_IDADE_MINIMA_INSS = 65;
 const DEFAULT_CONTRIBUICAO_INSS_TETO = estimarContribuicaoInssMensal(DEFAULT_SALARIO);
 const DEFAULT_CONTRIBUICAO_INSS_MINIMO = estimarContribuicaoInssMensal(SALARIO_MINIMO_2025);
 const DEFAULT_APORTE_COM_INSS_TETO = DEFAULT_SALARIO * 0.6;
-const DEFAULT_VALOR_LIVRE =
-	DEFAULT_SALARIO - DEFAULT_APORTE_COM_INSS_TETO - DEFAULT_CONTRIBUICAO_INSS_TETO;
-const DEFAULT_APORTE_COM_INSS_MINIMO =
-	DEFAULT_SALARIO - DEFAULT_CONTRIBUICAO_INSS_MINIMO - DEFAULT_VALOR_LIVRE;
+const DEFAULT_VALOR_LIVRE = DEFAULT_SALARIO - DEFAULT_APORTE_COM_INSS_TETO - DEFAULT_CONTRIBUICAO_INSS_TETO;
+const DEFAULT_APORTE_COM_INSS_MINIMO = DEFAULT_SALARIO - DEFAULT_CONTRIBUICAO_INSS_MINIMO - DEFAULT_VALOR_LIVRE;
 
 export const defaultFinancialPlanInput: FinancialPlanInput = {
 	salarioAtual: DEFAULT_SALARIO,

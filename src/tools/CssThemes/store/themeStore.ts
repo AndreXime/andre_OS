@@ -1,10 +1,6 @@
 import { createJsonPersistentAtom } from "@/lib/toolStorage/persistentAtom";
 import type { ToolStorageEntry } from "@/lib/toolStorage/types";
-import {
-	applyCssVariables,
-	clearCssVariables,
-	tokensToCssVariables,
-} from "../tokens/css-variables";
+import { applyCssVariables, clearCssVariables, tokensToCssVariables } from "../tokens/css-variables";
 import { getPresetById } from "../tokens/presets";
 import { resolvePresetTokens } from "../tokens/resolve";
 import type { ColorTokens, DesignTokens } from "../tokens/types";
@@ -49,9 +45,7 @@ function normalizeState(raw: unknown): CssThemesState {
 	if (!raw || typeof raw !== "object") return defaultState;
 	const s = raw as Record<string, unknown>;
 	const activePresetId =
-		typeof s.activePresetId === "string" && s.activePresetId !== "custom"
-			? s.activePresetId
-			: "default";
+		typeof s.activePresetId === "string" && s.activePresetId !== "custom" ? s.activePresetId : "default";
 	const presetOverrides = normalizeOverrides(s.presetOverrides);
 
 	if (s.activePresetId === "custom" && isDesignTokens(s.customTokens)) {
@@ -73,10 +67,7 @@ function migrateLegacyIntoStorage(): void {
 	try {
 		const parsed = JSON.parse(legacyRaw) as unknown;
 		const state =
-			parsed &&
-			typeof parsed === "object" &&
-			"state" in parsed &&
-			(parsed as { state: unknown }).state
+			parsed && typeof parsed === "object" && "state" in parsed && (parsed as { state: unknown }).state
 				? (parsed as { state: unknown }).state
 				: parsed;
 		localStorage.setItem(STORAGE_KEY, JSON.stringify(normalizeState(state)));
@@ -107,10 +98,7 @@ export function getTokens(state: CssThemesState = cssThemes$.get()): DesignToken
 	return resolvePresetTokens(state.activePresetId, state.presetOverrides);
 }
 
-export function getPresetTokens(
-	presetId: string,
-	state: CssThemesState = cssThemes$.get(),
-): DesignTokens {
+export function getPresetTokens(presetId: string, state: CssThemesState = cssThemes$.get()): DesignTokens {
 	return resolvePresetTokens(presetId, state.presetOverrides);
 }
 
@@ -152,9 +140,7 @@ export function syncThemeToRoot(root: HTMLElement = document.documentElement): v
 	applyCssVariables(tokensToCssVariables(getTokens()), root);
 }
 
-export function clearThemeFromRoot(
-	root: HTMLElement = document.documentElement,
-): void {
+export function clearThemeFromRoot(root: HTMLElement = document.documentElement): void {
 	clearCssVariables(tokensToCssVariables(getTokens()), root);
 }
 

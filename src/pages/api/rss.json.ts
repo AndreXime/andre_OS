@@ -61,20 +61,12 @@ export const GET: APIRoute = async ({ request }) => {
 
 		const contentType = response.headers.get("content-type") ?? "";
 		if (contentType.includes("text/html")) {
-			return jsonResponse(
-				{ error: "A URL nao parece ser um feed RSS/Atom." },
-				404,
-				CACHE_PERMANENT_ERROR_SECONDS,
-			);
+			return jsonResponse({ error: "A URL nao parece ser um feed RSS/Atom." }, 404, CACHE_PERMANENT_ERROR_SECONDS);
 		}
 
 		const xml = await response.text();
 		if (xml.length > MAX_RESPONSE_BYTES) {
-			return jsonResponse(
-				{ error: "Feed muito grande para processar." },
-				404,
-				CACHE_PERMANENT_ERROR_SECONDS,
-			);
+			return jsonResponse({ error: "Feed muito grande para processar." }, 404, CACHE_PERMANENT_ERROR_SECONDS);
 		}
 
 		const parsed = parseFeedXml(xml);

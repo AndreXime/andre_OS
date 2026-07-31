@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { segmentTabClass, tabBarClass } from "../uiClasses";
 
 // --- Funções de Cálculo (Mantidas iguais) ---
@@ -36,23 +36,13 @@ function formatResult(value: number | null | undefined, unit: string = "", fallb
 
 // --- COMPONENTE AUXILIAR (MOVIDO PARA FORA) ---
 // Agora ele é estável e não causa re-renderização desnecessária dos filhos
-const Row = ({
-	children,
-	result,
-	unit = "",
-}: {
-	children: React.ReactNode;
-	result: number | null;
-	unit?: string;
-}) => {
+const Row = ({ children, result, unit = "" }: { children: React.ReactNode; result: number | null; unit?: string }) => {
 	const resultBox =
 		"flex flex-col justify-center items-end px-4 py-2 rounded-lg bg-[color-mix(in_srgb,var(--color-paper-2)_90%,#0000)] border-l-4 border-accent/20";
 
 	return (
 		<div className="bg-[color-mix(in_srgb,var(--color-paper-2)_88%,#0000)] p-5 rounded-card border border-rule/50 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4">
-			<div className="text-xl font-light text-ink-2 leading-relaxed w-full text-center sm:text-left">
-				{children}
-			</div>
+			<div className="text-xl font-light text-ink-2 leading-relaxed w-full text-center sm:text-left">{children}</div>
 			<div className={`flex-shrink-0 w-full sm:w-auto ${resultBox}`}>
 				<span className="text-xs uppercase tracking-wider text-muted/90 font-semibold text-right w-full block">
 					Resultado
@@ -208,18 +198,10 @@ export default function PercentageCalculatorCard() {
 				<div className="flex items-center justify-between border-b border-rule/50 pb-2">
 					<h4 className="text-lg font-semibold text-ink-2">Cálculo de Desconto/Aumento</h4>
 					<div className={tabBarClass}>
-						<button
-							type="button"
-							onClick={() => setIsDiscount(true)}
-							className={segmentTabClass(isDiscount)}
-						>
+						<button type="button" onClick={() => setIsDiscount(true)} className={segmentTabClass(isDiscount)}>
 							Desconto
 						</button>
-						<button
-							type="button"
-							onClick={() => setIsDiscount(false)}
-							className={segmentTabClass(!isDiscount)}
-						>
+						<button type="button" onClick={() => setIsDiscount(false)} className={segmentTabClass(!isDiscount)}>
 							Aumento
 						</button>
 					</div>
@@ -254,11 +236,15 @@ export default function PercentageCalculatorCard() {
 				</div>
 
 				<div className="grid grid-cols-2 gap-4 pt-2">
-					<div className={`p-3 rounded-lg bg-[color-mix(in_srgb,var(--color-paper-2)_90%,#0000)] border border-rule/50`}>
+					<div
+						className={`p-3 rounded-lg bg-[color-mix(in_srgb,var(--color-paper-2)_90%,#0000)] border border-rule/50`}
+					>
 						<p className="text-muted/80 text-sm mb-1">Valor Final</p>
 						<span className="text-2xl font-bold text-accent">{formatResult(res3?.finalValue)}</span>
 					</div>
-					<div className={`p-3 rounded-lg bg-[color-mix(in_srgb,var(--color-paper-2)_90%,#0000)] border border-rule/50 text-right`}>
+					<div
+						className={`p-3 rounded-lg bg-[color-mix(in_srgb,var(--color-paper-2)_90%,#0000)] border border-rule/50 text-right`}
+					>
 						<p className="text-muted/80 text-sm mb-1">Diferença</p>
 						<span className="text-xl font-semibold text-ink-2">{formatResult(res3?.changeAmount)}</span>
 					</div>

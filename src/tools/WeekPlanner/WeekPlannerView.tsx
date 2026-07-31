@@ -1,5 +1,3 @@
-import { useMemo, useState, type ReactNode } from "react";
-import { ToolShell } from "../ToolShell";
 import {
 	ArrowRight,
 	CalendarDays,
@@ -13,6 +11,17 @@ import {
 	Timer,
 	Trash2,
 } from "lucide-react";
+import { type ReactNode, useMemo, useState } from "react";
+import { ToolShell } from "../ToolShell";
+import {
+	blockSpanMinutes,
+	canSaveBlockFields,
+	DAY_THEME,
+	type DayTheme,
+	formatDuration,
+	hasTime,
+	isTimeRangeOk,
+} from "./plannerDomain";
 import {
 	addWeekBlockToAllDays,
 	moveWeekBlock,
@@ -26,15 +35,6 @@ import {
 	type WeekTimeBlock,
 	weekPlannerStorage,
 } from "./store";
-import {
-	type DayTheme,
-	DAY_THEME,
-	blockSpanMinutes,
-	canSaveBlockFields,
-	formatDuration,
-	hasTime,
-	isTimeRangeOk,
-} from "./plannerDomain";
 
 function TimeField({
 	value,
@@ -57,11 +57,7 @@ function TimeField({
 					{optional && <span className="text-muted/75 font-normal normal-case"> (opcional)</span>}
 				</span>
 				{optional && hasTime(value) && (
-					<button
-						type="button"
-						onClick={() => onChange("")}
-						className="text-[10px] text-muted hover:text-ink"
-					>
+					<button type="button" onClick={() => onChange("")} className="text-[10px] text-muted hover:text-ink">
 						Limpar
 					</button>
 				)}
@@ -110,10 +106,7 @@ function SavedBlockBody({
 					)}
 					{hs && he && (
 						<>
-							<time
-								dateTime={`${block.start}/${block.end}`}
-								className="font-medium tabular-nums text-ink"
-							>
+							<time dateTime={`${block.start}/${block.end}`} className="font-medium tabular-nums text-ink">
 								{block.start}
 							</time>
 							<ArrowRight className="size-3.5 text-muted/80 shrink-0 self-center" aria-hidden />
@@ -181,9 +174,7 @@ function DraftBlockBody({
 		<div className="flex flex-col gap-3 w-full">
 			<div className="flex items-center justify-between gap-2">
 				<div className="flex items-center gap-2 flex-wrap">
-					<span className="text-[10px] font-semibold uppercase tracking-widest text-accent/80">
-						A definir
-					</span>
+					<span className="text-[10px] font-semibold uppercase tracking-widest text-accent/80">A definir</span>
 					{block.groupId && (
 						<span className="text-[10px] font-semibold tracking-wide uppercase rounded-md border border-accent/25 bg-[color-mix(in_srgb,var(--color-accent)_10%,transparent)] px-1.5 py-0.5 text-accent/95">
 							Toda a semana
@@ -324,10 +315,7 @@ function DaySection({
 					<div className="px-3 pt-3 pb-2">
 						<div className="flex flex-col gap-0.5 min-w-0">
 							<div className="flex items-center gap-2 flex-wrap">
-								<h2
-									id={`week-day-heading-${day}`}
-									className="text-base font-semibold text-ink tracking-tight"
-								>
+								<h2 id={`week-day-heading-${day}`} className="text-base font-semibold text-ink tracking-tight">
 									{WEEK_DAY_LABEL[day]}
 								</h2>
 								{hasBlocks && (

@@ -23,9 +23,7 @@ async function collectHtmlFiles(dir, baseDir) {
 function extractScriptSrcs(html) {
 	const srcs = new Set();
 
-	for (const match of html.matchAll(
-		/<script[^>]+type=["']module["'][^>]+src=["']([^"']+\.js)["'][^>]*>/g,
-	)) {
+	for (const match of html.matchAll(/<script[^>]+type=["']module["'][^>]+src=["']([^"']+\.js)["'][^>]*>/g)) {
 		srcs.add(match[1]);
 	}
 
@@ -48,15 +46,9 @@ function resolveAstroFile(src) {
 }
 
 function extractChunkRefs(content) {
-	const staticRefs = [
-		...content.matchAll(/from["'](\.\/[^"']+\.js)["']/g),
-	].map((match) => match[1]);
-	const dynamicRefs = [
-		...content.matchAll(/import\s*\([^)]*["'](\.\/[^"']+\.js)["']/g),
-	].map((match) => match[1]);
-	const absoluteRefs = [
-		...content.matchAll(/["'](\/_astro\/[^"']+\.js)["']/g),
-	].map((match) => match[1].slice(1));
+	const staticRefs = [...content.matchAll(/from["'](\.\/[^"']+\.js)["']/g)].map((match) => match[1]);
+	const dynamicRefs = [...content.matchAll(/import\s*\([^)]*["'](\.\/[^"']+\.js)["']/g)].map((match) => match[1]);
+	const absoluteRefs = [...content.matchAll(/["'](\/_astro\/[^"']+\.js)["']/g)].map((match) => match[1].slice(1));
 
 	return { staticRefs, dynamicRefs, absoluteRefs };
 }
@@ -167,9 +159,7 @@ for (const relHtml of htmlFiles) {
 	const fullHtmlPath = path.join(distDir, relHtml);
 	const html = await fs.readFile(fullHtmlPath, "utf8");
 	const srcs = extractScriptSrcs(html);
-	const entryFiles = srcs
-		.map(resolveAstroFile)
-		.filter((file) => file != null);
+	const entryFiles = srcs.map(resolveAstroFile).filter((file) => file != null);
 
 	const { initial, lazy } = await collectChunkGraph(entryFiles);
 	const initialFiles = formatChunkList(initial);
@@ -204,8 +194,6 @@ for (const { html, initialTotal, lazyTotal, initialFiles, lazyFiles } of reports
 			console.log(`    ${src} -> ${humanKb(size)} KB`);
 		}
 
-		console.log(
-			`  Total (initial + lazy): ${humanKb(initialTotal + lazyTotal)} KB`,
-		);
+		console.log(`  Total (initial + lazy): ${humanKb(initialTotal + lazyTotal)} KB`);
 	}
 }

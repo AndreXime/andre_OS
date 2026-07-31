@@ -4,9 +4,7 @@ import { formatDate } from "./utils";
 
 function RecipeBody({ body }: { readonly body: string }) {
 	return (
-		<pre className="whitespace-pre-wrap font-sans text-sm sm:text-[15px] leading-[1.7] text-ink-2 m-0">
-			{body}
-		</pre>
+		<pre className="whitespace-pre-wrap font-sans text-sm sm:text-[15px] leading-[1.7] text-ink-2 m-0">{body}</pre>
 	);
 }
 

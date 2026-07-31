@@ -67,4 +67,3 @@ export function removeSubscriptionItem(id: string): void {
 export function clearAllSubscriptionItems(): void {
 	financePlanner$.set(defaultState);
 }
-

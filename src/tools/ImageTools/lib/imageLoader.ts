@@ -58,11 +58,7 @@ async function detectAlpha(bitmap: ImageBitmap, signal?: AbortSignal): Promise<b
 	return false;
 }
 
-export function drawToCanvas(
-	bitmap: ImageBitmap,
-	targetWidth: number,
-	targetHeight: number,
-): HTMLCanvasElement {
+export function drawToCanvas(bitmap: ImageBitmap, targetWidth: number, targetHeight: number): HTMLCanvasElement {
 	const canvas = document.createElement("canvas");
 	canvas.width = targetWidth;
 	canvas.height = targetHeight;

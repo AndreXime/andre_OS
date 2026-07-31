@@ -1,13 +1,8 @@
-import { useEffect } from "react";
 import { Palette } from "lucide-react";
+import { useEffect } from "react";
 import { ToolShell } from "../ToolShell";
 import { App } from "./App";
-import {
-	clearThemeFromRoot,
-	cssThemes$,
-	cssThemesStorage,
-	syncThemeToRoot,
-} from "./store/themeStore";
+import { clearThemeFromRoot, cssThemes$, cssThemesStorage, syncThemeToRoot } from "./store/themeStore";
 import "./index.css";
 
 const THEME_FONTS_HREF =

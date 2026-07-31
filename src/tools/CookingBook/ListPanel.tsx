@@ -6,8 +6,8 @@ import {
 	toolListItemActiveClass,
 	toolListItemClass,
 } from "@/lib/toolUi";
-import { displayTitle, type Recipe } from "./store";
 import type { Screen } from "./store";
+import { displayTitle, type Recipe } from "./store";
 import { formatDate } from "./utils";
 
 function recipePreview(body: string, max = 120): string {
@@ -94,20 +94,14 @@ export function ListPanel({
 								<button
 									type="button"
 									onClick={() => onOpenDetail(recipe.id)}
-									className={[
-										"overflow-hidden",
-										toolListItemClass,
-										active ? toolListItemActiveClass : "",
-									].join(" ")}
+									className={["overflow-hidden", toolListItemClass, active ? toolListItemActiveClass : ""].join(" ")}
 								>
 									<div className="flex gap-0 min-h-[4.25rem]">
 										<div className="flex min-h-[4.25rem] w-20 shrink-0 items-center justify-center bg-accent-bg text-accent/50 sm:w-24">
 											<ChefHat className="size-6" />
 										</div>
 										<div className="flex flex-col justify-center gap-0.5 min-w-0 flex-1 p-3">
-											<span className="text-sm font-semibold text-ink truncate">
-												{displayTitle(recipe)}
-											</span>
+											<span className="text-sm font-semibold text-ink truncate">{displayTitle(recipe)}</span>
 											<span className="text-[10px] text-muted/75">{formatDate(recipe.updatedAt)}</span>
 											<span className="text-xs text-muted/65 line-clamp-2 leading-snug">
 												{recipePreview(recipe.body, 80)}

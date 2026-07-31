@@ -1,7 +1,7 @@
 import { useStore } from "@nanostores/react";
-import { masterProfile$, updateMasterProfile } from "../lib/store";
-import { useLayoutEffect, useRef } from "react";
 import { CloudBackup } from "lucide-react";
+import { useLayoutEffect, useRef } from "react";
+import { masterProfile$, updateMasterProfile } from "../lib/store";
 
 export function ContextTab() {
 	const masterProfile = useStore(masterProfile$);

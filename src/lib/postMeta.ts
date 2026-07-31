@@ -1,5 +1,5 @@
-import { getLinkInfo } from "@/lib/getLinkInfo";
 import type { Post } from "@/content.config";
+import { getLinkInfo } from "@/lib/getLinkInfo";
 
 export interface PostMeta {
 	kind: "tool" | "note" | "link";

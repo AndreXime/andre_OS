@@ -1,9 +1,9 @@
-import { Check, Copy } from "lucide-react";
-import { useState, useMemo } from "react";
 import { useStore } from "@nanostores/react";
-import { masterProfile$, jobDescription$ } from "../lib/store";
-import IAPrompt from "../markdown/promptExample.md?raw";
+import { Check, Copy } from "lucide-react";
+import { useMemo, useState } from "react";
+import { jobDescription$, masterProfile$ } from "../lib/store";
 import defaultCV from "../markdown/cvExample.md?raw";
+import IAPrompt from "../markdown/promptExample.md?raw";
 
 export function PromptTab() {
 	const [copied, setCopied] = useState(false);

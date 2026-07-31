@@ -93,23 +93,15 @@ export function ListPanel({
 								<button
 									type="button"
 									onClick={() => onSelect(note.id)}
-									className={[
-										"overflow-hidden",
-										toolListItemClass,
-										active ? toolListItemActiveClass : "",
-									].join(" ")}
+									className={["overflow-hidden", toolListItemClass, active ? toolListItemActiveClass : ""].join(" ")}
 								>
 									<div className="flex gap-0 min-h-[4.25rem]">
 										<div className="relative flex min-h-[4.25rem] w-20 shrink-0 items-center justify-center bg-accent-bg text-accent/50 sm:w-24">
 											<StickyNote className="size-6" />
-											{note.pinned && (
-												<Pin className="absolute right-1.5 top-1.5 size-3 text-accent fill-accent" />
-											)}
+											{note.pinned && <Pin className="absolute right-1.5 top-1.5 size-3 text-accent fill-accent" />}
 										</div>
 										<div className="flex flex-col justify-center gap-0.5 min-w-0 flex-1 p-3">
-											<span className="text-sm font-semibold text-ink truncate">
-												{displayTitle(note)}
-											</span>
+											<span className="text-sm font-semibold text-ink truncate">{displayTitle(note)}</span>
 											<span className="text-[10px] text-muted/75">{formatDate(note.updatedAt)}</span>
 											<span className="text-xs text-muted/65 line-clamp-2 leading-snug">
 												{notePreview(note.body, 80)}

@@ -1,8 +1,7 @@
 export const navLinkClass =
 	"inline-flex min-h-11 items-center px-2xs font-mono text-sm text-muted no-underline transition-colors duration-150 ease-out hover:text-ink";
 
-export const navLinkActiveClass =
-	"rounded-input border border-accent-muted bg-accent-bg px-sm font-medium text-accent";
+export const navLinkActiveClass = "rounded-input border border-accent-muted bg-accent-bg px-sm font-medium text-accent";
 
 export const navLinkRssClass = "font-medium text-accent";
 

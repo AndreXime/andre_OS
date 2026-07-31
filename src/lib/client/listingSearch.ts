@@ -17,16 +17,12 @@ function syncRailSections(query: string): void {
 	const recentRail = document.querySelector<HTMLElement>(RECENT_RAIL_SECTION);
 	if (recentRail) recentRail.hidden = query.length > 0;
 
-	const sections = document.querySelectorAll<HTMLElement>(
-		'section[aria-labelledby^="rail-"]',
-	);
+	const sections = document.querySelectorAll<HTMLElement>('section[aria-labelledby^="rail-"]');
 
 	for (const section of sections) {
 		if (section === recentRail) continue;
 
-		const rows = section.querySelectorAll<HTMLTableRowElement>(
-			"tr[data-search-text]",
-		);
+		const rows = section.querySelectorAll<HTMLTableRowElement>("tr[data-search-text]");
 		if (rows.length === 0) continue;
 
 		let visibleInSection = 0;

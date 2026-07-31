@@ -1,7 +1,7 @@
+import { Tabs } from "./components/ui/Tabs";
 import { SectionShowcase } from "./features/sections/SectionShowcase";
 import { ThemePicker } from "./features/theme/ThemePicker";
 import { TokenPreview } from "./features/theme/TokenPreview";
-import { Tabs } from "./components/ui/Tabs";
 
 function ThemeTab() {
 	return (

@@ -102,8 +102,7 @@ export function removeFeed(id: string): void {
 	const nextFeeds = state.feeds.filter((f) => f.id !== id);
 	if (nextFeeds.length === state.feeds.length) return;
 
-	const activeFeedId =
-		state.activeFeedId === id ? resolveActiveFeedId(nextFeeds, undefined) : state.activeFeedId;
+	const activeFeedId = state.activeFeedId === id ? resolveActiveFeedId(nextFeeds, undefined) : state.activeFeedId;
 
 	rssReader$.set({ feeds: nextFeeds, activeFeedId });
 }

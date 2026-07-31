@@ -1,8 +1,8 @@
+import { computed } from "nanostores";
 import { createJsonPersistentAtom } from "@/lib/toolStorage/persistentAtom";
 import type { ToolStorageEntry } from "@/lib/toolStorage/types";
-import { computed } from "nanostores";
-import { parseResumeMarkdown } from "./parserMd";
 import defaultCV from "../markdown/cvExample.md?raw";
+import { parseResumeMarkdown } from "./parserMd";
 
 export interface Resume {
 	id: string;

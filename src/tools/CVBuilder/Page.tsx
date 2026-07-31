@@ -1,6 +1,6 @@
-import type { UserData } from "./lib/types";
-import { parsedContent$ } from "./lib/store";
 import { useStore } from "@nanostores/react";
+import { parsedContent$ } from "./lib/store";
+import type { UserData } from "./lib/types";
 
 export default function ResumeContent() {
 	const content = useStore(parsedContent$);

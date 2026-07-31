@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import { fieldLabelClass, inputClass } from "../uiClasses";
 
 function calcularCustoCombustivel(distancia: number, kml: number, preco: number, freq: number) {

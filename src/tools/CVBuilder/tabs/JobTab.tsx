@@ -1,6 +1,6 @@
 import { useStore } from "@nanostores/react";
-import { jobDescription$, updateJobDescription } from "../lib/store";
 import { CloudBackup } from "lucide-react";
+import { jobDescription$, updateJobDescription } from "../lib/store";
 
 export function JobTab() {
 	const jobDescription = useStore(jobDescription$);

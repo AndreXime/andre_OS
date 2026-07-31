@@ -1,6 +1,5 @@
-import type { RefObject } from "react";
 import { ArrowLeft } from "lucide-react";
-import type { ReactNode } from "react";
+import type { ReactNode, RefObject } from "react";
 
 export function FieldLabel({ children, optional }: { readonly children: ReactNode; readonly optional?: boolean }) {
 	return (
@@ -51,9 +50,7 @@ export function FormPanel({
 					<ArrowLeft className="size-4" />
 					Voltar
 				</button>
-				<h2 className="text-lg sm:text-xl font-semibold text-ink">
-					{selectedId ? "Editar receita" : "Nova receita"}
-				</h2>
+				<h2 className="text-lg sm:text-xl font-semibold text-ink">{selectedId ? "Editar receita" : "Nova receita"}</h2>
 			</div>
 
 			<div className="rounded-card border border-rule bg-paper-2 p-4 sm:p-5 flex flex-col gap-4 shadow-lg shadow-black/10">

@@ -1,20 +1,20 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useStore } from "@nanostores/react";
 import { ChefHat } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ToolShell } from "../ToolShell";
 import { DetailPanel } from "./DetailPanel";
 import { FormPanel } from "./FormPanel";
 import { ListPanel } from "./ListPanel";
+import type { Screen } from "./store";
 import {
 	cookingBook$,
 	cookingBookStorage,
 	displayTitle,
 	duplicateRecipe,
+	type Recipe,
 	removeRecipe,
 	saveRecipe,
-	type Recipe,
 } from "./store";
-import type { Screen } from "./store";
 
 export default function CookingBook() {
 	const { recipes } = useStore(cookingBook$);

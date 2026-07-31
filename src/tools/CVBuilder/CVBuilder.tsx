@@ -1,16 +1,16 @@
 import "./styles.css";
-import { Printer, FileText, Briefcase, User, Database, Eye, BookOpen, FileSearch } from "lucide-react";
-import { useState } from "react";
+import { BookOpen, Briefcase, Database, Eye, FileSearch, FileText, Printer, User } from "lucide-react";
 import type React from "react";
+import { useState } from "react";
 
 import { ToolShell } from "../ToolShell";
 import { cvBuilderStorage, printResume } from "./lib/store";
-import { EditorTab } from "./tabs/EditorTab";
+import ResumeContent from "./Page";
 import { ContextTab } from "./tabs/ContextTab";
+import { EditorTab } from "./tabs/EditorTab";
+import { JobTab } from "./tabs/JobTab";
 import { PromptTab } from "./tabs/PromptTab";
 import { SavedResumesTab } from "./tabs/SavedResumesTab";
-import { JobTab } from "./tabs/JobTab";
-import ResumeContent from "./Page";
 
 type TabId = 1 | 2 | 3 | 4 | 5 | 6;
 

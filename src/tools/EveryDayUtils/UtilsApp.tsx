@@ -1,8 +1,8 @@
-import { tools, type ToolListItem } from "./toolsData";
-import { useState } from "react";
 import { ArrowLeft, ChevronRight, Wrench } from "lucide-react";
+import { useState } from "react";
 import { toolBtnGhostClass, toolSelectCardClass } from "@/lib/toolUi";
 import { ToolShell } from "../ToolShell";
+import { type ToolListItem, tools } from "./toolsData";
 
 export default function UtilsApp() {
 	const [selectedTool, setSelectedTool] = useState<ToolListItem>();
@@ -27,11 +27,7 @@ export default function UtilsApp() {
 			{...(!isListView
 				? {
 						actions: (
-							<button
-								type="button"
-								onClick={() => setSelectedTool(undefined)}
-								className={toolBtnGhostClass}
-							>
+							<button type="button" onClick={() => setSelectedTool(undefined)} className={toolBtnGhostClass}>
 								<ArrowLeft className="size-4" />
 								Voltar
 							</button>

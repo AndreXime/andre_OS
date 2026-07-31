@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
 import { useStore } from "@nanostores/react";
-import { ExternalLink, Loader2, Plus, RefreshCw, Rss, RotateCcw, Trash2, X } from "lucide-react";
+import { ExternalLink, Loader2, Plus, RefreshCw, RotateCcw, Rss, Trash2, X } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ToolShell } from "../ToolShell";
 import { formatRelativeDate, isValidFeedUrl, type RssArticle } from "./domain";
 import {
@@ -74,10 +74,7 @@ export default function RssReader() {
 	const [channelDescriptions, setChannelDescriptions] = useState<Record<string, string>>({});
 	const [displayedFeedId, setDisplayedFeedId] = useState<string | null>(null);
 
-	const activeFeed = useMemo(
-		() => feeds.find((f) => f.id === activeFeedId) ?? feeds[0],
-		[activeFeedId, feeds],
-	);
+	const activeFeed = useMemo(() => feeds.find((f) => f.id === activeFeedId) ?? feeds[0], [activeFeedId, feeds]);
 
 	const activeLabel = activeFeed?.title ?? "Feed";
 	const isContentLoading = loading || (activeFeed !== undefined && displayedFeedId !== activeFeed.id);
@@ -264,9 +261,7 @@ export default function RssReader() {
 									<li key={feed.id}>
 										<div
 											className={`rss-reader-feed group/card flex items-stretch rounded-card border text-sm ${
-												activeFeedId === feed.id
-													? "rss-reader-feed--active font-medium text-ink"
-													: "text-ink-2"
+												activeFeedId === feed.id ? "rss-reader-feed--active font-medium text-ink" : "text-ink-2"
 											}`}
 										>
 											<button
@@ -405,16 +400,12 @@ export default function RssReader() {
 											>
 												<div className="flex items-start justify-between gap-3">
 													<div className="min-w-0 flex-1">
-														<p className="text-xs font-medium text-accent mb-1 truncate">
-															{article.feedTitle}
-														</p>
+														<p className="text-xs font-medium text-accent mb-1 truncate">{article.feedTitle}</p>
 														<h3 className="text-base font-semibold text-ink leading-snug group-hover:text-accent transition-colors">
 															{article.title}
 														</h3>
 														{article.summary && (
-															<p className="mt-2 text-sm text-muted line-clamp-2 leading-relaxed">
-																{article.summary}
-															</p>
+															<p className="mt-2 text-sm text-muted line-clamp-2 leading-relaxed">{article.summary}</p>
 														)}
 														{article.pubDate > 0 && (
 															<time

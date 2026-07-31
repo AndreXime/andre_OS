@@ -1,8 +1,13 @@
-import { useMemo, useState } from "react";
 import { Flame } from "lucide-react";
+import { useMemo, useState } from "react";
 import { ToolShell } from "../ToolShell";
-import { calcularPlanoAposentadoriaTributado, defaultFinancialPlanInput, formatarMoeda, type FinancialPlanInput } from "./domain";
 import { InputField, ResultCard } from "./Components";
+import {
+	calcularPlanoAposentadoriaTributado,
+	defaultFinancialPlanInput,
+	type FinancialPlanInput,
+	formatarMoeda,
+} from "./domain";
 
 export default function FirePlanner() {
 	const [inputs, setInputs] = useState<FinancialPlanInput>(defaultFinancialPlanInput);
@@ -199,12 +204,8 @@ export default function FirePlanner() {
 													].join(" ")}
 												>
 													<td className="px-4 py-2 tabular-nums text-ink">{row.idade}</td>
-													<td className="px-4 py-2 tabular-nums text-muted">
-														{formatarMoeda(row.totalInvestido)}
-													</td>
-													<td className="px-4 py-2 tabular-nums text-muted">
-														{formatarMoeda(row.jurosAcumulados)}
-													</td>
+													<td className="px-4 py-2 tabular-nums text-muted">{formatarMoeda(row.totalInvestido)}</td>
+													<td className="px-4 py-2 tabular-nums text-muted">{formatarMoeda(row.jurosAcumulados)}</td>
 													<td className="px-4 py-2 tabular-nums font-medium text-ink">
 														{formatarMoeda(row.patrimonioTotal)}
 													</td>

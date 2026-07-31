@@ -28,9 +28,7 @@ function decodeHtmlEntities(value: string): string {
 }
 
 function stripHtml(html: string): string {
-	let text = html
-		.replace(/<script[\s\S]*?<\/script>/gi, "")
-		.replace(/<style[\s\S]*?<\/style>/gi, "");
+	let text = html.replace(/<script[\s\S]*?<\/script>/gi, "").replace(/<style[\s\S]*?<\/style>/gi, "");
 
 	text = decodeHtmlEntities(text);
 
@@ -183,9 +181,7 @@ export function parseFeedXml(xml: string): ParsedFeed {
 	const isAtom = /<feed[\s>]/i.test(normalized);
 	const parsed = isAtom ? parseAtom(normalized) : parseRss2(normalized);
 
-	const articles = parsed.articles
-		.filter((a) => a.title !== "" || a.link !== "")
-		.sort((a, b) => b.pubDate - a.pubDate);
+	const articles = parsed.articles.filter((a) => a.title !== "" || a.link !== "").sort((a, b) => b.pubDate - a.pubDate);
 
 	return { title: parsed.title, description: parsed.description, articles };
 }

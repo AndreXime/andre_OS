@@ -2,15 +2,7 @@ import { createJsonPersistentAtom } from "@/lib/toolStorage/persistentAtom";
 import type { ToolStorageEntry } from "@/lib/toolStorage/types";
 import { canSaveBlockFields } from "./plannerDomain";
 
-export const WEEK_DAY_ORDER = [
-	"mon",
-	"tue",
-	"wed",
-	"thu",
-	"fri",
-	"sat",
-	"sun",
-] as const;
+export const WEEK_DAY_ORDER = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
 
 export type WeekDayId = (typeof WEEK_DAY_ORDER)[number];
 
@@ -121,7 +113,11 @@ export function addWeekBlockToAllDays(): void {
 	weekPlan$.set(next);
 }
 
-export function updateWeekBlock(day: WeekDayId, id: string, patch: Partial<Pick<WeekTimeBlock, "start" | "end" | "title">>): void {
+export function updateWeekBlock(
+	day: WeekDayId,
+	id: string,
+	patch: Partial<Pick<WeekTimeBlock, "start" | "end" | "title">>,
+): void {
 	const plan = weekPlan$.get();
 	const block = plan[day].find((b) => b.id === id);
 	if (!block || block.saved) return;

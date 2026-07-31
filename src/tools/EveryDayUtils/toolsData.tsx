@@ -2,8 +2,8 @@ import { DollarSign, Fuel, Lock, type LucideIcon, Percent } from "lucide-react";
 import type { ComponentType } from "react";
 import FuelCost from "./tools/FuelCost";
 import Investiment from "./tools/Investiment";
-import PercentageCalculator from "./tools/PercentageCalculator";
 import Password from "./tools/Password";
+import PercentageCalculator from "./tools/PercentageCalculator";
 
 export interface ToolListItem {
 	title: string;

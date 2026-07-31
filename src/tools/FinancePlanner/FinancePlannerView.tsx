@@ -1,6 +1,6 @@
-import { useMemo, useState } from "react";
 import { useStore } from "@nanostores/react";
 import { Plus, Trash2, Wallet } from "lucide-react";
+import { useMemo, useState } from "react";
 import { toolBtnPrimaryClass, toolInputClass, toolLabelClass, toolPanelClass, toolStatCardClass } from "@/lib/toolUi";
 import { ToolShell } from "../ToolShell";
 import { computeTotals, formatBrlFromCents, parseBrlToCents } from "./domain";
@@ -110,16 +110,11 @@ export function FinancePlannerView() {
 
 					<div className="border-t border-rule">
 						{items.length === 0 ? (
-							<div className="p-6 text-sm text-muted">
-								Nenhuma assinatura ainda. Adicione a primeira acima.
-							</div>
+							<div className="p-6 text-sm text-muted">Nenhuma assinatura ainda. Adicione a primeira acima.</div>
 						) : (
 							<ul className="p-2 sm:p-3 flex flex-col gap-2 list-none m-0">
 								{items.map((it) => (
-									<li
-										key={it.id}
-										className="rounded-card border border-rule bg-paper/40"
-									>
+									<li key={it.id} className="rounded-card border border-rule bg-paper/40">
 										<div className="flex items-center justify-between gap-3 p-3">
 											<div className="min-w-0 flex flex-col">
 												<div className="text-sm font-medium text-ink truncate">{it.name}</div>

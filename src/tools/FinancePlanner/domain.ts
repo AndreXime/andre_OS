@@ -57,4 +57,3 @@ export function computeTotals(items: readonly SubscriptionItem[]): SubscriptionT
 	const dailyCents = Math.round(annualCents / 365);
 	return { dailyCents, monthlyCents, annualCents };
 }
-

@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { fieldLabelClass, inputClass } from "../uiClasses";
 
 interface TaxaApiItem {
@@ -139,9 +139,7 @@ export default function InvestmentCard() {
 			{/* --- Resultado --- */}
 			{resultado && (
 				<div className={`${cardClass} border-accent/20 animate-in fade-in slide-in-from-bottom-2 duration-500`}>
-					<h3 className="text-lg font-bold mb-4 uppercase tracking-wide text-accent">
-						Planejamento Financeiro
-					</h3>
+					<h3 className="text-lg font-bold mb-4 uppercase tracking-wide text-accent">Planejamento Financeiro</h3>
 
 					<div className="flex flex-col gap-6">
 						{/* Capital Principal */}
@@ -167,9 +165,7 @@ export default function InvestmentCard() {
 								<div className="p-3 bg-[color-mix(in_srgb,var(--color-ink)_6%,#0000)] rounded border border-[var(--color-ink)]/10">
 									<span className="block text-ink uppercase font-bold mb-1">Pode Gastar (Livre)</span>
 									<strong className="text-ink-2 text-lg block">{formatarMoeda(resultado.rendaReal)}</strong>
-									<span className=" text-muted/90">
-										{(100 - resultado.porcentagemReinvestir).toFixed(1)}% do total
-									</span>
+									<span className=" text-muted/90">{(100 - resultado.porcentagemReinvestir).toFixed(1)}% do total</span>
 								</div>
 							</div>
 						</div>

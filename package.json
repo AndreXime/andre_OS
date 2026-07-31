@@ -6,7 +6,7 @@
 		"dev": "astro dev",
 		"build": "astro build",
 		"preview": "astro preview",
-		"lint": "biome lint && astro check"
+		"lint": "biome check && astro check"
 	},
 	"dependencies": {
 		"@astrojs/check": "^0.9.9",

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { fieldLabelClass, inputClass, segmentTabClass, tabBarClass } from "../uiClasses";
 
 // --- Utilitários de Lógica ---
@@ -143,8 +143,7 @@ export default function SecurityToolsCard() {
 	};
 
 	// Estilos comuns
-	const checkboxClass =
-		"w-5 h-5 rounded bg-[var(--color-rule)]/60 border border-rule text-accent focus:ring-0";
+	const checkboxClass = "w-5 h-5 rounded bg-[var(--color-rule)]/60 border border-rule text-accent focus:ring-0";
 
 	return (
 		<div className="space-y-6">

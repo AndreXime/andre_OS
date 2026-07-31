@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
 import { useStore } from "@nanostores/react";
 import { StickyNote } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ToolShell } from "../ToolShell";
 import { ListPanel } from "./ListPanel";
 import { NotePanel } from "./NotePanel";
-import { createNote, displayTitle, scratchPad$, scratchPadStorage, type Screen } from "./store";
+import { createNote, displayTitle, type Screen, scratchPad$, scratchPadStorage } from "./store";
 
 export default function ScratchPad() {
 	const { notes } = useStore(scratchPad$);
@@ -91,9 +91,7 @@ export default function ScratchPad() {
 			<div className="hidden min-h-[20rem] w-full flex-col items-center justify-center gap-md rounded-card border border-dashed border-rule bg-paper-2/30 p-12 lg:flex">
 				<StickyNote className="size-14 shrink-0 text-accent/45" strokeWidth={1.5} />
 				<p className="text-left text-base leading-relaxed text-muted">
-					{notes.length === 0
-						? "Comece criando sua primeira nota."
-						: "Selecione uma nota na lista ou crie uma nova."}
+					{notes.length === 0 ? "Comece criando sua primeira nota." : "Selecione uma nota na lista ou crie uma nova."}
 				</p>
 			</div>
 		) : null;

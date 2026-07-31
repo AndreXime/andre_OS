@@ -1,7 +1,7 @@
+import { useStore } from "@nanostores/react";
 import { CloudBackup, RotateCcw } from "lucide-react";
 import { useLayoutEffect, useRef } from "react";
-import { useStore } from "@nanostores/react";
-import { activeResume$, updateResumeContent, resetActiveResume } from "../lib/store";
+import { activeResume$, resetActiveResume, updateResumeContent } from "../lib/store";
 
 export function EditorTab() {
 	const activeResume = useStore(activeResume$);

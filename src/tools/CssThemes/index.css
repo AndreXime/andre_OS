@@ -69,17 +69,9 @@
 	--color-accent: var(--ct-color-primary);
 	--color-accent-ink: var(--ct-color-primary-foreground);
 	--color-focus: var(--ct-color-ring);
-	--color-accent-bg: color-mix(
-		in srgb,
-		var(--ct-color-primary) 14%,
-		var(--ct-color-background)
-	);
+	--color-accent-bg: color-mix(in srgb, var(--ct-color-primary) 14%, var(--ct-color-background));
 	--color-accent-weak: var(--ct-color-primary);
-	--color-accent-muted: color-mix(
-		in srgb,
-		var(--ct-color-primary) 45%,
-		var(--ct-color-background)
-	);
+	--color-accent-muted: color-mix(in srgb, var(--ct-color-primary) 45%, var(--ct-color-background));
 	--font-display: var(--ct-font-family-heading);
 	--font-body: var(--ct-font-family);
 

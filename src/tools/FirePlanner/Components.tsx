@@ -39,9 +39,7 @@ export function InputField({
 					className={toolInputClass}
 				/>
 				{suffix && (
-					<span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted">
-						{suffix}
-					</span>
+					<span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted">{suffix}</span>
 				)}
 			</div>
 		</div>
@@ -60,12 +58,7 @@ export function ResultCard({
 	highlight?: boolean;
 }) {
 	return (
-		<div
-			className={[
-				toolStatCardClass,
-				highlight ? "border-accent-muted bg-accent-bg" : "",
-			].join(" ")}
-		>
+		<div className={[toolStatCardClass, highlight ? "border-accent-muted bg-accent-bg" : ""].join(" ")}>
 			<span className={toolLabelClass}>{label}</span>
 			<span className="text-xl font-bold tabular-nums text-ink sm:text-2xl">{value}</span>
 			{hint && <span className="text-xs leading-snug text-muted">{hint}</span>}
