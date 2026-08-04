@@ -1,5 +1,4 @@
-import { persistentAtom } from "@nanostores/persistent";
-import type { WritableAtom } from "nanostores";
+import { atom, type WritableAtom } from "nanostores";
 
 interface JsonPersistentOptions<T> {
 	readonly storageKey: string;
@@ -11,28 +10,61 @@ export interface JsonPersistentAtom<T> extends WritableAtom<T> {
 	setFromRaw(raw: unknown): void;
 }
 
+type BootTask = () => void;
+
+const bootTasks: BootTask[] = [];
+let booted = false;
+
+/**
+ * Lê localStorage e liga a persistência. Deve rodar só no client,
+ * depois da hidratação (ex.: useEffect), para o HTML do SSR bater
+ * com o primeiro render do React.
+ */
+export function bootJsonPersistentAtoms(): void {
+	if (booted || typeof window === "undefined") return;
+	booted = true;
+	for (const task of bootTasks) task();
+	bootTasks.length = 0;
+}
+
 export function createJsonPersistentAtom<T>({
 	storageKey,
 	defaultValue,
 	normalize,
 }: JsonPersistentOptions<T>): JsonPersistentAtom<T> {
 	const resolve = normalize ?? ((raw: unknown) => raw as T);
+	const store = atom<T>(defaultValue);
 
-	const atom = persistentAtom<T>(storageKey, defaultValue, {
-		encode: JSON.stringify,
-		decode(value: string | null) {
-			if (!value) return defaultValue;
-			try {
-				return resolve(JSON.parse(value) as unknown);
-			} catch {
-				return defaultValue;
+	const setFromRaw = (raw: unknown): void => {
+		store.set(resolve(raw));
+	};
+
+	const boot = (): void => {
+		try {
+			const raw = window.localStorage.getItem(storageKey);
+			if (raw !== null) {
+				store.set(resolve(JSON.parse(raw) as unknown));
 			}
-		},
-	});
+		} catch {
+			store.set(defaultValue);
+		}
 
-	return Object.assign(atom, {
-		setFromRaw(raw: unknown) {
-			atom.set(resolve(raw));
-		},
-	});
+		store.listen((value) => {
+			try {
+				window.localStorage.setItem(storageKey, JSON.stringify(value));
+			} catch {
+				// quota / private mode: estado fica só em memória
+			}
+		});
+	};
+
+	if (typeof window === "undefined") {
+		// SSR: mantém defaultValue (sem localStorage)
+	} else if (booted) {
+		boot();
+	} else {
+		bootTasks.push(boot);
+	}
+
+	return Object.assign(store, { setFromRaw });
 }

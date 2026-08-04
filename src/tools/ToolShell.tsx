@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
+import { useEffect } from "react";
 import { CopyLinkButton } from "@/lib/toolStorage/CopyLinkButton";
+import { bootJsonPersistentAtoms } from "@/lib/toolStorage/persistentAtom";
 import type { ToolStorageEntry } from "@/lib/toolStorage/types";
 import { useImportStateFromUrl } from "@/lib/toolStorage/useImportStateFromUrl";
 
@@ -9,6 +11,7 @@ export interface ToolShellProps {
 	icon?: ReactNode;
 	storage?: ToolStorageEntry;
 	actions?: ReactNode;
+	mainClassName?: string;
 	children: ReactNode;
 }
 
@@ -23,12 +26,16 @@ function HeaderActions({ storage, actions }: { storage?: ToolStorageEntry; actio
 	);
 }
 
-export function ToolShell({ title, description, icon, storage, actions, children }: ToolShellProps) {
+export function ToolShell({ title, description, icon, storage, actions, mainClassName, children }: ToolShellProps) {
+	useEffect(() => {
+		bootJsonPersistentAtoms();
+	}, []);
+
 	useImportStateFromUrl(storage);
 
 	return (
-		<div className="relative flex min-h-full w-full flex-col">
-			<header className="container-page w-full border-b border-b-rule pb-md pt-lg">
+		<div className="relative flex h-full min-h-0 w-full flex-1 flex-col">
+			<header className="container-page w-full shrink-0 border-b border-b-rule pb-md pt-lg">
 				<div className="flex w-full flex-col gap-sm lg:flex-row lg:items-start lg:justify-between">
 					<div className="flex min-w-0 flex-1 items-start gap-sm border-l-[3px] border-accent pl-md">
 						{icon && (
@@ -46,7 +53,14 @@ export function ToolShell({ title, description, icon, storage, actions, children
 					<HeaderActions {...(storage ? { storage } : {})} {...(actions ? { actions } : {})} />
 				</div>
 			</header>
-			<main className="container-page flex flex-1 flex-col gap-md pb-3xl pt-md">{children}</main>
+			<main
+				className={[
+					"container-page flex min-h-0 flex-1 flex-col gap-md overflow-y-auto pb-3xl pt-md",
+					mainClassName ?? "",
+				].join(" ")}
+			>
+				{children}
+			</main>
 		</div>
 	);
 }
