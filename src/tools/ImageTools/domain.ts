@@ -5,7 +5,7 @@ export const ACCEPTED_FORMATS_LABEL = "PNG, JPEG, WebP, AVIF";
 export const MAX_FILE_BYTES = 25 * 1024 * 1024;
 export const MAX_DIMENSION = 8192;
 
-export const BG_REMOVAL_MODEL = "isnet_quint8" as const;
+export const BG_REMOVAL_MODEL = "isnet_fp16" as const;
 
 export type ModelPreloadStatus = "idle" | "loading" | "ready" | "error";
 
