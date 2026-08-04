@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import type { OutputFormat } from "../domain";
+import { formatImageProcessingError, type OutputFormat } from "../domain";
 import { mapPool } from "../lib/batchRunner";
 import { compressFile, convertFile } from "../lib/processImage";
 import {
@@ -39,7 +39,7 @@ export function useImageProcessor() {
 				finishItemOperation(itemId);
 				return;
 			}
-			setItemError(itemId, (err as Error).message || "Falha ao converter imagem", batchId);
+			setItemError(itemId, formatImageProcessingError(err, "Falha ao converter imagem"), batchId);
 		} finally {
 			finishItemOperation(itemId);
 		}
@@ -63,7 +63,7 @@ export function useImageProcessor() {
 				finishItemOperation(itemId);
 				return;
 			}
-			setItemError(itemId, (err as Error).message || "Falha ao comprimir imagem", batchId);
+			setItemError(itemId, formatImageProcessingError(err, "Falha ao comprimir imagem"), batchId);
 		} finally {
 			finishItemOperation(itemId);
 		}
@@ -114,8 +114,10 @@ export function useImageProcessor() {
 						}
 						setItemError(
 							itemId,
-							(err as Error).message ||
-								(operation === "convert" ? "Falha ao converter imagem" : "Falha ao comprimir imagem"),
+							formatImageProcessingError(
+								err,
+								operation === "convert" ? "Falha ao converter imagem" : "Falha ao comprimir imagem",
+							),
 							batchId,
 						);
 					} finally {

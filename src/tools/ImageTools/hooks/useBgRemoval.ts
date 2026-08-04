@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
+import { formatImageProcessingError } from "../domain";
 import { mapPool } from "../lib/batchRunner";
 import { bgRemovalConfig } from "../lib/bgRemovalConfig";
 import { removeBackgroundFile } from "../lib/processImage";
@@ -106,8 +107,7 @@ export function useBgRemoval(shouldPreload = false) {
 				setItemResult(itemId, blob, "bg-removal", batchId);
 			} catch (err) {
 				if (!isItemOperationCurrent(itemId, batchId)) return;
-				const message = err instanceof Error && err.message ? err.message : "Falha ao remover fundo da imagem.";
-				setItemError(itemId, message, batchId);
+				setItemError(itemId, formatImageProcessingError(err, "Falha ao remover fundo da imagem."), batchId);
 			} finally {
 				finishItemOperation(itemId);
 			}
@@ -155,8 +155,7 @@ export function useBgRemoval(shouldPreload = false) {
 						finishItemOperation(itemId);
 						return;
 					}
-					const message = err instanceof Error && err.message ? err.message : "Falha ao remover fundo da imagem.";
-					setItemError(itemId, message, batchId);
+					setItemError(itemId, formatImageProcessingError(err, "Falha ao remover fundo da imagem."), batchId);
 				} finally {
 					finishItemOperation(itemId);
 					if (isBatchCurrent(batchId)) {

@@ -79,18 +79,65 @@ export function formatFileSize(bytes: number): string {
 	return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
+const IMGLY_DECODE_MIMES = new Set(["image/png", "image/jpeg", "image/webp", "application/octet-stream"]);
+
+export function sniffImageMime(bytes: Uint8Array): string | null {
+	if (bytes.length >= 8 && bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47) {
+		return "image/png";
+	}
+	if (bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) {
+		return "image/jpeg";
+	}
+	if (
+		bytes.length >= 12 &&
+		bytes[0] === 0x52 &&
+		bytes[1] === 0x49 &&
+		bytes[2] === 0x46 &&
+		bytes[3] === 0x46 &&
+		bytes[8] === 0x57 &&
+		bytes[9] === 0x45 &&
+		bytes[10] === 0x42 &&
+		bytes[11] === 0x50
+	) {
+		return "image/webp";
+	}
+	// ftyp....avif / avis
+	if (bytes.length >= 12 && bytes[4] === 0x66 && bytes[5] === 0x74 && bytes[6] === 0x79 && bytes[7] === 0x70) {
+		const brand = String.fromCharCode(bytes[8] ?? 0, bytes[9] ?? 0, bytes[10] ?? 0, bytes[11] ?? 0);
+		if (brand === "avif" || brand === "avis" || brand === "mif1") return "image/avif";
+	}
+	return null;
+}
+
+export function isImglyDecodableMime(mime: string): boolean {
+	return IMGLY_DECODE_MIMES.has(mime);
+}
+
 export function validateImageFile(file: File): string | null {
 	const unsupported = UNSUPPORTED_MIME_TYPES[file.type];
 	if (unsupported) {
 		return `${unsupported} nao e suportado. Use PNG, JPEG, WebP ou AVIF.`;
 	}
-	if (!file.type.startsWith("image/")) {
+	if (file.type && !file.type.startsWith("image/")) {
 		return "Arquivo selecionado nao e uma imagem valida.";
 	}
 	if (file.size > MAX_FILE_BYTES) {
 		return `Arquivo muito grande. O limite e ${formatFileSize(MAX_FILE_BYTES)}.`;
 	}
 	return null;
+}
+
+export function formatImageProcessingError(err: unknown, fallback: string): string {
+	if (!(err instanceof Error) || !err.message) return fallback;
+	const message = err.message;
+	const lower = message.toLowerCase();
+	if (lower.includes("encode") || err.name === "EncodingError") {
+		return "Falha ao gerar a imagem de saida neste navegador. Tente PNG ou JPEG, ou outro navegador.";
+	}
+	if (lower.includes("invalid format") || lower.includes("unsupported")) {
+		return "Formato de imagem nao suportado para esta operacao. Use PNG, JPEG ou WebP.";
+	}
+	return message;
 }
 
 export function validateDimensions(width: number, height: number): string | null {

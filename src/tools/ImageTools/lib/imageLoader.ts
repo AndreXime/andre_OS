@@ -89,6 +89,15 @@ export function canvasToBlob(
 					reject(new Error(`Falha ao gerar imagem (${mime})`));
 					return;
 				}
+				const actualType = blob.type || "image/png";
+				if (actualType !== mime) {
+					reject(
+						new Error(
+							`Seu navegador nao consegue exportar para ${mime.replace("image/", "").toUpperCase()}. Escolha outro formato.`,
+						),
+					);
+					return;
+				}
 				resolve(blob);
 			},
 			mime,

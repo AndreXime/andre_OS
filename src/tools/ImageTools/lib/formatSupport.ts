@@ -18,7 +18,9 @@ async function canEncode(mime: string): Promise<boolean> {
 
 	try {
 		const blob = await canvasToBlob(canvas, mime, 100);
-		return blob.type === mime || blob.size > 0;
+		// Navegadores caem em PNG sem erro quando o MIME nao e suportado.
+		// So o type do blob precisa bater com o MIME pedido (size > 0 dava falso positivo).
+		return blob.type === mime;
 	} catch {
 		return false;
 	}
@@ -40,6 +42,6 @@ export async function detectFormatSupport(): Promise<Record<OutputFormat, boolea
 }
 
 export function isFormatSupported(support: Record<OutputFormat, boolean> | null, format: OutputFormat): boolean {
-	if (!support) return format === "png" || format === "jpeg" || format === "webp";
+	if (!support) return format === "png" || format === "jpeg";
 	return support[format];
 }
