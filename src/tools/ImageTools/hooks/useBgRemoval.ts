@@ -84,10 +84,7 @@ export function useBgRemoval(shouldPreload = false) {
 		if (!item) return;
 
 		const modelReady = $modelPreloadStatus.get() === "ready";
-		const started = beginItemOperation(
-			itemId,
-			modelReady ? "Processando imagem..." : "Carregando modelo de IA...",
-		);
+		const started = beginItemOperation(itemId, modelReady ? "Processando imagem..." : "Carregando modelo de IA...");
 		if (!started) return;
 		const { batchId } = started;
 
@@ -109,10 +106,7 @@ export function useBgRemoval(shouldPreload = false) {
 				setItemResult(itemId, blob, "bg-removal", batchId);
 			} catch (err) {
 				if (!isItemOperationCurrent(itemId, batchId)) return;
-				const message =
-					err instanceof Error && err.message
-						? err.message
-						: "Falha ao remover fundo da imagem.";
+				const message = err instanceof Error && err.message ? err.message : "Falha ao remover fundo da imagem.";
 				setItemError(itemId, message, batchId);
 			} finally {
 				finishItemOperation(itemId);
@@ -161,10 +155,7 @@ export function useBgRemoval(shouldPreload = false) {
 						finishItemOperation(itemId);
 						return;
 					}
-					const message =
-						err instanceof Error && err.message
-							? err.message
-							: "Falha ao remover fundo da imagem.";
+					const message = err instanceof Error && err.message ? err.message : "Falha ao remover fundo da imagem.";
 					setItemError(itemId, message, batchId);
 				} finally {
 					finishItemOperation(itemId);

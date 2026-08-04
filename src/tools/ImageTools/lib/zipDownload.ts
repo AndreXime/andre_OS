@@ -1,10 +1,5 @@
 import { zipSync } from "fflate";
-import {
-	buildZipEntryName,
-	getSelectedDoneItems,
-	type ImageItem,
-	type OutputFormat,
-} from "../domain";
+import { buildZipEntryName, getSelectedDoneItems, type ImageItem, type OutputFormat } from "../domain";
 
 export async function downloadProcessedZip(
 	items: ImageItem[],

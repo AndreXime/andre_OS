@@ -2,13 +2,7 @@ import { computeTargetSize, formatToMime, type OutputFormat } from "../domain";
 import { $supportedFormats } from "../store";
 import { bgRemovalConfig } from "./bgRemovalConfig";
 import { isFormatSupported } from "./formatSupport";
-import {
-	canvasToBlob,
-	drawToCanvas,
-	loadImageFromFile,
-	releaseLoadedImage,
-	throwIfAborted,
-} from "./imageLoader";
+import { canvasToBlob, drawToCanvas, loadImageFromFile, releaseLoadedImage, throwIfAborted } from "./imageLoader";
 
 export async function convertFile(
 	file: File,
@@ -40,12 +34,7 @@ export async function convertFile(
 	}
 }
 
-export async function compressFile(
-	file: File,
-	quality: number,
-	maxWidth: number,
-	signal: AbortSignal,
-): Promise<Blob> {
+export async function compressFile(file: File, quality: number, maxWidth: number, signal: AbortSignal): Promise<Blob> {
 	let loaded: Awaited<ReturnType<typeof loadImageFromFile>> | null = null;
 	try {
 		loaded = await loadImageFromFile(file, signal);

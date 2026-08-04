@@ -39,10 +39,7 @@ export async function detectFormatSupport(): Promise<Record<OutputFormat, boolea
 	return cachedSupport;
 }
 
-export function isFormatSupported(
-	support: Record<OutputFormat, boolean> | null,
-	format: OutputFormat,
-): boolean {
+export function isFormatSupported(support: Record<OutputFormat, boolean> | null, format: OutputFormat): boolean {
 	if (!support) return format === "png" || format === "jpeg" || format === "webp";
 	return support[format];
 }

@@ -1,13 +1,7 @@
-import { useState } from "react";
 import { Upload } from "lucide-react";
-import {
-	ACCEPTED_EXTENSIONS,
-	ACCEPTED_FORMATS_LABEL,
-	MAX_DIMENSION,
-	MAX_FILE_BYTES,
-	formatFileSize,
-} from "../domain";
-import { ErrorBanner, dismissGlobalError } from "./components";
+import { useState } from "react";
+import { ACCEPTED_EXTENSIONS, ACCEPTED_FORMATS_LABEL, formatFileSize, MAX_DIMENSION, MAX_FILE_BYTES } from "../domain";
+import { dismissGlobalError, ErrorBanner } from "./components";
 
 export function UploadZone({
 	onFileSelect,

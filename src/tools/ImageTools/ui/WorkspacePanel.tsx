@@ -12,9 +12,9 @@ import {
 	BgRemovalInfo,
 	CompressControls,
 	ConvertControls,
+	dismissGlobalError,
 	ErrorBanner,
 	ProcessingStatus,
-	dismissGlobalError,
 } from "./components";
 import { OPERATIONS } from "./constants";
 

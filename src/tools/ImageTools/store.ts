@@ -1,10 +1,10 @@
 import { atom, computed } from "nanostores";
 import {
+	createImageItemId,
 	type ImageItem,
 	type ModelPreloadStatus,
 	type OperationType,
 	type OutputFormat,
-	createImageItemId,
 	validateDimensions,
 	validateImageFile,
 } from "./domain";
@@ -62,10 +62,7 @@ export function abortItem(id: string): void {
 	}
 }
 
-export function beginItemOperation(
-	id: string,
-	label: string,
-): { signal: AbortSignal; batchId: number } | null {
+export function beginItemOperation(id: string, label: string): { signal: AbortSignal; batchId: number } | null {
 	const item = getItem(id);
 	if (!item) return null;
 
@@ -102,12 +99,7 @@ export function finishItemOperation(id: string): void {
 	itemAbortControllers.delete(id);
 }
 
-export function setItemResult(
-	id: string,
-	blob: Blob,
-	operation: OperationType,
-	batchId: number,
-): void {
+export function setItemResult(id: string, blob: Blob, operation: OperationType, batchId: number): void {
 	if (!isItemOperationCurrent(id, batchId)) return;
 	const url = URL.createObjectURL(blob);
 	patchItem(id, {
@@ -201,8 +193,7 @@ function ensureAtLeastOneSelected(): void {
 	}
 
 	const activeId = $activeItemId.get();
-	const fallback =
-		activeId && items.some((item) => item.id === activeId) ? activeId : (items[0]?.id ?? null);
+	const fallback = activeId && items.some((item) => item.id === activeId) ? activeId : (items[0]?.id ?? null);
 	$selectedIds.set(fallback ? [fallback] : []);
 }
 
@@ -228,8 +219,7 @@ export function clearSelection(): void {
 		return;
 	}
 	const activeId = $activeItemId.get();
-	const keep =
-		activeId && items.some((item) => item.id === activeId) ? activeId : (items[0]?.id ?? null);
+	const keep = activeId && items.some((item) => item.id === activeId) ? activeId : (items[0]?.id ?? null);
 	$selectedIds.set(keep ? [keep] : []);
 }
 

@@ -70,10 +70,7 @@ export function useImageProcessor() {
 	}, []);
 
 	const runBatchOnSelected = useCallback(
-		async (
-			operation: "convert" | "compress",
-			options: { format: OutputFormat; quality: number; maxWidth: number },
-		) => {
+		async (operation: "convert" | "compress", options: { format: OutputFormat; quality: number; maxWidth: number }) => {
 			const selected = $selectedIds.get();
 			const ids = selected.filter((id) => {
 				const item = getItem(id);

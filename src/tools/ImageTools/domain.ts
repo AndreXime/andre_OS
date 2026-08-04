@@ -100,11 +100,7 @@ export function validateDimensions(width: number, height: number): string | null
 	return null;
 }
 
-export function computeTargetSize(
-	width: number,
-	height: number,
-	maxWidth: number,
-): { width: number; height: number } {
+export function computeTargetSize(width: number, height: number, maxWidth: number): { width: number; height: number } {
 	if (maxWidth <= 0 || width <= maxWidth) {
 		return { width, height };
 	}
@@ -120,8 +116,7 @@ export function buildDownloadFilename(
 ): string {
 	const dotIdx = sourceName.lastIndexOf(".");
 	const baseName = dotIdx > 0 ? sourceName.slice(0, dotIdx) : sourceName;
-	const suffix =
-		operation === "convert" ? "convertido" : operation === "compress" ? "comprimido" : "sem_fundo";
+	const suffix = operation === "convert" ? "convertido" : operation === "compress" ? "comprimido" : "sem_fundo";
 
 	let ext: string;
 	if (operation === "convert" && outputFormat) {

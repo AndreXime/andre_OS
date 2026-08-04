@@ -1,10 +1,5 @@
 import { Loader2, Trash2, X } from "lucide-react";
-import {
-	COMPRESS_MAX_WIDTH_OPTIONS,
-	type ImageItem,
-	type ModelPreloadStatus,
-	type OutputFormat,
-} from "../domain";
+import { COMPRESS_MAX_WIDTH_OPTIONS, type ImageItem, type ModelPreloadStatus, type OutputFormat } from "../domain";
 import { isFormatSupported } from "../lib/formatSupport";
 import { $compressMaxWidth, $error, $outputFormat, $quality } from "../store";
 import { CONVERT_FORMATS, PRELOAD_PROGRESS_BAR_CLASS, PROGRESS_BAR_CLASS, STATUS_LABEL } from "./constants";
@@ -83,11 +78,7 @@ export function ImageListItem({
 						<p className="text-sm text-ink truncate">{item.file.name}</p>
 						<p
 							className={`text-[10px] ${
-								item.status === "error"
-									? "text-red-400"
-									: item.status === "done"
-										? "text-emerald-400"
-										: "text-muted"
+								item.status === "error" ? "text-red-400" : item.status === "done" ? "text-emerald-400" : "text-muted"
 							}`}
 						>
 							{STATUS_LABEL[item.status]}
