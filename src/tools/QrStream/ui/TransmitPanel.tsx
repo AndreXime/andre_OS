@@ -190,8 +190,8 @@ export function TransmitPanel() {
 			</div>
 
 			<div className="flex flex-col gap-sm">
-				<span className={toolLabelClass}>Preset</span>
-				<div className={toolTabBarClass} role="tablist" aria-label="Preset de desempenho">
+				<span className={toolLabelClass}>Modo de transmissão</span>
+				<div className={toolTabBarClass} role="tablist" aria-label="Modo de transmissão">
 					{STREAM_PRESETS.map((preset) => (
 						<button
 							key={preset.id}
@@ -206,6 +206,7 @@ export function TransmitPanel() {
 						</button>
 					))}
 				</div>
+				<p className="m-0 text-sm leading-relaxed text-muted">{getPreset(presetId).summary}</p>
 			</div>
 
 			<div className="flex flex-wrap gap-2xs">

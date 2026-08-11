@@ -96,7 +96,7 @@ export function ReceivePanel() {
 				<span className={toolLabelClass}>Câmera</span>
 				<video
 					ref={videoRef}
-					className="aspect-video w-full max-w-xl border border-rule bg-ink object-cover"
+					className="mx-auto aspect-square w-full max-w-[min(100%,40rem)] border border-rule bg-ink object-cover"
 					muted
 					playsInline
 					aria-label="Pré-visualização da câmera"
