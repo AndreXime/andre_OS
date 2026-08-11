@@ -14,6 +14,7 @@ import CookingBook from "../../tools/CookingBook/CookingBook";
 import RssReader from "../../tools/RssReader/RssReader";
 import CssThemes from "../../tools/CssThemes/CssThemes";
 import Canvas from "../../tools/Canvas/Canvas";
+import QrStream from "../../tools/QrStream/QrStream";
 
 export async function getStaticPaths() {
 	const tools = await getCollection("posts", ({ data }) => data.type === "tool");
@@ -57,6 +58,8 @@ const { title, target } = Astro.props;
 						return <CssThemes client:load />;
 					case "Canvas":
 						return <Canvas client:load />;
+					case "QrStream":
+						return <QrStream client:load />;
 					default:
 						return <div>Ferramenta não encontrada.</div>;
 				}
